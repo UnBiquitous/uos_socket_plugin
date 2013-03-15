@@ -144,17 +144,14 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 		if(serverDevice == null){
 			try {
 				Enumeration<NetworkInterface> e1 = (Enumeration<NetworkInterface>)NetworkInterface.getNetworkInterfaces();
-				logger.debug("has?:"+e1.hasMoreElements());
 				while(e1.hasMoreElements()) {
 					NetworkInterface ni = e1.nextElement();
-					logger.debug("Addr:"+ni.isLoopback() + ni.isVirtual() + ni.isUp());
 					
 					if (!ni.isLoopback() && !ni.isVirtual() && ni.isUp()){
 						Enumeration<InetAddress> e2 = ni.getInetAddresses();
 						String addr = null;
 						while(e2.hasMoreElements()) {
 							InetAddress ia = e2.nextElement();
-							logger.debug("Addr:"+ia.toString());
 							if (!ia.isLoopbackAddress() && !ia.isAnyLocalAddress() && !ia.isMulticastAddress()){
 								if (!ia.toString().contains(":")){
 									addr = ia.toString(); // FIXME : TCP Plugin : This denies a ipv6 server to be create which is a very restrictive strategy.
