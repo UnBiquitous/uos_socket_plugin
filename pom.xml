@@ -71,6 +71,11 @@
 			<version>2.2.1</version>
 		</dependency>
 		<dependency>
+			<groupId>ubiquitos</groupId>
+			<artifactId>uos.basic_auth.api</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+		<dependency>
 			<groupId>ethutil</groupId>
 			<artifactId>ethutil</artifactId>
 			<version>1.2</version>
