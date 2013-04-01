@@ -6,7 +6,7 @@
 	<artifactId>uos.tcp_udp.plugin</artifactId>
 	<name>TCP and UDP Network Plugin</name>
 	<packaging>jar</packaging>
-	<version>2.2.1_DEV</version>
+	<version>2.2.1</version>
 
 	<build>
 		<directory>target</directory>
@@ -68,12 +68,12 @@
 		<dependency>
 			<groupId>ubiquitos</groupId>
 			<artifactId>uos.core</artifactId>
-			<version>2.2.1_DEV</version>
+			<version>2.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>ubiquitos</groupId>
 			<artifactId>uos.basic_auth.api</artifactId>
-			<version>2.2.1_DEV</version>
+			<version>2.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>ethutil</groupId>
