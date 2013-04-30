@@ -75,7 +75,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		logger.info("---------------------- testUDPConsumesDiscreteTCP BEGIN ---------------------- ");	
 		logger.info("Trying to consume the listDrivers service from the Device Driver from the TCP machine");
 		
-		Map<String, String> parameterMap = new HashMap<String, String>();
+		Map<String,Object> parameterMap = new HashMap<String,Object>();
 		parameterMap.put("device", new JSONDevice(this.applicationContext.getGateway().getCurrentDevice()).toString());
 		
 		ServiceResponse response = this.applicationContext.getGateway().callService(
@@ -91,7 +91,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		
 		if ( response != null && (response.getError() == null || response.getError().isEmpty()) ){
 			logger.info("Let's see what we got: ");
-			Map<String, String> mapa = response.getResponseData();
+			Map<String,Object> mapa = response.getResponseData();
 			
 			JSONObject jsonList = new JSONObject(mapa.get("driverList"));
 			
@@ -118,7 +118,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		logger.info("---------------------- testUDPConsumesDiscreteBluetooth BEGIN ---------------------- ");	
 		logger.info("Trying to consume the listDrivers service from the Device Driver from the Bluetooth machine");
 		
-		Map<String, String> parameterMap = new HashMap<String, String>();
+		Map<String,Object> parameterMap = new HashMap<String,Object>();
 		parameterMap.put("device", new JSONDevice(this.applicationContext.getGateway().getCurrentDevice()).toString());
 		
 		ServiceResponse response = this.applicationContext.getGateway().callService(
@@ -134,7 +134,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		
 		if ( response != null && (response.getError() == null || response.getError().isEmpty()) ){
 			logger.info("Let's see what we got: ");
-			Map<String, String> mapa = response.getResponseData();
+			Map<String,Object> mapa = response.getResponseData();
 			
 			JSONObject jsonList = new JSONObject(mapa.get("driverList"));
 			

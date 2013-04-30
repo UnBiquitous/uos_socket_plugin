@@ -29,9 +29,9 @@ public class DummyDriver implements UosDriver {
 	 */
 	public void echoService(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
 		
-		Map<String,String> parameters = serviceCall.getParameters();
+		Map<String,Object> parameters = serviceCall.getParameters();
 		
-		Map<String,String> responseMap = new HashMap<String,String>();
+		Map<String,Object> responseMap = new HashMap<String,Object>();
 		
 		responseMap.put(MESSAGE_KEY, parameters.get(MESSAGE_KEY));
 		

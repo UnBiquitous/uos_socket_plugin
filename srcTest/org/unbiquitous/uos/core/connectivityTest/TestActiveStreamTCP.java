@@ -114,7 +114,7 @@ public class TestActiveStreamTCP extends TestCase {
 		if ( response != null && (response.getError() == null || response.getError().isEmpty()) ){
 			logger.info("Stream Service OK! ");
 			logger.info("Let's see what we got: ");
-			Map<String, String> mapa = response.getResponseData();
+			Map<String,Object> mapa = response.getResponseData();
 			logger.info("Returned encapsulated" + " : " + mapa.get("message"));
 			
 			if( mapa.get("message") == null ){
@@ -179,7 +179,7 @@ public class TestActiveStreamTCP extends TestCase {
 		if ( response != null && (response.getError() == null || response.getError().isEmpty()) ){
 			logger.info("Stream Service OK! ");
 			logger.info("Let's see what we got: ");
-			Map<String, String> mapa = response.getResponseData();
+			Map<String,Object> mapa = response.getResponseData();
 			logger.info("Returned encapsulated" + " : " + mapa.get("message"));
 			
 			if( mapa.get("message") == null ){

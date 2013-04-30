@@ -52,7 +52,7 @@ public class TestBasicAuthentication2 extends TestCase {
 
 		String SECURITY_TYPE = "BASIC";
 		
-		Map<String, String> authenticationData = new HashMap<String, String>();
+		Map<String,Object> authenticationData = new HashMap<String,Object>();
 		//String hashId, String idEncriptadoM1, String ra1EncriptadoM1, String ra2EncriptadoM1, String hmacM1
 		authenticationData.put("hashId", firstMessage.getHashId());
 		authenticationData.put("idEnc", firstMessage.getIdEnc());

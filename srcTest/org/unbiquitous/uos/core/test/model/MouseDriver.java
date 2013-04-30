@@ -28,10 +28,10 @@ public class MouseDriver implements UosDriver {
 	
 	public void movePointer(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
 		
-		Map<String,String> parameters = serviceCall.getParameters();
+		Map<String,Object> parameters = serviceCall.getParameters();
 		
-		String xValue = parameters.get(X_VALUE_KEY);
-		String yValue = parameters.get(Y_VALUE_KEY);
+		String xValue = (String) parameters.get(X_VALUE_KEY);
+		String yValue = (String) parameters.get(Y_VALUE_KEY);
 		
 		
 		try {
@@ -46,9 +46,9 @@ public class MouseDriver implements UosDriver {
 	
 	public void moveScroll(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
 		
-		Map<String,String> parameters = serviceCall.getParameters();
+		Map<String,Object> parameters = serviceCall.getParameters();
 		
-		String value = parameters.get(VALUE_KEY);
+		String value = (String) parameters.get(VALUE_KEY);
 		
 		
 		try {

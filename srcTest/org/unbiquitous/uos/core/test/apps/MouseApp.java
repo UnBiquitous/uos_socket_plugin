@@ -17,7 +17,7 @@ public class MouseApp implements UosApplication {
 		
 		try {
 			Thread.sleep(1000);
-			Map<String, String> parameters =  new HashMap<String, String>();
+			Map<String, Object> parameters =  new HashMap<String, Object>();
 			
 			for (int x = 10 ,y =10; y < 500 && x < 500 ; y += 10 , x += 10 ){
 			

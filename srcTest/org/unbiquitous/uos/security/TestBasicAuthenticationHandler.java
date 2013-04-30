@@ -35,7 +35,7 @@ public class TestBasicAuthenticationHandler extends TestCase {
 	
 		ServiceCall serviceCall = new ServiceCall();
 		
-		Map<String, String> authenticationData = new HashMap<String, String>();
+		Map<String,Object> authenticationData = new HashMap<String,Object>();
 		//String hashId, String idEncriptadoM1, String ra1EncriptadoM1, String ra2EncriptadoM1, String hmacM1
 		authenticationData.put("hashId", firstMessage.getHashId());
 		authenticationData.put("idEnc", firstMessage.getIdEnc());

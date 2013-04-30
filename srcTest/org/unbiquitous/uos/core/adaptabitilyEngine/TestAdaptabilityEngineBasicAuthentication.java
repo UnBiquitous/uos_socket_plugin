@@ -75,14 +75,14 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);
 		serviceCall.setSecurityType(TEST_DATA_SECURITY_TYPE_VALID);
 		
-		Map<String,String> parameters = new HashMap<String,String>();
+		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 		
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
 		
 		ServiceResponse expectedResponse = new ServiceResponse();
-		Map<String,String> responseMap = new HashMap<String,String>();
+		Map<String,Object> responseMap = new HashMap<String,Object>();
 		responseMap.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		expectedResponse.setResponseData(responseMap);
 		
@@ -91,7 +91,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	
 	public void testSendDechoRequestWithValidIntanceIdByParameters() throws ServiceCallException{
 		
-		Map<String,String> parameters = new HashMap<String,String>();
+		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		
 		ServiceResponse response = gateway.callService(
@@ -103,7 +103,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 				parameters);
 		
 		ServiceResponse expectedResponse = new ServiceResponse();
-		Map<String,String> responseMap = new HashMap<String,String>();
+		Map<String,Object> responseMap = new HashMap<String,Object>();
 		responseMap.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		expectedResponse.setResponseData(responseMap);
 		
@@ -117,7 +117,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_INVALID_ID);
 		serviceCall.setSecurityType(TEST_DATA_SECURITY_TYPE_VALID);
-		Map<String,String> parameters = new HashMap<String,String>();
+		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 		
@@ -131,7 +131,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	
 	public void testSendDechoRequestWithInvalidIntanceIdByParameters() throws ServiceCallException{
 		
-		Map<String,String> parameters = new HashMap<String,String>();
+		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		
 		try {
@@ -156,14 +156,14 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(null);
 		serviceCall.setSecurityType(TEST_DATA_SECURITY_TYPE_VALID);
-		Map<String,String> parameters = new HashMap<String,String>();
+		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 		
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
 		
 		ServiceResponse expectedResponse = new ServiceResponse();
-		Map<String,String> responseMap = new HashMap<String,String>();
+		Map<String,Object> responseMap = new HashMap<String,Object>();
 		responseMap.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		expectedResponse.setResponseData(responseMap);
 		
@@ -172,7 +172,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	
 	public void testSendDechoRequestWithoutInstanceIdAndValidDriverByParameters() throws ServiceCallException{
 		
-		Map<String,String> parameters = new HashMap<String,String>();
+		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		
 		ServiceResponse response = gateway.callService(
@@ -184,7 +184,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 				parameters);
 		
 		ServiceResponse expectedResponse = new ServiceResponse();
-		Map<String,String> responseMap = new HashMap<String,String>();
+		Map<String,Object> responseMap = new HashMap<String,Object>();
 		responseMap.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		expectedResponse.setResponseData(responseMap);
 		
@@ -200,7 +200,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(null);
 		serviceCall.setSecurityType(TEST_DATA_SECURITY_TYPE_VALID);
-		Map<String,String> parameters = new HashMap<String,String>();
+		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 		
@@ -214,7 +214,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	
 	public void testSendDechoRequestWithoutInstanceIdAndInvalidDriverByParameters() throws ServiceCallException{
 		
-		Map<String,String> parameters = new HashMap<String,String>();
+		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		
 		try {
@@ -233,7 +233,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	
 	public void testSendDechoRequestWithInvalidSecurityType() throws ServiceCallException{
 		
-		Map<String,String> parameters = new HashMap<String,String>();
+		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		
 		try {
