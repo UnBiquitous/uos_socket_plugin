@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.application.UosApplication;
+import org.unbiquitous.uos.core.applicationManager.UosApplication;
 import org.unbiquitous.uos.core.ontologyEngine.api.OntologyDeploy;
 import org.unbiquitous.uos.core.ontologyEngine.api.OntologyStart;
 import org.unbiquitous.uos.core.ontologyEngine.api.OntologyUndeploy;
@@ -36,7 +36,7 @@ public class MouseApp implements UosApplication {
 	public void stop() throws Exception {}
 
 	@Override
-	public void init(OntologyDeploy ontology) {}
+	public void init(OntologyDeploy ontology, String id) {}
 
 	@Override
 	public void tearDown(OntologyUndeploy ontology) throws Exception {}
