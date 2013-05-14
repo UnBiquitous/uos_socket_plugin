@@ -102,7 +102,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 
 		// creates a new instance of serviceCall and initializes their parameters
 		ServiceCall serviceCall = new ServiceCall();
-		serviceCall.setDriver("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver");
+		serviceCall.setDriver("uos.DeviceDriver");
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);//verificar isso
 		serviceCall.setSecurityType(SECURITY_TYPE);
@@ -182,7 +182,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 
 		// creates a new instance of serviceCall and initializes their parameters
 		ServiceCall serviceCall = new ServiceCall();
-		serviceCall.setDriver("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver");
+		serviceCall.setDriver("uos.DeviceDriver");
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);//verificar isso
 		serviceCall.setSecurityType(SECURITY_TYPE);
@@ -246,7 +246,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 
 		// creates a new instance of serviceCall and initializes their parameters
 		ServiceCall serviceCall = new ServiceCall();
-		serviceCall.setDriver("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver");
+		serviceCall.setDriver("uos.DeviceDriver");
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);//verificar isso
 		serviceCall.setSecurityType(SECURITY_TYPE);
@@ -301,7 +301,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 
 		// creates a new instance of serviceCall and initializes their parameters
 		ServiceCall serviceCall = new ServiceCall();
-		serviceCall.setDriver("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver");
+		serviceCall.setDriver("uos.DeviceDriver");
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);//verificar isso
 		serviceCall.setSecurityType(SECURITY_TYPE);
@@ -357,7 +357,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 
 		// creates a new instance of serviceCall and initializes their parameters
 		ServiceCall serviceCall = new ServiceCall();
-		serviceCall.setDriver("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver");
+		serviceCall.setDriver("uos.DeviceDriver");
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);//verificar isso
 		serviceCall.setSecurityType(SECURITY_TYPE);

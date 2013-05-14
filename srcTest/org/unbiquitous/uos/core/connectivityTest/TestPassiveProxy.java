@@ -220,7 +220,7 @@ public class TestPassiveProxy extends TestCase {
 		ServiceResponse response = this.applicationContextPassiveTCP.getAdaptabilityEngine().callService(
 				this.applicationContextRadar.getCurrentDevice(), //Use the dummy device with the caller address 
 				"listDrivers", 
-				"br.unb.unbiquitous.ubiquitos.driver.DeviceDriver", 
+				"uos.DeviceDriver", 
 				"deviceDriverImplIdPassiveUDP", // Any Instance is ok 
 				null, // No security needed 
 				parameterMap // Informing the current device data to the remote device
@@ -285,7 +285,7 @@ public class TestPassiveProxy extends TestCase {
 		ServiceResponse response = this.applicationContextPassiveUDP.getAdaptabilityEngine().callService(
 				this.applicationContextRadar.getCurrentDevice(),
 				"listDrivers", 
-				"br.unb.unbiquitous.ubiquitos.driver.DeviceDriver", 
+				"uos.DeviceDriver", 
 				"deviceDriverImplWindows",
 				null, // No security needed 
 				parameterMap // Informing the current device data to the remote device
@@ -324,7 +324,7 @@ public class TestPassiveProxy extends TestCase {
 		ServiceResponse response = this.applicationContextPassiveTCP.getAdaptabilityEngine().callService(
 				this.applicationContextRadar.getCurrentDevice(),
 				"listDrivers", 
-				"br.unb.unbiquitous.ubiquitos.driver.DeviceDriver", 
+				"uos.DeviceDriver", 
 				"deviceDriverImplWindows",
 				null, // No security needed 
 				parameterMap // Informing the current device data to the remote device

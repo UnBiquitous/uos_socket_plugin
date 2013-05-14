@@ -65,7 +65,7 @@ public class TestBasicAuthentication2 extends TestCase {
 		serviceCall.setSecurityType(SECURITY_TYPE);
 		serviceCall.setServiceType(ServiceCall.ServiceType.DISCRETE);
 		serviceCall.setService("authenticate");
-		serviceCall.setDriver("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver");
+		serviceCall.setDriver("uos.DeviceDriver");
 
 		gateway.callService(providerDevice, serviceCall);
 	}

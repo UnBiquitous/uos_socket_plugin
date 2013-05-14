@@ -72,7 +72,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		serviceCall.setSecurityType(SECURITY_TYPE);
 		serviceCall.setServiceType(ServiceCall.ServiceType.DISCRETE);
 		serviceCall.setService("authenticate");
-		serviceCall.setDriver("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver");
+		serviceCall.setDriver("uos.DeviceDriver");
 
 		logger.debug("Starts authentication proccess calling the service \"authenticate\"");
 		
@@ -123,7 +123,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		serviceCall.setSecurityType(SECURITY_TYPE);
 		serviceCall.setServiceType(ServiceCall.ServiceType.DISCRETE);
 		serviceCall.setService("authenticate");
-		serviceCall.setDriver("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver");
+		serviceCall.setDriver("uos.DeviceDriver");
 
 		logger.debug("Starts authentication proccess calling the service \"authenticate\"");
 		
@@ -173,7 +173,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		serviceCall.setSecurityType(SECURITY_TYPE);
 		serviceCall.setServiceType(ServiceCall.ServiceType.DISCRETE);
 		serviceCall.setService("authenticate");
-		serviceCall.setDriver("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver");
+		serviceCall.setDriver("uos.DeviceDriver");
 
 		logger.debug("Starts authentication proccess calling the service \"authenticate\"");
 		

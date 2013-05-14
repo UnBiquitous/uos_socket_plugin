@@ -47,7 +47,7 @@ public class TestBasicAuthenticationHandler extends TestCase {
 		serviceCall.setSecurityType(SECURITY_TYPE);
 		serviceCall.setServiceType(ServiceCall.ServiceType.DISCRETE);
 		serviceCall.setService("authenticate");
-		serviceCall.setDriver("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver");
+		serviceCall.setDriver("uos.DeviceDriver");
 		
 		
 		gateway.callService(gateway.getCurrentDevice(), serviceCall);

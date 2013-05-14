@@ -43,7 +43,7 @@ public class TestDeviceDriverAuthenticate extends TestCase {
 	public void testSendAuthenticate() 
 		throws UnknownHostException, IOException, InterruptedException, JSONException {
 		
-		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC'}}";
+		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC'}}";
 		
 		logger.debug("Sending Message:");
 		logger.debug(notifyMessage);

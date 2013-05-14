@@ -57,7 +57,7 @@ public class TestBasicMiddlewareAuthenticationHandler extends TestCase {
 		
 		FirstMessage m1 = authentication.runFirstStep("WrongDummyDevice", "5f8d93682477592c1479ee7803ac44e1");
 	
-		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','hashId':'" +m1.getHashId()+ "','idEnc':'" +m1.getIdEnc()+ "','ra1Enc':'" +m1.getRa1Enc()+ "','ra2Enc':'" +m1.getRa2Enc() + "','hmacM1':'" +m1.getHmacM1()+ "'}}";
+		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','hashId':'" +m1.getHashId()+ "','idEnc':'" +m1.getIdEnc()+ "','ra1Enc':'" +m1.getRa1Enc()+ "','ra2Enc':'" +m1.getRa2Enc() + "','hmacM1':'" +m1.getHmacM1()+ "'}}";
 		
 		logger.debug("Sending Message:");
 		logger.debug(notifyMessage);
@@ -106,7 +106,7 @@ public class TestBasicMiddlewareAuthenticationHandler extends TestCase {
 
 		String rb1 = (m2.getRb1());
 		
-		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','sessionKeyEnc':'" +sessionKeyEnc+ "','hmacM3':'" +hmacM3+ "','id':'" +id+ "','rb1':'" +rb1+ "'}}";
+		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','sessionKeyEnc':'" +sessionKeyEnc+ "','hmacM3':'" +hmacM3+ "','id':'" +id+ "','rb1':'" +rb1+ "'}}";
 		
 		logger.debug("Sending Message:");
 		logger.debug(notifyMessage);
@@ -135,7 +135,7 @@ public class TestBasicMiddlewareAuthenticationHandler extends TestCase {
 	//SecondMessage m2 = authentication.runSecondStep(m1.getHashId(), m1.getIdEnc(), m1.getRa1Enc(), m1.getRa2Enc(), m1.getHmacM1());
 
 	// send notifyMessage with incorrect ra2Enc
-	String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','hashId':'" +m1.getHashId()+ "','idEnc':'" +m1.getIdEnc()+ "','ra1Enc':'" +m1.getRa1Enc()+ "','ra2Enc':'" +"yVJTzuEJI07h9Gj45bWaakbt/LyXLHOuVeE1NIZUnIw=" + "','hmacM1':'" +m1.getHmacM1()+ "'}}";
+	String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','hashId':'" +m1.getHashId()+ "','idEnc':'" +m1.getIdEnc()+ "','ra1Enc':'" +m1.getRa1Enc()+ "','ra2Enc':'" +"yVJTzuEJI07h9Gj45bWaakbt/LyXLHOuVeE1NIZUnIw=" + "','hmacM1':'" +m1.getHmacM1()+ "'}}";
 	
 	logger.debug("Sending Message:");
 	logger.debug(notifyMessage);
@@ -171,7 +171,7 @@ public class TestBasicMiddlewareAuthenticationHandler extends TestCase {
 	String rb1 = (m2.getRb1());
 	
 	//send notifyMessage with incorrect HMAC
-	String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','sessionKeyEnc':'" +sessionKeyEnc+ "','hmacM3':'" +"758F3AB2EB34658ED3A011A51B695E4A"+ "','id':'" +id+ "','rb1':'" +rb1+ "'}}";
+	String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','sessionKeyEnc':'" +sessionKeyEnc+ "','hmacM3':'" +"758F3AB2EB34658ED3A011A51B695E4A"+ "','id':'" +id+ "','rb1':'" +rb1+ "'}}";
 	
 	logger.debug("Sending Message:");
 	logger.debug(notifyMessage);

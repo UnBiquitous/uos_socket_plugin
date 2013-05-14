@@ -81,7 +81,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		ServiceResponse response = this.applicationContext.getGateway().callService(
 				this.applicationContext.getDeviceManager().retrieveDevice("ProxyDevice"),
 				"listDrivers", 
-				"br.unb.unbiquitous.ubiquitos.driver.DeviceDriver", 
+				"uos.DeviceDriver", 
 				"deviceDriverImplIdTCPDevice",
 				null, // No security needed 
 				parameterMap // Informing the current device data to the remote device
@@ -124,7 +124,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		ServiceResponse response = this.applicationContext.getGateway().callService(
 				this.applicationContext.getDeviceManager().retrieveDevice("ProxyDevice"),
 				"listDrivers", 
-				"br.unb.unbiquitous.ubiquitos.driver.DeviceDriver", 
+				"uos.DeviceDriver", 
 				"deviceDriverImplIdBluetoothDevice",
 				null, // No security needed 
 				parameterMap // Informing the current device data to the remote device

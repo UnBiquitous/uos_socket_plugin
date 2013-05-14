@@ -16,7 +16,7 @@ import org.unbiquitous.json.JSONException;
 import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uos.core.Logger;
 import org.unbiquitous.uos.core.UOSApplicationContext;
-import org.unbiquitous.uos.core.driver.DeviceDriverImpl;
+import org.unbiquitous.uos.core.driver.DeviceDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.json.JSONDriver;
 import org.unbiquitous.uos.core.test.model.DummyDriver;
@@ -48,7 +48,7 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 	public void testSendListDrivers() 
 		throws UnknownHostException, IOException, InterruptedException, JSONException {
 		
-		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver',service:'listDrivers'}";
+		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'listDrivers'}";
 		
 		logger.debug("Sending Message:");
 		logger.debug(notifyMessage);
@@ -67,12 +67,12 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 		
 		Map<String,String> testListDrivers = new HashMap<String,String>();
 		
-		UpDriver upDeviceDriver = (new DeviceDriverImpl()).getDriver();
+		UpDriver upDeviceDriver = (new DeviceDriver()).getDriver();
 		JSONDriver jsonDeviceDriver = new JSONDriver(upDeviceDriver);
 		
-		testListDrivers.put("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver1", jsonDeviceDriver.toString());
+		testListDrivers.put("uos.DeviceDriver1", jsonDeviceDriver.toString());
 		testListDrivers.put("defaultDeviceDriver", jsonDeviceDriver.toString());
-		testListDrivers.put("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver3", jsonDeviceDriver.toString());
+		testListDrivers.put("uos.DeviceDriver3", jsonDeviceDriver.toString());
 		testListDrivers.put("testListId", jsonDeviceDriver.toString());
 		
 		UpDriver upDummyDriver = (new DummyDriver()).getDriver();
@@ -91,7 +91,7 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 	public void testSendListDriversByDriverNameValid1() 
 	throws UnknownHostException, IOException, InterruptedException, JSONException {
 		
-		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver',parameters:{driverName:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver'},service:'listDrivers'}";
+		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',parameters:{driverName:'uos.DeviceDriver'},service:'listDrivers'}";
 		
 		logger.debug("Sending Message:");
 		logger.debug(notifyMessage);
@@ -110,12 +110,12 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 		
 		Map<String,String> testListDrivers = new HashMap<String,String>();
 		
-		UpDriver upDriver = (new DeviceDriverImpl()).getDriver();
+		UpDriver upDriver = (new DeviceDriver()).getDriver();
 		
 		JSONDriver jsonDriver = new JSONDriver(upDriver);
 		
-		testListDrivers.put("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver1", jsonDriver.toString());
-		testListDrivers.put("br.unb.unbiquitous.ubiquitos.driver.DeviceDriver3", jsonDriver.toString());
+		testListDrivers.put("uos.DeviceDriver1", jsonDriver.toString());
+		testListDrivers.put("uos.DeviceDriver3", jsonDriver.toString());
 		testListDrivers.put("defaultDeviceDriver", jsonDriver.toString());
 		testListDrivers.put("testListId", jsonDriver.toString());
 		
@@ -123,13 +123,13 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 		
 		expectedDriverList.put("driverList", new JSONObject(testListDrivers).toString());
 		
-		assertEquals(expectedDriverList.toString(), jsonResponse.optJSONObject("responseData").toString());
+		assertEquals(expectedDriverList.toMap(), jsonResponse.optJSONObject("responseData").toMap());
 	}
 	
 	public void testSendListDriversByDriverNameValid2() 
 	throws UnknownHostException, IOException, InterruptedException, JSONException {
 		
-		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver',parameters:{driverName:'DummyDriver'},service:'listDrivers'}";
+		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',parameters:{driverName:'DummyDriver'},service:'listDrivers'}";
 		
 		logger.debug("Sending Message:");
 		logger.debug(notifyMessage);
@@ -164,7 +164,7 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 	public void testSendListDriversByDriverNameEmpty() 
 	throws UnknownHostException, IOException, InterruptedException, JSONException {
 		
-		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver',parameters:{driverName:''},service:'listDrivers'}";
+		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',parameters:{driverName:''},service:'listDrivers'}";
 		
 		logger.debug("Sending Message:");
 		logger.debug(notifyMessage);
@@ -193,7 +193,7 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 	public void testSendListDriversByDriverNameWrong() 
 	throws UnknownHostException, IOException, InterruptedException, JSONException {
 		
-		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'br.unb.unbiquitous.ubiquitos.driver.DeviceDriver',parameters:{driverName:'no.exists.driver.name'},service:'listDrivers'}";
+		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',parameters:{driverName:'no.exists.driver.name'},service:'listDrivers'}";
 		
 		logger.debug("Sending Message:");
 		logger.debug(notifyMessage);
