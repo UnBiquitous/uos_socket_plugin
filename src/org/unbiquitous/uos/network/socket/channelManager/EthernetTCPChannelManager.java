@@ -37,6 +37,8 @@ public class EthernetTCPChannelManager implements ChannelManager{
      * Controller responsible for the active connections cache. 
      */
     private CacheController cacheController;
+
+	private List<Integer> validPorts;
 	
 	/*********************************
 	 * CONSTRUCTORS
@@ -53,10 +55,14 @@ public class EthernetTCPChannelManager implements ChannelManager{
 		this.startedServers = new HashMap<String, EthernetTCPServerConnection>();
 		
 		freePassiveDevices = new ArrayList<NetworkDevice>();
+		validPorts = new ArrayList<Integer>();
+		validPorts.add(defaultPort);
+		validPorts.add(controlPort);
 		String[] limitPorts = portRange.split("-");
 		int inferiorPort = Integer.parseInt(limitPorts[0]);
 		int superiorPort = Integer.parseInt(limitPorts[1]);
 		for(int port = inferiorPort; port <= superiorPort; port++){
+			validPorts.add(port);
 			freePassiveDevices.add(new EthernetDevice("0.0.0.0",port,EthernetConnectionType.TCP));
 		}
 	}
@@ -71,7 +77,7 @@ public class EthernetTCPChannelManager implements ChannelManager{
 		String host ;
 		int port ;
 		if (address.length == 1){
-			port = controlPort;
+			port = defaultPort;
 		}else if(address.length == 2){
 			port = Integer.parseInt(address[1]);
 		}else{
@@ -80,19 +86,21 @@ public class EthernetTCPChannelManager implements ChannelManager{
 		
     	host = address[0];
     	
+    	if (!validPorts.contains(port) ){
+    		port = defaultPort;
+    	}
+    	
     	ClientConnection cached = cacheController.getConnection(networkDeviceName);
 		if (cached != null){
-			logger.info("\nEthernetTCPChannelManager: openActiveConnection: Returning cached connection for host '"+host+"'\n\n"); 
+			logger.info("EthernetTCPChannelManager: openActiveConnection: Returning cached connection for host '"+host+"'\n\n"); 
 			return cached;
 		}
     	
-    	EthernetTCPClientConnection etcc ;
 		try {
-			etcc = new EthernetTCPClientConnection(host, port, cacheController);
+			return new EthernetTCPClientConnection(host, port, cacheController);
 		} catch (Exception e) {
-			etcc = new EthernetTCPClientConnection(host, defaultPort, cacheController);
+			return null;
 		}
-		return etcc;
 	}
 	
 	

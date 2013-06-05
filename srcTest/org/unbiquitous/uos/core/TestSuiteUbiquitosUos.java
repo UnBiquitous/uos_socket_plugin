@@ -1,12 +1,12 @@
 package org.unbiquitous.uos.core;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.unbiquitous.uos.core.adaptabitilyEngine.TestSuiteAdaptabilityEngine;
 import org.unbiquitous.uos.core.deviceManager.TestSuiteDeviceManager;
 import org.unbiquitous.uos.core.driver.deviceDriver.TestSuiteDeviceDriver;
 import org.unbiquitous.uos.core.driverManager.TestSuiteDriverManager;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 public class TestSuiteUbiquitosUos {
 	public static Test suite() { 

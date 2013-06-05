@@ -51,11 +51,6 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
     /** Indicates whether the radar is running or not. */
     private boolean started = false;
     
-    /**
-     * The connection manager responsible for handling the information of connections.
-     */
-    private ConnectionManager connectionManager;
-    
     /* *****************************
 	 *   	CONSTRUCTOR
 	 * *****************************/
@@ -71,6 +66,9 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
     	this.radarListener = radarListener;
     	ethUtil = new EthUtil(this);
     }
+    
+    @Override
+    public void setConnectionManager(ConnectionManager connectionManager) {}
     
     /* *****************************
 	 *   	PUBLIC METHODS - Runnable
@@ -175,8 +173,4 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
         }
     }
 
-    @Override
-    public void setConnectionManager(ConnectionManager connectionManager) {
-    	this.connectionManager = connectionManager;
-    }
 }
