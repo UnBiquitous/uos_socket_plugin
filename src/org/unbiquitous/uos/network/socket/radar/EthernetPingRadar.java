@@ -142,7 +142,8 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
      * @param host 
      */
     public void deviceDiscoveryFinished(Vector<String> recentilyDiscoveredHosts) {
-        
+        if (recentilyDiscoveredHosts == null) return;
+    	
     	logger.info("[EthernetPingRadar] Ethernet Discovery Finished. Found Devices: "+ recentilyDiscoveredHosts);
 
     	// If localHostRepository equals null, First time Discovery is called), populates it with the found hosts
