@@ -86,7 +86,7 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
         	// start PING discovery.
             ethUtil.discoverDevices(EthUtil.DISCOVER_DEVICES_USING_PING);
         } catch (Exception ex) {
-        	logger.error("[EthernetPingRadar] Could Not realize the host discovery...");
+        	logger.error("[EthernetPingRadar] Could Not realize the host discovery...",ex);
         }
     }
     
@@ -165,7 +165,7 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
 				radarListener.deviceLeft(new EthernetDevice(byeHost,  14984, EthernetConnectionType.TCP)); 
 			}
     		// add all found hosts to the local repository
-    		localHostRepository.addAll(recentilyDiscoveredHosts);
+    		localHostRepository = new HashSet<String>(recentilyDiscoveredHosts);
     	}
     	
         //If stopRadar method was called, a new device discovery will not be started
