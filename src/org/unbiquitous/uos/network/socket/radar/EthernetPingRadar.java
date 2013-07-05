@@ -42,7 +42,7 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
 	private EthUtil ethUtil = null;
 	
     /** This is the list of devices present in the smart-space. */
-    private Set<String> localHostRepository = null;
+    private HashSet<String> localHostRepository = null;
     
     /** A RadarListener object interested in receiving UbiquitOS Radar notifications, 
      * like "a new device has entered the smart-space" and "device X has left the smart-space". */
@@ -141,7 +141,8 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
      * 
      * @param host 
      */
-    public void deviceDiscoveryFinished(Vector<String> recentilyDiscoveredHosts) {
+    @SuppressWarnings("unchecked")
+	public void deviceDiscoveryFinished(Vector<String> recentilyDiscoveredHosts) {
         if (recentilyDiscoveredHosts == null) return;
     	
     	logger.info("[EthernetPingRadar] Ethernet Discovery Finished. Found Devices: "+ recentilyDiscoveredHosts);
@@ -150,17 +151,18 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
     	if (localHostRepository == null){
     		localHostRepository = new HashSet<String>(recentilyDiscoveredHosts);
     	}else{
+    		
+			HashSet<String> byeGuys = (HashSet<String>) localHostRepository.clone();
+			byeGuys.removeAll(recentilyDiscoveredHosts);
+    		
     		//else, checks if some host exited the smart-space
-    		for (String existingHost : localHostRepository) {
-    			// If localHost wasn't found on the network... It left the smart-space
-				if (!recentilyDiscoveredHosts.contains(existingHost)){
-					// remove from localRepository.
-					localHostRepository.remove(existingHost); 
-					// notifies the Radar Control Center
-					logger.info("[EthernetPingRadar] Host ["+existingHost+"] has left the smart-space.");
-			    	//FIXME: PingRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
-					radarListener.deviceLeft(new EthernetDevice(existingHost,  14984, EthernetConnectionType.TCP)); 
-				}
+    		for (String byeHost : byeGuys) {
+				// remove from localRepository.
+				localHostRepository.remove(byeHost); 
+				// notifies the Radar Control Center
+				logger.info("[EthernetPingRadar] Host ["+byeHost+"] has left the smart-space.");
+		    	//FIXME: PingRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
+				radarListener.deviceLeft(new EthernetDevice(byeHost,  14984, EthernetConnectionType.TCP)); 
 			}
     		// add all found hosts to the local repository
     		localHostRepository.addAll(recentilyDiscoveredHosts);
