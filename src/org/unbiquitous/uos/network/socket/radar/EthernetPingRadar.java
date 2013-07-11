@@ -2,10 +2,11 @@ package org.unbiquitous.uos.network.socket.radar;
 
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.unbiquitous.uos.core.Logger;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
@@ -35,7 +36,7 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
 	 * *****************************/
 	
     /** Object for logging registration. */
-	private static final Logger logger = Logger.getLogger(EthernetPingRadar.class);
+	private static final Logger logger = UOSLogging.getLogger();
     
 	
 	/** A Convenient way to Access Ethernet */
@@ -82,11 +83,11 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
         try {
             // Start the device discovery. According to the defined discovery Mode
             // log it.
-        	logger.debug("[EthernetPingRadar] Starting Radar... PING Discovery");
+        	logger.fine("[EthernetPingRadar] Starting Radar... PING Discovery");
         	// start PING discovery.
             ethUtil.discoverDevices(EthUtil.DISCOVER_DEVICES_USING_PING);
         } catch (Exception ex) {
-        	logger.error("[EthernetPingRadar] Could Not realize the host discovery...",ex);
+        	logger.log(Level.SEVERE,"[EthernetPingRadar] Could Not realize the host discovery...",ex);
         }
     }
     
@@ -124,7 +125,7 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
      */
     public void deviceDiscovered(String host) {
 
-    	logger.debug("[EthernetPingRadar] A device was found [" + host + "].");
+    	logger.fine("[EthernetPingRadar] A device was found [" + host + "].");
         //Notify listeners.
     	logger.info("[EthernetPingRadar] [" + host + "] is in the smart-space.");
     	// Creates a EthernetDevice Object
@@ -171,7 +172,7 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
         //If stopRadar method was called, a new device discovery will not be started
         if (started) {
             //Start a new host discovery process
-        	logger.debug("[EthernetPingRadar] Starting a new discovery.");
+        	logger.fine("[EthernetPingRadar] Starting a new discovery.");
         	ethUtil.discoverDevices(EthUtil.DISCOVER_DEVICES_USING_PING);
         }
     }

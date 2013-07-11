@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.unbiquitous.uos.core.Logger;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.applicationManager.UOSMessageContext;
 import org.unbiquitous.uos.core.driverManager.UosDriver;
@@ -32,7 +33,7 @@ public class StreamDriver implements UosDriver {
 	private static final String MESSAGE_KEY = "message";
 	private static final String CHANNELS_KEY = "channels";
 	
-	private static final Logger logger = Logger.getLogger(StreamDriver.class);
+	private static final Logger logger = UOSLogging.getLogger();
 	
 	/**
 	 * Receives the request and starts the threaded chat manager.
@@ -44,13 +45,13 @@ public class StreamDriver implements UosDriver {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void chatService(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
 		
-		logger.debug("Handling StreamDriver.chatService Call");
+		logger.fine("Handling StreamDriver.chatService Call");
 		
 		Map parameters = serviceCall.getParameters();
 		
 		int channels = (Integer)parameters.get(CHANNELS_KEY);
 		
-		logger.debug("Caller DeviceName : "+messageContext.getCallerDevice().getNetworkDeviceName());
+		logger.fine("Caller DeviceName : "+messageContext.getCallerDevice().getNetworkDeviceName());
 		
 		Map responseMap = new HashMap();
 		
@@ -98,11 +99,11 @@ public class StreamDriver implements UosDriver {
 		            	for(int i = 0; i < available; i++){
 		            		builder.append((char)reader.read());
 		            	}
-		            	logger.debug("CHANNEL_DRIVER["+channel+"]: RECEBIDO MSG: ["+builder.toString()+"]");
+		            	logger.fine("CHANNEL_DRIVER["+channel+"]: RECEBIDO MSG: ["+builder.toString()+"]");
 		            	
 		            	String msgRetorno = "CHANNEL_DRIVER["+channel+"]: STREAM SERVICE RECEBEU: {"+builder.toString()+"}";
 		            	
-		            	logger.debug("CHANNEL_DRIVER["+channel+"]: ENVIANDO MSG: ["+msgRetorno+"]");
+		            	logger.fine("CHANNEL_DRIVER["+channel+"]: ENVIANDO MSG: ["+msgRetorno+"]");
 		            	
 		            	writer.write(msgRetorno);
 		            	writer.flush();

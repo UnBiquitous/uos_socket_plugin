@@ -2,17 +2,16 @@ package org.unbiquitous.uos.core.adaptabitilyEngine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
-import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.adaptabitilyEngine.ServiceCallException;
+import junit.framework.TestCase;
+
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.driverManager.DriverManagerException;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
-
-import junit.framework.TestCase;
 
 public class TestAdaptabilityEngineNullProvider extends TestCase {
 	
@@ -28,9 +27,9 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 	
 	private static final String TEST_DATA_DUMMY_DRIVER_INVALID_NAME = "DummyDriver";
 
-	private static final Logger logger = Logger.getLogger(TestAdaptabilityEngineNullProvider.class);
+	private static final Logger logger = UOSLogging.getLogger();
 	
-	private static UOSApplicationContext context;
+	private static UOS context;
 	
 	private static int testNumber = 0;
 	
@@ -42,8 +41,8 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 	
 	protected void setUp() throws Exception {
 		Thread.sleep(timeToWaitBetweenTests/2);
-		logger.debug("\n\n######################### TEST "+testNumber+++" #########################\n\n");
-		context = new UOSApplicationContext();
+		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
+		context = new UOS();
 		context.init();
 		Thread.sleep(timeToWaitBetweenTests/2);
 		gateway = context.getGateway();

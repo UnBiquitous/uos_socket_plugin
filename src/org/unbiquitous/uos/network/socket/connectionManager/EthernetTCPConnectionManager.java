@@ -7,8 +7,10 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.unbiquitous.uos.core.Logger;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManagerListener;
@@ -44,7 +46,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 	String UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE;
 	
     /** Object for logging registration.*/
-    private static final Logger logger = Logger.getLogger(EthernetTCPConnectionManager.class);
+    private static final Logger logger = UOSLogging.getLogger();
 
     /** A Connection Manager Listener (ConnectionManagerControlCenter) */
     private ConnectionManagerListener connectionManagerListener = null;
@@ -94,7 +96,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 		
 		if(resource == null){
         	String msg = "ResourceBundle is null";
-        	logger.fatal(msg);
+        	logger.severe(msg);
             throw new RuntimeException(msg);
         }else{
         	try{
@@ -107,7 +109,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
         		UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE = resource.getString(UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE_KEY);
         	}catch (Exception e) {
         		String msg = "Incorrect ethernet tcp port";
-            	logger.fatal(msg);
+            	logger.severe(msg);
                 throw new RuntimeException(msg);
 			}
         }
@@ -119,16 +121,16 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 	public void tearDown(){
 		try {
 			closingEthernetConnectionManager = true;
-			logger.debug("Closing Ethernet TCP Connection Manager...");
+			logger.fine("Closing Ethernet TCP Connection Manager...");
 			server.closeConnection();
 			if(channelManager != null){
 				channelManager.tearDown();
 			}
-			logger.debug("Ethernet TCP Connection Manager is closed.");
+			logger.fine("Ethernet TCP Connection Manager is closed.");
 		} catch (Exception ex) {
 			closingEthernetConnectionManager = false;
 			String msg = "Error closing Ethernet TCP Connection Manager. ";
-            logger.fatal(msg, ex);
+            logger.log(Level.SEVERE,msg, ex);
             throw new RuntimeException(msg + ex);
 		}
 	}
@@ -166,10 +168,10 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 					}
 				}
 			} catch (SocketException e) {
-				logger.error(e);
+				logger.log(Level.SEVERE,"",e);
 			}
 		}
-		logger.debug("returning:"+serverDevice);
+		logger.fine("returning:"+serverDevice);
 		return serverDevice;
 	}
 	
@@ -188,7 +190,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 	 * Method extends from Runnable. Starts the connection Manager
 	 */
     public void run() {
-    	logger.debug("Starting UbiquitOS Smart-Space Ethernet TCP Connection Manager.");
+    	logger.fine("Starting UbiquitOS Smart-Space Ethernet TCP Connection Manager.");
         logger.info("Starting Ethernet TCP Connection Manager...");
         
         int tries = 0;
@@ -201,20 +203,20 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 				tries = max_retries;
 			} catch (IOException e) {
 				String msg = "Error starting Ethernet TCP Connection Manager : "+e.getMessage();
-	            logger.fatal(msg);
+	            logger.severe(msg);
 	            ex = e;
 	            tries ++;
 	            try {
 					Thread.sleep(waiting_time);
 				} catch (InterruptedException e1) {
-					logger.error(e1);
+					logger.log(Level.SEVERE,"",e1);
 				}
 			}
         }
 		
         if (server == null){
         	String msg = "Error starting Ethernet TCP Connection Manager. ";
-            logger.fatal(msg, ex);
+            logger.log(Level.SEVERE,msg, ex);
             throw new RuntimeException(msg,ex);
         }
         
@@ -226,7 +228,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
     		} catch (IOException e) {
     			if(!closingEthernetConnectionManager){
     				String msg = "Error starting Ethernet TCP Connection Manager. ";
-                    logger.fatal(msg, e);
+                    logger.log(Level.SEVERE,msg, e);
                     throw new RuntimeException(msg + e);
     			}else{
     				return;

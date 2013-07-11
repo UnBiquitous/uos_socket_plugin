@@ -9,17 +9,17 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
-import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.adaptabitilyEngine.ServiceCallException;
-import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall.ServiceType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
+
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
+import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall.ServiceType;
+import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
 
 public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 	
@@ -33,9 +33,9 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 
 	private static final String TEST_DATA_STREAM_DRIVER_NAME = "StreamDriver";
 	
-	private static final Logger logger = Logger.getLogger(TestAdaptabilityEngineStreamChannel.class);
+	private static final Logger logger = UOSLogging.getLogger();
 	
-	private static UOSApplicationContext context;
+	private static UOS context;
 	
 	private static int testNumber = 0;
 	
@@ -51,8 +51,8 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 	
 	protected void setUp() throws Exception {
 		Thread.sleep(timeToWaitBetweenTests/2);
-		logger.debug("\n\n######################### TEST "+testNumber+++" #########################\n\n");
-		context = new UOSApplicationContext();
+		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
+		context = new UOS();
 		context.init("ubiquitos_adaptability");
 		Thread.sleep(timeToWaitBetweenTests/2);
 		gateway = context.getGateway();
@@ -90,7 +90,7 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 		
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
 		
-		logger.debug("Returned Msg: ["+response.getResponseData().get(TEST_DATA_CHAT_SERVICE_MESSAGE_KEY)+"]");
+		logger.fine("Returned Msg: ["+response.getResponseData().get(TEST_DATA_CHAT_SERVICE_MESSAGE_KEY)+"]");
 		
 		activeChannels = channels;
 		
@@ -99,12 +99,12 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 	        chatChannel.start();
 		}
         
-		logger.debug("waiting");
+		logger.fine("waiting");
         while(activeChannels > 0){
-        	logger.debug("probe : "+activeChannels);
+        	logger.fine("probe : "+activeChannels);
         	Thread.sleep(1000);
         }
-        logger.debug("fim");
+        logger.fine("fim");
 	}
 	
 	private synchronized void finalizeChannel(){
@@ -131,7 +131,7 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 		        for(int j = 0; j < 10; j++){
 		        	String msg  = "CHANNEL["+channelNumber+"]: MSG DE TESTE DO CHAT " + j;
 		            
-		            logger.debug("CHANNEL["+channelNumber+"]: ENVIANDO MSG: ["+msg+"]");
+		            logger.fine("CHANNEL["+channelNumber+"]: ENVIANDO MSG: ["+msg+"]");
 		            
 		            writer.write(msg);
 		            writer.flush();
@@ -146,7 +146,7 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 		                	for(int i = 0; i < available; i++){
 		                       	builder.append((char)reader.read());
 		                    }
-		                	logger.debug("CHANNEL["+channelNumber+"]: RECEBIDO MSG: ["+builder.toString()+"]");
+		                	logger.fine("CHANNEL["+channelNumber+"]: RECEBIDO MSG: ["+builder.toString()+"]");
 		                	break;
 		                }
 		            	Thread.sleep(300);
@@ -154,11 +154,11 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 		        }
 		        
 			}catch (Exception e) {
-				logger.error("Problems executing test",e);
+				logger.log(Level.SEVERE,"Problems executing test",e);
 			}finally{
 				finalizeChannel();
 			}
-			logger.debug("finalize :"+activeChannels);
+			logger.fine("finalize :"+activeChannels);
 		}
 	}
 }

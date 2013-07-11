@@ -1,29 +1,27 @@
 package org.unbiquitous.uos.core.driverManager;
 
 import java.util.List;
-
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
-import org.unbiquitous.uos.core.deviceManager.DeviceDao;
-import org.unbiquitous.uos.core.deviceManager.DeviceManager;
-import org.unbiquitous.uos.core.driverManager.DriverDao;
-import org.unbiquitous.uos.core.driverManager.DriverData;
-import org.unbiquitous.uos.core.driverManager.DriverManager;
-import org.unbiquitous.uos.core.driverManager.DriverModel;
-import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
+
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.adaptabitilyEngine.SmartSpaceGateway;
+import org.unbiquitous.uos.core.deviceManager.DeviceDao;
+import org.unbiquitous.uos.core.deviceManager.DeviceManager;
+import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 
 public class TestDeviceManagerRadar extends TestCase {
 
 
-	private static Logger logger = Logger.getLogger(TestDeviceManagerRadar.class);
+	private static Logger logger = UOSLogging.getLogger();
 	
 	private static final String TEST_VALID_DEVICE_NAME = "LocalDummyDevicePassive";
 
-	protected UOSApplicationContext applicationContextRadar;
+	protected UOS applicationContextRadar;
 	
-	protected UOSApplicationContext applicationContextPassive;
+	protected UOS applicationContextPassive;
 	
 	protected DeviceManager deviceManager;
 	
@@ -57,21 +55,23 @@ public class TestDeviceManagerRadar extends TestCase {
 		logger.info("============== Teste : "+currentTest+++" ========================== Begin");
 		logger.info("\n");
 		
-		applicationContextPassive = new UOSApplicationContext();
+		applicationContextPassive = new UOS();
 		applicationContextPassive.init("br/unb/unbiquitous/ubiquitos/uos/deviceManager/propPassive");
 		
-		applicationContextRadar = new UOSApplicationContext();
+		applicationContextRadar = new UOS();
 		applicationContextRadar.init("br/unb/unbiquitous/ubiquitos/uos/deviceManager/propRadar");
 		
-		deviceManager = applicationContextRadar.getDeviceManager();
-		deviceDao = applicationContextRadar.getDeviceDao();
-		remoteDriverDao = applicationContextRadar.getDriverDao();
-		driverManager = applicationContextRadar.getDriverManager();
+		deviceManager = applicationContextRadar.getFactory().gateway().getDeviceManager();
+		SmartSpaceGateway gateway = (SmartSpaceGateway) applicationContextRadar.getGateway();
+		deviceDao = gateway.getDeviceManager().getDeviceDao();
+		remoteDriverDao = gateway.getDriverManager().getDriverDao();
+		driverManager = applicationContextRadar.getFactory().gateway().getDriverManager();
 		
 		reinsertCurrentDevice(remoteDriverDao, deviceDao, applicationContextRadar,"LocalDummyDevice", "localhost");
+		SmartSpaceGateway passiveGateway = (SmartSpaceGateway) applicationContextPassive.getGateway();
 		reinsertCurrentDevice(
-				applicationContextPassive.getDriverDao(), 
-				applicationContextPassive.getDeviceDao(), 
+				passiveGateway.getDriverManager().getDriverDao(), 
+				passiveGateway.getDeviceManager().getDeviceDao(),
 				applicationContextPassive,"LocalDummyDevicePassive", "0.0.0.0");
 		
 		deviceDao.save(applicationContextRadar.getGateway().getCurrentDevice());
@@ -82,7 +82,7 @@ public class TestDeviceManagerRadar extends TestCase {
 	private void reinsertCurrentDevice(
 			DriverDao remoteDriverDao, 
 			DeviceDao deviceDao, 
-			UOSApplicationContext applicationContext, 
+			UOS applicationContext, 
 			String deviceName, 
 			String deviceAddr) {
 		List<DriverModel> returnedDrivers =  remoteDriverDao.list(null, deviceName);

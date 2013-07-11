@@ -1,7 +1,7 @@
 package org.unbiquitous.uos.core.test.apps;
 
 import org.unbiquitous.uos.core.ContextException;
-import org.unbiquitous.uos.core.UOSApplicationContext;
+import org.unbiquitous.uos.core.UOS;
 
 public class UosAppLauncher {
 
@@ -10,7 +10,7 @@ public class UosAppLauncher {
 	 * @throws ContextException 
 	 */
 	public static void main(String[] args) throws ContextException {
-		UOSApplicationContext applicationContext = new UOSApplicationContext();
+		UOS applicationContext = new UOS();
 		try {
 			applicationContext.init("app");
 		} catch (ContextException e) {

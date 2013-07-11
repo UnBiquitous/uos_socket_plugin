@@ -1,8 +1,11 @@
 package org.unbiquitous.uos.core.driver.deviceDriver;
 
-import org.unbiquitous.uos.core.Logger;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
+
+import org.unbiquitous.uos.core.UOSLogging;
+
 import br.unb.unbiquitous.ubiquitos.authentication.AuthenticationDao;
 import br.unb.unbiquitous.ubiquitos.authentication.HashGenerator;
 import br.unb.unbiquitous.ubiquitos.authentication.SessionKeyDaoHSQLDB;
@@ -14,7 +17,7 @@ import br.unb.unbiquitous.ubiquitos.uos.security.basic.BasicSecurityHandler;
 public class TestEncodeDecode extends TestCase {
 
 	protected static long currentTest = 0;
-	private static Logger logger = Logger.getLogger(TestEncodeDecode.class);
+	private static Logger logger = UOSLogging.getLogger();
 	
 	public void testEncodeDecodeWithAuthenticatedDevice() throws Exception {
 
@@ -35,15 +38,15 @@ public class TestEncodeDecode extends TestCase {
 			BasicSecurityHandler basicSecurityHandler = new BasicSecurityHandler();
 			String message = "new message to be encoded";
 			String encodedMessage = basicSecurityHandler.encode(message, "newDevice");
-			logger.debug("encoded: "+encodedMessage);
+			logger.fine("encoded: "+encodedMessage);
 			String decodedMessage = basicSecurityHandler.decode(encodedMessage, "newDevice");
 			assertEquals(message, decodedMessage);
 			
 		} catch (IdNotInformedException e) {
-			logger.fatal(e.toString());
+			logger.severe(e.toString());
 			fail();
 		} catch (SessionKeyNotInformedException e) {
-			logger.fatal(e.toString());
+			logger.severe(e.toString());
 			fail();
 		}
 	}
@@ -80,10 +83,10 @@ public class TestEncodeDecode extends TestCase {
 			assertNull(message, encodedMessage);
 			
 		} catch (IdNotInformedException e) {
-			logger.fatal(e.toString());
+			logger.severe(e.toString());
 			fail();
 		} catch (SessionKeyNotInformedException e) {
-			logger.fatal(e.toString());
+			logger.severe(e.toString());
 			fail();
 		}
 	}
@@ -118,7 +121,7 @@ public class TestEncodeDecode extends TestCase {
 			assertNull(message, encodedMessage);
 			
 		} catch (IdNotInformedException e) {
-			logger.fatal(e.toString());
+			logger.severe(e.toString());
 			fail();
 		}
 	}
@@ -156,10 +159,10 @@ public class TestEncodeDecode extends TestCase {
 			assertNull(decodedMessage);
 			
 		} catch (IdNotInformedException e) {
-			logger.fatal(e.toString());
+			logger.severe(e.toString());
 			fail();
 		} catch (SessionKeyNotInformedException e) {
-			logger.fatal(e.toString());
+			logger.severe(e.toString());
 			fail();
 		}
 	}
@@ -189,10 +192,10 @@ public class TestEncodeDecode extends TestCase {
 			basicSecurityHandler.encode(encodedMessage, "newDevice");
 			
 		} catch (IdNotInformedException e) {
-			logger.fatal(e.toString());
+			logger.severe(e.toString());
 			fail();
 		} catch (SessionKeyNotInformedException e) {
-			logger.fatal(e.toString());
+			logger.severe(e.toString());
 			fail();
 		}
 	}

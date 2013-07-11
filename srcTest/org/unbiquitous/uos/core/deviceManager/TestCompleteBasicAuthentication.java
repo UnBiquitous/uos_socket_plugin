@@ -2,25 +2,25 @@ package org.unbiquitous.uos.core.deviceManager;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
-import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.deviceManager.DeviceDao;
-import org.unbiquitous.uos.core.deviceManager.DeviceManager;
+import junit.framework.TestCase;
+
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.adaptabitilyEngine.SmartSpaceGateway;
 import org.unbiquitous.uos.core.driverManager.DriverDao;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
 
-import junit.framework.TestCase;
 import br.unb.unbiquitous.ubiquitos.authentication.SessionKeyDaoHSQLDB;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 public class TestCompleteBasicAuthentication extends TestCase {
 
-	private static Logger logger = Logger.getLogger(TestCompleteBasicAuthentication.class);
-	protected UOSApplicationContext context;
+	private static Logger logger = UOSLogging.getLogger();
+	protected UOS context;
 	protected DeviceManager deviceManager;
 	protected DeviceDao deviceDao;
 	protected DriverDao remoteDriverDao;
@@ -28,7 +28,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 	
 	//
 	protected UpDevice providerDevice;
-	private Gateway gateway;
+	private SmartSpaceGateway gateway;
 	
 	/** 
 	 * Method executed before each test. It creates a new context of ubiquitOS and initializes the device
@@ -39,13 +39,14 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		logger.info("============== Teste : "+currentTest+++" ==========================");
 		logger.info("\n");
 		
-		context = new UOSApplicationContext();
+		context = new UOS();
 		context.init();
-		gateway = context.getGateway();
 		
-		deviceManager = context.getDeviceManager();
-		deviceDao = context.getDeviceDao();
-		remoteDriverDao = context.getDriverDao();
+		deviceManager = context.getFactory().gateway().getDeviceManager();
+		
+		gateway = (SmartSpaceGateway) context.getGateway();
+		deviceDao = gateway.getDeviceManager().getDeviceDao();
+		remoteDriverDao = gateway.getDriverManager().getDriverDao();
 		
 		Thread.sleep(100);
 	}
@@ -113,7 +114,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 
-		logger.debug("Starts authentication proccess calling the service \"echoService\"");
+		logger.fine("Starts authentication proccess calling the service \"echoService\"");
 		
 		// Call service
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
@@ -128,11 +129,11 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		assertEquals(expectedResponse, response);
 		
 		if (response.getResponseData().containsValue("true")){
-			logger.debug("Authentication performed successfully. Service returned value \"true\"");
+			logger.fine("Authentication performed successfully. Service returned value \"true\"");
 		} else if (response.getResponseData().containsValue("false")){
-			logger.debug("Authentication failure. Service returned value \"false\"");
+			logger.fine("Authentication failure. Service returned value \"false\"");
 		} else{
-			logger.debug("resposta retornada: "+response.getResponseData().values());
+			logger.fine("resposta retornada: "+response.getResponseData().values());
 		}
 	}
 	
@@ -192,7 +193,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 
-		logger.debug("Starts authentication proccess calling the service \"echoService\"");
+		logger.fine("Starts authentication proccess calling the service \"echoService\"");
 		
 		// Call service
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
@@ -256,7 +257,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 
-		logger.debug("Starts authentication proccess calling the service \"echoService\"");
+		logger.fine("Starts authentication proccess calling the service \"echoService\"");
 		
 		// Call service
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
@@ -311,7 +312,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 
-		logger.debug("Starts authentication proccess calling the service \"echoService\"");
+		logger.fine("Starts authentication proccess calling the service \"echoService\"");
 		
 		// Call service
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
@@ -367,7 +368,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 
-		logger.debug("Starts authentication proccess calling the service \"echoService\"");
+		logger.fine("Starts authentication proccess calling the service \"echoService\"");
 		
 		// Call service
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);

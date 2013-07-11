@@ -9,19 +9,20 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
-import org.unbiquitous.json.JSONException;
-import org.unbiquitous.json.JSONObject;
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
+import org.unbiquitous.json.JSONException;
+import org.unbiquitous.json.JSONObject;
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
+
 public class TestDeviceDriverAuthenticate extends TestCase {
 	
-	private static final Logger logger = Logger.getLogger(TestDeviceDriverAuthenticate.class);
+	private static final Logger logger = UOSLogging.getLogger();
 	
-	private static UOSApplicationContext context;
+	private static UOS context;
 	
 	private static int testNumber = 0;
 	
@@ -29,8 +30,8 @@ public class TestDeviceDriverAuthenticate extends TestCase {
 	
 	protected void setUp() throws Exception {
 		Thread.sleep(timeToWaitBetweenTests/2);
-		logger.debug("\n\n######################### TEST "+testNumber+++" #########################\n\n");
-		context = new UOSApplicationContext();
+		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
+		context = new UOS();
 		context.init("br/unb/unbiquitous/ubiquitos/uos/deviceManager/ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 	};
@@ -45,13 +46,13 @@ public class TestDeviceDriverAuthenticate extends TestCase {
 		
 		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC'}}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(notifyMessage);
+		logger.fine("Sending Message:");
+		logger.fine(notifyMessage);
 		
 		String response = sendReceive(notifyMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug("["+response+"]");
+		logger.fine("Returned Message:");
+		logger.fine("["+response+"]");
 		
 		new JSONObject(response);
 		

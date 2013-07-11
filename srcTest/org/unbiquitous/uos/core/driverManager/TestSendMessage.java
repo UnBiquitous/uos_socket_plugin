@@ -7,21 +7,22 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.UnknownHostException;
-
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
-import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
+
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
 
 
 public abstract class TestSendMessage extends TestCase {
 	
 	private static final int timeToWaitBetweenRetries = 300;
 
-	private static final Logger logger = Logger.getLogger(TestSendMessage.class);
+	private static final Logger logger = UOSLogging.getLogger();
 	
-	private static UOSApplicationContext context;
+	private static UOS context;
 	
 	private static int testNumber = 0;
 	
@@ -33,8 +34,8 @@ public abstract class TestSendMessage extends TestCase {
 	
 	protected synchronized void setUp() throws Exception {
 		Thread.sleep(timeToWaitBetweenTests/2);
-		logger.debug("\n\n######################### TEST "+testNumber+++" #########################\n\n");
-		context = new UOSApplicationContext();
+		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
+		context = new UOS();
 		context.init("org/unbiquitous/uos/core/driverManager/ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 		connect();
@@ -52,13 +53,13 @@ public abstract class TestSendMessage extends TestCase {
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',serviceType:'DISCRETE',driver:'DummyDriver',service:'echoService',parameters:{message:'testMessage'},instanceId:'dummyDriverId'}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(serviceCallMessage);
+		logger.fine("Sending Message:");
+		logger.fine(serviceCallMessage);
 		
 		String response = sendReceive(serviceCallMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug(response);
+		logger.fine("Returned Message:");
+		logger.fine(response);
 		
 		assertEquals("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
 	}
@@ -68,13 +69,13 @@ public abstract class TestSendMessage extends TestCase {
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',serviceType:'DISCRETE',driver:'DummyDriver',service:'echoService',parameters:{message:'testMessage'},instanceId:'dummyDriverIdInvalid'}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(serviceCallMessage);
+		logger.fine("Sending Message:");
+		logger.fine(serviceCallMessage);
 		
 		String response = sendReceive(serviceCallMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug(response);
+		logger.fine("Returned Message:");
+		logger.fine(response);
 		
 		assertEquals("{\"responseData\":{},\"error\":\"No Instance found with id 'dummyDriverIdInvalid'\",\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
 		
@@ -85,13 +86,13 @@ public abstract class TestSendMessage extends TestCase {
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',serviceType:'DISCRETE',driver:'DummyDriver',service:'echoService',parameters:{message:'testMessage'}}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(serviceCallMessage);
+		logger.fine("Sending Message:");
+		logger.fine(serviceCallMessage);
 		
 		String response = sendReceive(serviceCallMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug(response);
+		logger.fine("Returned Message:");
+		logger.fine(response);
 		
 		assertEquals("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
 		
@@ -102,13 +103,13 @@ public abstract class TestSendMessage extends TestCase {
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',serviceType:'DISCRETE',driver:'DummyDriverInvalid',service:'echoService',parameters:{message:'testMessage'}}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(serviceCallMessage);
+		logger.fine("Sending Message:");
+		logger.fine(serviceCallMessage);
 		
 		String response = sendReceive(serviceCallMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug(response);
+		logger.fine("Returned Message:");
+		logger.fine(response);
 		
 		assertEquals("{\"responseData\":{},\"error\":\"No instance found for handling driver 'DummyDriverInvalid'\",\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
 	}
@@ -118,23 +119,23 @@ public abstract class TestSendMessage extends TestCase {
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',driver:'DummyDriver',service:'echoService',parameters:{message:'testMessage'},instanceId:'dummyDriverId'}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(serviceCallMessage);
+		logger.fine("Sending Message:");
+		logger.fine(serviceCallMessage);
 		
 		String response = sendReceive(serviceCallMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug(response);
+		logger.fine("Returned Message:");
+		logger.fine(response);
 		
 		assertEquals("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
 		
-		logger.debug("Sending Message:");
-		logger.debug(serviceCallMessage);
+		logger.fine("Sending Message:");
+		logger.fine(serviceCallMessage);
 		
 		response = sendReceive(serviceCallMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug(response);
+		logger.fine("Returned Message:");
+		logger.fine(response);
 		
 		assertEquals("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
 	}
@@ -145,13 +146,13 @@ public abstract class TestSendMessage extends TestCase {
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',driver:'DummyDriver',service:'echoService',parameters:{message:'testMessage'},instanceId:'dummyDriverId'}";
 		
 		for(int i = 0; i < 10; i++){
-			logger.debug("Sending Message:");
-			logger.debug(serviceCallMessage);
+			logger.fine("Sending Message:");
+			logger.fine(serviceCallMessage);
 			
 			String response = sendReceive(serviceCallMessage);
 			
-			logger.debug("Returned Message:");
-			logger.debug(response);
+			logger.fine("Returned Message:");
+			logger.fine(response);
 			
 			assertEquals("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
 		}
@@ -161,7 +162,7 @@ public abstract class TestSendMessage extends TestCase {
 
 		OutputStream outputStream = con.getDataOutputStream();
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-		logger.debug("Sending message.");
+		logger.fine("Sending message.");
 		writer.write(message);
 		writer.write('\n');
 		writer.flush();
@@ -170,7 +171,7 @@ public abstract class TestSendMessage extends TestCase {
 		
 		InputStream inputStream = con.getDataInputStream();
 		
-		logger.debug("Receiving message.");
+		logger.fine("Receiving message.");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		
 		StringBuilder builder = new StringBuilder();

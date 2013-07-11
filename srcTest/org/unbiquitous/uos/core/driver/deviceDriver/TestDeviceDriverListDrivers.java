@@ -11,22 +11,23 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
+
+import junit.framework.TestCase;
 
 import org.unbiquitous.json.JSONException;
 import org.unbiquitous.json.JSONObject;
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.driver.DeviceDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.json.JSONDriver;
 import org.unbiquitous.uos.core.test.model.DummyDriver;
 
-import junit.framework.TestCase;
-
 public class TestDeviceDriverListDrivers extends TestCase {
-private static final Logger logger = Logger.getLogger(TestDeviceDriverListDrivers.class);
+private static final Logger logger = UOSLogging.getLogger();
 	
-	private static UOSApplicationContext context;
+	private static UOS context;
 	
 	private static int testNumber = 0;
 	
@@ -34,8 +35,8 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 	
 	protected void setUp() throws Exception {
 		Thread.sleep(timeToWaitBetweenTests/2);
-		logger.debug("\n\n######################### TEST "+testNumber+++" #########################\n\n");
-		context = new UOSApplicationContext();
+		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
+		context = new UOS();
 		context.init("org/unbiquitous/uos/core/deviceManager/ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 	};
@@ -50,13 +51,13 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 		
 		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'listDrivers'}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(notifyMessage);
+		logger.fine("Sending Message:");
+		logger.fine(notifyMessage);
 		
 		String response = sendReceive(notifyMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug("["+response+"]");
+		logger.fine("Returned Message:");
+		logger.fine("["+response+"]");
 		
 		JSONObject jsonResponse = new JSONObject(response);
 		
@@ -65,27 +66,27 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 		assertNotNull(jsonResponse.optJSONObject("responseData"));
 		assertNotNull(jsonResponse.optJSONObject("responseData").opt("driverList"));
 		
-		Map<String,String> testListDrivers = new HashMap<String,String>();
+		Map<String,Object> testListDrivers = new HashMap<String,Object>();
 		
 		UpDriver upDeviceDriver = (new DeviceDriver()).getDriver();
 		JSONDriver jsonDeviceDriver = new JSONDriver(upDeviceDriver);
 		
-		testListDrivers.put("uos.DeviceDriver1", jsonDeviceDriver.toString());
-		testListDrivers.put("defaultDeviceDriver", jsonDeviceDriver.toString());
-		testListDrivers.put("uos.DeviceDriver3", jsonDeviceDriver.toString());
-		testListDrivers.put("testListId", jsonDeviceDriver.toString());
+		testListDrivers.put("uos.DeviceDriver1", jsonDeviceDriver);
+		testListDrivers.put("defaultDeviceDriver", jsonDeviceDriver);
+		testListDrivers.put("uos.DeviceDriver3", jsonDeviceDriver);
+		testListDrivers.put("testListId", jsonDeviceDriver);
 		
 		UpDriver upDummyDriver = (new DummyDriver()).getDriver();
 		JSONDriver jsonDummyDriver = new JSONDriver(upDummyDriver);
 		
-		testListDrivers.put("dummyDriverId", jsonDummyDriver.toString());
-		testListDrivers.put("DummyDriver6", jsonDummyDriver.toString());
+		testListDrivers.put("dummyDriverId", jsonDummyDriver);
+		testListDrivers.put("DummyDriver6", jsonDummyDriver);
 		
 		JSONObject expectedDriverList = new JSONObject();
 		
-		expectedDriverList.put("driverList", new JSONObject(testListDrivers).toString());
+		expectedDriverList.put("driverList", new JSONObject(testListDrivers));
 		
-		assertEquals(expectedDriverList.toString(), jsonResponse.optJSONObject("responseData").toString());
+		assertEquals(expectedDriverList.toMap(), jsonResponse.optJSONObject("responseData").toMap());
 	}
 	
 	public void testSendListDriversByDriverNameValid1() 
@@ -93,13 +94,13 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 		
 		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',parameters:{driverName:'uos.DeviceDriver'},service:'listDrivers'}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(notifyMessage);
+		logger.fine("Sending Message:");
+		logger.fine(notifyMessage);
 		
 		String response = sendReceive(notifyMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug("["+response+"]");
+		logger.fine("Returned Message:");
+		logger.fine("["+response+"]");
 		
 		JSONObject jsonResponse = new JSONObject(response);
 		
@@ -131,13 +132,13 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 		
 		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',parameters:{driverName:'DummyDriver'},service:'listDrivers'}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(notifyMessage);
+		logger.fine("Sending Message:");
+		logger.fine(notifyMessage);
 		
 		String response = sendReceive(notifyMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug("["+response+"]");
+		logger.fine("Returned Message:");
+		logger.fine("["+response+"]");
 		
 		JSONObject jsonResponse = new JSONObject(response);
 		
@@ -166,13 +167,13 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 		
 		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',parameters:{driverName:''},service:'listDrivers'}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(notifyMessage);
+		logger.fine("Sending Message:");
+		logger.fine(notifyMessage);
 		
 		String response = sendReceive(notifyMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug("["+response+"]");
+		logger.fine("Returned Message:");
+		logger.fine("["+response+"]");
 		
 		JSONObject jsonResponse = new JSONObject(response);
 		
@@ -195,13 +196,13 @@ private static final Logger logger = Logger.getLogger(TestDeviceDriverListDriver
 		
 		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',parameters:{driverName:'no.exists.driver.name'},service:'listDrivers'}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(notifyMessage);
+		logger.fine("Sending Message:");
+		logger.fine(notifyMessage);
 		
 		String response = sendReceive(notifyMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug("["+response+"]");
+		logger.fine("Returned Message:");
+		logger.fine("["+response+"]");
 		
 		JSONObject jsonResponse = new JSONObject(response);
 		
