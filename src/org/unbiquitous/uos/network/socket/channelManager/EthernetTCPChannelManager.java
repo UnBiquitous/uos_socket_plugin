@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.unbiquitous.uos.core.Logger;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
@@ -20,7 +21,7 @@ import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionMa
 
 public class EthernetTCPChannelManager implements ChannelManager{ 
 	
-	private static final Logger logger = Logger.getLogger(EthernetTCPChannelManager.class);
+	private static final Logger logger = UOSLogging.getLogger();
 	
 	/*********************************
 	 * ATTRIBUTES

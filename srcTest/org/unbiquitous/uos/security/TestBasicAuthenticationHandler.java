@@ -3,7 +3,7 @@ package org.unbiquitous.uos.security;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.unbiquitous.uos.core.UOSApplicationContext;
+import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
 
@@ -18,7 +18,7 @@ public class TestBasicAuthenticationHandler extends TestCase {
 
 	public void testeSucessoAutenticacao() throws Exception {
 
-		UOSApplicationContext context = new UOSApplicationContext();
+		UOS context = new UOS();
 		context.init();
 		Gateway gateway = context.getGateway();
 	

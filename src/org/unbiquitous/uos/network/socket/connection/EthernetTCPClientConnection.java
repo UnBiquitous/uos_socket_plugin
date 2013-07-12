@@ -4,8 +4,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.unbiquitous.uos.core.Logger;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.cache.CachableConnection;
 import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.cache.CachedConnectionData;
@@ -23,7 +25,7 @@ import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionMa
  */
 public class EthernetTCPClientConnection extends ClientConnection implements CachableConnection {
 	
-	private static final Logger logger = Logger.getLogger(EthernetTCPClientConnection.class);
+	private static final Logger logger = UOSLogging.getLogger();
 
 	/************************************
 	 * ATTRIBUTES
@@ -118,13 +120,13 @@ public class EthernetTCPClientConnection extends ClientConnection implements Cac
 			if (dataInputStream != null) 
 				dataInputStream.close();
 		} catch (Exception e) {
-			logger.error(e);
+			logger.log(Level.SEVERE,"",e);
 		}
 		try{
 			if (dataOutputStream != null)
 				dataOutputStream.close();
 		} catch (Exception e) {
-			logger.error(e);
+			logger.log(Level.SEVERE,"",e);
 		}
 		try{
 			if (tcpSocket != null){
@@ -135,7 +137,7 @@ public class EthernetTCPClientConnection extends ClientConnection implements Cac
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e);
+			logger.log(Level.SEVERE,"",e);
 		}
 	}
 

@@ -1,20 +1,20 @@
 package org.unbiquitous.uos.core.deviceManager;
 
 import java.util.Date;
-
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
-import org.unbiquitous.uos.core.deviceManager.DeviceDao;
-import org.unbiquitous.uos.core.deviceManager.DeviceManager;
-import org.unbiquitous.uos.core.driverManager.DriverDao;
-import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.adaptabitilyEngine.SmartSpaceGateway;
+import org.unbiquitous.uos.core.driverManager.DriverDao;
+import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+
 public class TestCompleteBasicAuthenticationBluetooth extends TestCase {
 
-	private static Logger logger = Logger.getLogger(TestCompleteBasicAuthenticationBluetooth.class);
-	protected UOSApplicationContext context;
+	private static Logger logger = UOSLogging.getLogger();
+	protected UOS context;
 	protected DeviceManager deviceManager;
 	protected DeviceDao deviceDao;
 	protected DriverDao remoteDriverDao;
@@ -32,12 +32,13 @@ public class TestCompleteBasicAuthenticationBluetooth extends TestCase {
 		logger.info("============== Teste : "+currentTest+++" ==========================");
 		logger.info("\n");
 		
-		context = new UOSApplicationContext();
+		context = new UOS();
 		context.init();
 		
-		deviceManager = context.getDeviceManager();
-		deviceDao = context.getDeviceDao();
-		remoteDriverDao = context.getDriverDao();
+		deviceManager = context.getFactory().gateway().getDeviceManager();
+		SmartSpaceGateway gateway = (SmartSpaceGateway) context.getGateway();
+		deviceDao = gateway.getDeviceManager().getDeviceDao();
+		remoteDriverDao = gateway.getDriverManager().getDriverDao();
 		
 		Thread.sleep(100);
 	}
@@ -93,7 +94,7 @@ public class TestCompleteBasicAuthenticationBluetooth extends TestCase {
 		System.out.println("fim do sleep");
 		Date finalTime = new Date();
 		long totalTime = finalTime.getTime() - initialTime.getTime();
-		logger.debug("Total run time: " + totalTime);
+		logger.fine("Total run time: " + totalTime);
 		
 	}
 }

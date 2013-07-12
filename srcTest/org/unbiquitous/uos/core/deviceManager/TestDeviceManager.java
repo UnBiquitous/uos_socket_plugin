@@ -2,19 +2,19 @@ package org.unbiquitous.uos.core.deviceManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
-import org.unbiquitous.uos.core.deviceManager.DeviceDao;
-import org.unbiquitous.uos.core.deviceManager.DeviceManager;
-import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
-import org.unbiquitous.uos.core.messageEngine.dataType.UpNetworkInterface;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.adaptabitilyEngine.SmartSpaceGateway;
+import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+import org.unbiquitous.uos.core.messageEngine.dataType.UpNetworkInterface;
+
 public class TestDeviceManager extends TestCase {
 
-	private static Logger logger = Logger.getLogger(TestDeviceManager.class);
+	private static Logger logger = UOSLogging.getLogger();
 	
 	private static final String TEST_VALID_NET_ADDR_2 = "ValidDummyNetAddr2";
 
@@ -26,7 +26,7 @@ public class TestDeviceManager extends TestCase {
 
 	private static final String TEST_VALID_DEVICE_NAME = "TestValidDummyName";
 
-	protected UOSApplicationContext applicationContext;
+	protected UOS applicationContext;
 	
 	protected DeviceManager deviceManager;
 	
@@ -55,11 +55,12 @@ public class TestDeviceManager extends TestCase {
 		logger.info("============== Teste : "+currentTest+++" ==========================");
 		logger.info("\n");
 		
-		applicationContext = new UOSApplicationContext();
+		applicationContext = new UOS();
 		applicationContext.init("org/unbiquitous/uos/core/deviceManager/prop");
 		
-		deviceManager = applicationContext.getDeviceManager();
-		deviceDao = applicationContext.getDeviceDao();
+		deviceManager = applicationContext.getFactory().gateway().getDeviceManager();
+		SmartSpaceGateway gateway = (SmartSpaceGateway) applicationContext.getGateway();
+		deviceDao = gateway.getDeviceManager().getDeviceDao();
 		Thread.sleep(TIME_BETWEEN_TESTS);
 	}
 	

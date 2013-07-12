@@ -2,8 +2,10 @@ package org.unbiquitous.uos.core.connectivityTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.unbiquitous.uos.core.Logger;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.radar.Radar;
@@ -14,7 +16,7 @@ import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionMa
 
 public class RadarLocalhost implements Radar {
 	
-	private static Logger logger = Logger.getLogger(RadarLocalhost.class);
+	private static Logger logger = UOSLogging.getLogger();
 
 	private RadarListener listenner;
 	
@@ -78,7 +80,7 @@ public class RadarLocalhost implements Radar {
 			}
 			
 		} catch (Exception e) {
-			logger.error(e);
+			logger.log(Level.SEVERE,"",e);
 			e.printStackTrace();
 		}
 	}
@@ -98,7 +100,7 @@ public class RadarLocalhost implements Radar {
 			try {
 				singletonReference.deviceEnteredPool.wait();
 			} catch (InterruptedException e) {
-				logger.error(e);
+				logger.log(Level.SEVERE,"",e);
 			}
 		}
 	}
@@ -112,7 +114,7 @@ public class RadarLocalhost implements Radar {
 			try {
 				singletonReference.deviceLeftPool.wait();
 			} catch (InterruptedException e) {
-				logger.error(e);
+				logger.log(Level.SEVERE,"",e);
 			}
 		}
 	}

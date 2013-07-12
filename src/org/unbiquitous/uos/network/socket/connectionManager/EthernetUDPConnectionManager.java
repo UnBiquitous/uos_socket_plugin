@@ -6,8 +6,10 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.unbiquitous.uos.core.Logger;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManagerListener;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
@@ -40,7 +42,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 	public static final int UDP_BUFFER_SIZE = 1024;
 	
     /** Object for logging registration.*/
-	private static final Logger logger = Logger.getLogger(EthernetUDPConnectionManager.class);
+	private static final Logger logger = UOSLogging.getLogger();
 
     /** A Connection Manager Listener (ConnectionManagerControlCenter) */
     private ConnectionManagerListener connectionManagerListener = null;
@@ -85,7 +87,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 		
 		if(resource == null){
         	String msg = "ResourceBundle is null";
-        	logger.fatal(msg);
+        	logger.severe(msg);
             throw new RuntimeException(msg);
         }else{
         	try{
@@ -98,7 +100,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
         		UBIQUITOS_ETH_UDP_PASSIVE_PORT_RANGE = resource.getString(UBIQUITOS_ETH_UDP_PASSIVE_PORT_RANGE_KEY);
         	}catch (Exception e) {
         		String msg = "Incorrect ethernet udp port";
-            	logger.fatal(msg);
+            	logger.severe(msg);
                 throw new RuntimeException(msg);
 			}
         }
@@ -110,14 +112,14 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 	public void tearDown(){
 		try {
 			closingEthernetConnectionManager = true;
-			logger.debug("Closing Ethernet UDP Connection Manager...");
+			logger.fine("Closing Ethernet UDP Connection Manager...");
 			server.closeConnection();
 			UdpChannel.tearDown();
-			logger.debug("Ethernet UDP Connection Manager is closed.");
+			logger.fine("Ethernet UDP Connection Manager is closed.");
 		} catch (IOException ex) {
 			closingEthernetConnectionManager = false;
 			String msg = "Error closing Ethernet UDP Connection Manager. ";
-            logger.fatal(msg, ex);
+            logger.log(Level.SEVERE,msg, ex);
             throw new RuntimeException(msg + ex);
 		}
 	}
@@ -155,7 +157,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 					}
 				}
 			} catch (SocketException e) {
-				logger.error(e);
+				logger.log(Level.SEVERE,"",e);
 			}
 		}
 		return serverDevice;
@@ -176,14 +178,14 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 	 * Method extends from Runnable. Starts the connection Manager
 	 */
     public void run() {
-    	logger.debug("Starting UbiquitOS Smart-Space Ethernet UDP Connection Manager.");
+    	logger.fine("Starting UbiquitOS Smart-Space Ethernet UDP Connection Manager.");
         logger.info("Starting Ethernet UDP Connection Manager...");
         
 		try {
 			server = new EthernetUDPServerConnection((EthernetDevice)getNetworkDevice());
 		} catch (IOException ex) {
 			String msg = "Error starting Ethernet UDP Connection Manager. ";
-            logger.fatal(msg, ex);
+            logger.log(Level.SEVERE,msg, ex);
             throw new RuntimeException(msg,ex);
 		}
 		
@@ -195,7 +197,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
     		} catch (IOException ex) {
     			if(!closingEthernetConnectionManager){
     				String msg = "Error starting Ethernet UDP Connection Manager. ";
-                    logger.fatal(msg, ex);
+                    logger.log(Level.SEVERE,msg, ex);
                     throw new RuntimeException(msg,ex);
     			}else{
     				return;
