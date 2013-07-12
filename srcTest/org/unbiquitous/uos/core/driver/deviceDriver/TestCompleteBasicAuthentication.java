@@ -1,19 +1,22 @@
 package org.unbiquitous.uos.core.driver.deviceDriver;
 
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
+import java.util.logging.Logger;
+
+import junit.framework.TestCase;
+
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
 
-import junit.framework.TestCase;
 import br.unb.unbiquitous.ubiquitos.authentication.SessionKeyDaoHSQLDB;
 
 public class TestCompleteBasicAuthentication extends TestCase {
 	
-	private static final Logger logger = Logger.getLogger(TestCompleteBasicAuthentication.class);
-	private static UOSApplicationContext context;
+	private static final Logger logger = UOSLogging.getLogger();
+	private static UOS context;
 	private static int testNumber = 0;
 	protected UpDevice providerDevice;
 	private Gateway gateway;
@@ -23,8 +26,8 @@ public class TestCompleteBasicAuthentication extends TestCase {
 	 * for which the test will be executed.
 	 * */
 	protected void setUp() throws Exception {
-		logger.debug("\n\n######################### TEST "+testNumber+++" #########################\n\n");
-		context = new UOSApplicationContext();
+		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
+		context = new UOS();
 		context.init("br/unb/unbiquitous/ubiquitos/uos/deviceManager/ubiquitos");
 		gateway = context.getGateway();
 		
@@ -74,15 +77,15 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		serviceCall.setService("authenticate");
 		serviceCall.setDriver("uos.DeviceDriver");
 
-		logger.debug("Starts authentication proccess calling the service \"authenticate\"");
+		logger.fine("Starts authentication proccess calling the service \"authenticate\"");
 		
 		// Call service
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
 		
 		if (response.getResponseData().containsValue("true")){
-			logger.debug("Authentication performed successfully. Service returned value \"true\"");
+			logger.fine("Authentication performed successfully. Service returned value \"true\"");
 		} else{
-			logger.debug("Authentication failure. Service returned value \"false\"");
+			logger.fine("Authentication failure. Service returned value \"false\"");
 		}
 	}
 
@@ -125,15 +128,15 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		serviceCall.setService("authenticate");
 		serviceCall.setDriver("uos.DeviceDriver");
 
-		logger.debug("Starts authentication proccess calling the service \"authenticate\"");
+		logger.fine("Starts authentication proccess calling the service \"authenticate\"");
 		
 		// Call service
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
 		
 		if (response.getResponseData().containsValue("true")){
-			logger.debug("Authentication performed successfully. Service returned value \"true\"");
+			logger.fine("Authentication performed successfully. Service returned value \"true\"");
 		} else{
-			logger.debug("Authentication failure. Service returned value \"false\"");
+			logger.fine("Authentication failure. Service returned value \"false\"");
 		}
 	}
 
@@ -175,15 +178,15 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		serviceCall.setService("authenticate");
 		serviceCall.setDriver("uos.DeviceDriver");
 
-		logger.debug("Starts authentication proccess calling the service \"authenticate\"");
+		logger.fine("Starts authentication proccess calling the service \"authenticate\"");
 		
 		// Call service
 		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
 		
 		if (response.getResponseData().containsValue("true")){
-			logger.debug("Authentication performed successfully. Service returned value \"true\"");
+			logger.fine("Authentication performed successfully. Service returned value \"true\"");
 		} else{
-			logger.debug("Authentication failure. Service returned value \"false\"");
+			logger.fine("Authentication failure. Service returned value \"false\"");
 		}
 	}	
 }

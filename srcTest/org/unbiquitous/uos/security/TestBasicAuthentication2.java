@@ -2,23 +2,24 @@ package org.unbiquitous.uos.security;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
+import junit.framework.TestCase;
+
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-
-import junit.framework.TestCase;
 
 import br.unb.unbiquitous.ubiquitos.authentication.SessionKeyDaoHSQLDB;
 import br.unb.unbiquitous.ubiquitos.authentication.messages.FirstMessage;
 
 public class TestBasicAuthentication2 extends TestCase {
 	
-	private static final Logger logger = Logger.getLogger(TestBasicAuthentication2.class);
+	private static final Logger logger = UOSLogging.getLogger();
 	
-	private static UOSApplicationContext context;
+	private static UOS context;
 	
 	private static int testNumber = 0;
 	
@@ -27,8 +28,8 @@ public class TestBasicAuthentication2 extends TestCase {
 	private Gateway gateway;
 	
 	protected void setUp() throws Exception {
-		logger.debug("\n\n######################### TEST "+testNumber+++" #########################\n\n");
-		context = new UOSApplicationContext();
+		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
+		context = new UOS();
 		context.init();
 		gateway = context.getGateway();
 		

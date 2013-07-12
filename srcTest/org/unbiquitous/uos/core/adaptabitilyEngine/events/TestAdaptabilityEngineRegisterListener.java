@@ -8,10 +8,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
+
+import junit.framework.TestCase;
 
 import org.unbiquitous.json.JSONException;
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.AdaptabilityEngine;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.deviceManager.DeviceManager;
@@ -25,8 +28,6 @@ import org.unbiquitous.uos.core.messageEngine.messages.json.JSONServiceResponse;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
 import org.unbiquitous.uos.network.socket.connection.EthernetTCPClientConnection;
 
-import junit.framework.TestCase;
-
 
 public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	
@@ -38,9 +39,9 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	
 	private static final String TEST_EVENT_KEY_CORRECT_2 = "TEST_EVENT_KEY_2";
 
-	private static Logger logger = Logger.getLogger(TestAdaptabilityEngineRegisterListener.class);
+	private static Logger logger = UOSLogging.getLogger();
 	
-	private static UOSApplicationContext context;
+	private static UOS context;
 	
 	private static int testNumber = 0;
 	
@@ -63,14 +64,14 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	
 	protected void setUp() throws Exception {
 		Thread.sleep(timeToWaitBetweenTests/2);
-		logger.debug("\n\n######################### TEST "+testNumber+++" #########################\n\n");
-		context = new UOSApplicationContext();
+		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
+		context = new UOS();
 		context.init("br/unb/unbiquitous/ubiquitos/uos/adaptabitilyEngine/events/ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 		currentEventDriver = DummyEventDriver.getCurrentDummyEventDriver();
 		gateway = context.getGateway();
 		currentEventListener = new DummyEventListener();
-		deviceManager = context.getDeviceManager();
+		deviceManager = context.getFactory().gateway().getDeviceManager();
 	}
 	
 	protected void tearDown() throws Exception {
@@ -265,7 +266,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 			
 		OutputStream outputStream = con.getDataOutputStream();
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-		logger.debug("Sending message.");
+		logger.fine("Sending message.");
 		writer.write(message);
 		writer.write('\n');
 		writer.flush();
@@ -274,7 +275,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		
 		InputStream inputStream = con.getDataInputStream();
 		
-		logger.debug("Receiving message.");
+		logger.fine("Receiving message.");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		
 		StringBuilder builder = new StringBuilder();

@@ -1,15 +1,17 @@
 package org.unbiquitous.uos.core.connectivityTest;
 
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
+
 public class TestPassiveUDP extends TestCase {
 
-	private static Logger logger = Logger.getLogger(TestPassiveUDP.class);
+	private static Logger logger = UOSLogging.getLogger();
 
-	protected UOSApplicationContext applicationContext;
+	protected UOS applicationContext;
 
 	private static final int TIME_BETWEEN_TESTS = 1000;
 	
@@ -36,7 +38,7 @@ public class TestPassiveUDP extends TestCase {
 		logger.info("\n");
 		
 		logger.info("***** Starting applicationContextRadar **********");
-		applicationContext = new UOSApplicationContext();
+		applicationContext = new UOS();
 		applicationContext.init("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesUDP");
 		logger.info("***** ApplicationContextRadar started **********");		
 		

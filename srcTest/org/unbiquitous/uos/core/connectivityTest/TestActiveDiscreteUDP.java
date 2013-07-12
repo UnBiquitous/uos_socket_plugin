@@ -2,20 +2,21 @@ package org.unbiquitous.uos.core.connectivityTest;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.unbiquitous.json.JSONObject;
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
-import org.unbiquitous.uos.core.messageEngine.dataType.json.JSONDevice;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
+import org.unbiquitous.json.JSONObject;
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.messageEngine.dataType.json.JSONDevice;
+import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+
 public class TestActiveDiscreteUDP extends TestCase {
 
-	private static Logger logger = Logger.getLogger(TestActiveDiscreteUDP.class);
+	private static Logger logger = UOSLogging.getLogger();
 
-	protected UOSApplicationContext applicationContext;
+	protected UOS applicationContext;
 
 	private static final int TIME_BETWEEN_TESTS = 500;
 	
@@ -45,7 +46,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		logger.info("\n");
 		
 		
-		applicationContext = new UOSApplicationContext();
+		applicationContext = new UOS();
 		applicationContext.init("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesUDP");
 			
 	}
@@ -79,7 +80,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		parameterMap.put("device", new JSONDevice(this.applicationContext.getGateway().getCurrentDevice()).toString());
 		
 		ServiceResponse response = this.applicationContext.getGateway().callService(
-				this.applicationContext.getDeviceManager().retrieveDevice("ProxyDevice"),
+				this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"),
 				"listDrivers", 
 				"uos.DeviceDriver", 
 				"deviceDriverImplIdTCPDevice",
@@ -103,7 +104,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 			
 			
 		}else{
-			logger.error("Not possible to listDrivers from the TCP machine");
+			logger.severe("Not possible to listDrivers from the TCP machine");
 		}
 	
 		logger.info("---------------------- testUDPConsumesDiscreteTCP END ---------------------- ");
@@ -122,7 +123,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		parameterMap.put("device", new JSONDevice(this.applicationContext.getGateway().getCurrentDevice()).toString());
 		
 		ServiceResponse response = this.applicationContext.getGateway().callService(
-				this.applicationContext.getDeviceManager().retrieveDevice("ProxyDevice"),
+				this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"),
 				"listDrivers", 
 				"uos.DeviceDriver", 
 				"deviceDriverImplIdBluetoothDevice",
@@ -146,7 +147,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 			
 			
 		}else{
-			logger.error("Not possible to listDrivers from the Bluetooth machine");
+			logger.severe("Not possible to listDrivers from the Bluetooth machine");
 		}
 	
 		logger.info("---------------------- testUDPConsumesDiscreteBluetooth END ---------------------- ");

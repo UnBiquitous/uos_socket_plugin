@@ -9,13 +9,15 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
+
+import junit.framework.TestCase;
 
 import org.unbiquitous.json.JSONException;
 import org.unbiquitous.json.JSONObject;
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
 
-import junit.framework.TestCase;
 import br.unb.unbiquitous.ubiquitos.authentication.AuthenticationHandler;
 import br.unb.unbiquitous.ubiquitos.authentication.SessionKeyDaoHSQLDB;
 import br.unb.unbiquitous.ubiquitos.authentication.messages.FirstMessage;
@@ -25,9 +27,9 @@ import br.unb.unbiquitous.ubiquitos.uos.security.basic.AuthenticationDaoHSQLDB;
 
 public class TestBasicMiddlewareAuthenticationHandler extends TestCase {
 	
-	private static final Logger logger = Logger.getLogger(TestDeviceDriverAuthenticate.class);
+	private static final Logger logger = UOSLogging.getLogger();
 	
-	private static UOSApplicationContext context;
+	private static UOS context;
 	
 	private static int testNumber = 0;
 	
@@ -35,8 +37,8 @@ public class TestBasicMiddlewareAuthenticationHandler extends TestCase {
 	
 	protected void setUp() throws Exception {
 		Thread.sleep(timeToWaitBetweenTests/2);
-		logger.debug("\n\n######################### TEST "+testNumber+++" #########################\n\n");
-		context = new UOSApplicationContext();
+		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
+		context = new UOS();
 		context.init("br/unb/unbiquitous/ubiquitos/uos/deviceManager/ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 	};
@@ -59,13 +61,13 @@ public class TestBasicMiddlewareAuthenticationHandler extends TestCase {
 	
 		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','hashId':'" +m1.getHashId()+ "','idEnc':'" +m1.getIdEnc()+ "','ra1Enc':'" +m1.getRa1Enc()+ "','ra2Enc':'" +m1.getRa2Enc() + "','hmacM1':'" +m1.getHmacM1()+ "'}}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(notifyMessage);
+		logger.fine("Sending Message:");
+		logger.fine(notifyMessage);
 		
 		String response = sendReceive(notifyMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug("["+response+"]");
+		logger.fine("Returned Message:");
+		logger.fine("["+response+"]");
 		
 		new JSONObject(response);
 	
@@ -108,13 +110,13 @@ public class TestBasicMiddlewareAuthenticationHandler extends TestCase {
 		
 		String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','sessionKeyEnc':'" +sessionKeyEnc+ "','hmacM3':'" +hmacM3+ "','id':'" +id+ "','rb1':'" +rb1+ "'}}";
 		
-		logger.debug("Sending Message:");
-		logger.debug(notifyMessage);
+		logger.fine("Sending Message:");
+		logger.fine(notifyMessage);
 		
 		String response = sendReceive(notifyMessage);
 		
-		logger.debug("Returned Message:");
-		logger.debug("["+response+"]");
+		logger.fine("Returned Message:");
+		logger.fine("["+response+"]");
 		
 		new JSONObject(response);
 
@@ -137,13 +139,13 @@ public class TestBasicMiddlewareAuthenticationHandler extends TestCase {
 	// send notifyMessage with incorrect ra2Enc
 	String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','hashId':'" +m1.getHashId()+ "','idEnc':'" +m1.getIdEnc()+ "','ra1Enc':'" +m1.getRa1Enc()+ "','ra2Enc':'" +"yVJTzuEJI07h9Gj45bWaakbt/LyXLHOuVeE1NIZUnIw=" + "','hmacM1':'" +m1.getHmacM1()+ "'}}";
 	
-	logger.debug("Sending Message:");
-	logger.debug(notifyMessage);
+	logger.fine("Sending Message:");
+	logger.fine(notifyMessage);
 	
 	String response = sendReceive(notifyMessage);
 	
-	logger.debug("Returned Message:");
-	logger.debug("["+response+"]");
+	logger.fine("Returned Message:");
+	logger.fine("["+response+"]");
 	
 	new JSONObject(response);
 }
@@ -173,13 +175,13 @@ public class TestBasicMiddlewareAuthenticationHandler extends TestCase {
 	//send notifyMessage with incorrect HMAC
 	String notifyMessage = "{type:'SERVICE_CALL_REQUEST',driver:'uos.DeviceDriver',service:'authenticate',parameters:{securityType:'BASIC','sessionKeyEnc':'" +sessionKeyEnc+ "','hmacM3':'" +"758F3AB2EB34658ED3A011A51B695E4A"+ "','id':'" +id+ "','rb1':'" +rb1+ "'}}";
 	
-	logger.debug("Sending Message:");
-	logger.debug(notifyMessage);
+	logger.fine("Sending Message:");
+	logger.fine(notifyMessage);
 	
 	String response = sendReceive(notifyMessage);
 	
-	logger.debug("Returned Message:");
-	logger.debug("["+response+"]");
+	logger.fine("Returned Message:");
+	logger.fine("["+response+"]");
 	
 	new JSONObject(response);
 	

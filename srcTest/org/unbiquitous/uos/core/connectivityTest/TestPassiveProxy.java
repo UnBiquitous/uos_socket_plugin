@@ -1,16 +1,18 @@
 package org.unbiquitous.uos.core.connectivityTest;
 
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
+
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
 
 public class TestPassiveProxy extends TestCase {
 
 
-	private static Logger logger = Logger.getLogger(TestPassiveProxy.class);
+	private static Logger logger = UOSLogging.getLogger();
 
-	protected UOSApplicationContext proxyApplicationContext;
+	protected UOS proxyApplicationContext;
 	
 	//protected UOSApplicationContext applicationContextPassiveTCP;
 	
@@ -46,7 +48,7 @@ public class TestPassiveProxy extends TestCase {
 		logger.info("\n");
 		
 		logger.info("***** Starting proxyApplicationContext **********");
-		proxyApplicationContext = new UOSApplicationContext();
+		proxyApplicationContext = new UOS();
 		proxyApplicationContext.init("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesProxy");
 		logger.info("***** proxyApplicationContext started **********");
 		

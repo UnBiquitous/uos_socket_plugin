@@ -8,14 +8,15 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.unbiquitous.uos.core.Logger;
-import org.unbiquitous.uos.core.UOSApplicationContext;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall.ServiceType;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
+
+import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
+import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall.ServiceType;
+import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
 
 /*
  * This test only works along with other on thsi package.
@@ -23,9 +24,9 @@ import junit.framework.TestCase;
  */
 public class TestActiveStreamUDP extends TestCase {
 
-	private static Logger logger = Logger.getLogger(TestActiveStreamUDP.class);
+	private static Logger logger = UOSLogging.getLogger();
 
-	protected UOSApplicationContext applicationContext;
+	protected UOS applicationContext;
 
 	private static final int TIME_BETWEEN_TESTS = 500;
 	
@@ -60,7 +61,7 @@ public class TestActiveStreamUDP extends TestCase {
 		logger.info("\n");
 		
 		
-		applicationContext = new UOSApplicationContext();
+		applicationContext = new UOS();
 		applicationContext.init("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesUDP");
 		
 	}
@@ -111,7 +112,7 @@ public class TestActiveStreamUDP extends TestCase {
 		
 		serviceCall.setParameters(parameters);
 	
-		ServiceResponse response = applicationContext.getGateway().callService(this.applicationContext.getDeviceManager().retrieveDevice("ProxyDevice"), serviceCall);
+		ServiceResponse response = applicationContext.getGateway().callService(this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"), serviceCall);
 		
 		assertNotNull(response);
 		
@@ -135,15 +136,15 @@ public class TestActiveStreamUDP extends TestCase {
 		        chatChannel.start();
 			}
 	        
-			logger.debug("waiting");
+			logger.fine("waiting");
 	        while(activeChannels > 0){
-	        	logger.debug("probe : "+activeChannels);
+	        	logger.fine("probe : "+activeChannels);
 	        	Thread.sleep(1000);
 	        }
-	        logger.debug("fim");	
+	        logger.fine("fim");	
 			
 		}else{
-			logger.error("Not possible to consume chat service from the TCP machine");
+			logger.severe("Not possible to consume chat service from the TCP machine");
 		}
 	
 		logger.info("---------------------- testUDPConsumesStreamTCP END ---------------------- ");
@@ -176,7 +177,7 @@ public class TestActiveStreamUDP extends TestCase {
 		
 		serviceCall.setParameters(parameters);
 	
-		ServiceResponse response = applicationContext.getGateway().callService(this.applicationContext.getDeviceManager().retrieveDevice("ProxyDevice"), serviceCall);
+		ServiceResponse response = applicationContext.getGateway().callService(this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"), serviceCall);
 		
 		assertNotNull(response);
 		
@@ -200,15 +201,15 @@ public class TestActiveStreamUDP extends TestCase {
 		        chatChannel.start();
 			}
 	        
-			logger.debug("waiting");
+			logger.fine("waiting");
 	        while(activeChannels > 0){
-	        	logger.debug("probe : "+activeChannels);
+	        	logger.fine("probe : "+activeChannels);
 	        	Thread.sleep(1000);
 	        }
-	        logger.debug("fim");	
+	        logger.fine("fim");	
 			
 		}else{
-			logger.error("Not possible to consume chat service from the Bluetooth machine");
+			logger.severe("Not possible to consume chat service from the Bluetooth machine");
 		}
 	
 		logger.info("---------------------- testUDPConsumesStreamBluetooth END ---------------------- ");
@@ -242,7 +243,7 @@ public class TestActiveStreamUDP extends TestCase {
 		        for(int j = 0; j < 10; j++){
 		        	String msg  = "CHANNEL["+channelNumber+"]: MSG DE TESTE DO CHAT " + j;
 		            
-		            logger.debug("CHANNEL["+channelNumber+"]: ENVIANDO MSG: ["+msg+"]");
+		            logger.fine("CHANNEL["+channelNumber+"]: ENVIANDO MSG: ["+msg+"]");
 		            
 		            writer.write(msg);
 		            writer.flush();
@@ -257,7 +258,7 @@ public class TestActiveStreamUDP extends TestCase {
 		                	for(int i = 0; i < available; i++){
 		                       	builder.append((char)reader.read());
 		                    }
-		                	logger.debug("CHANNEL["+channelNumber+"]: RECEBIDO MSG: ["+builder.toString()+"]");
+		                	logger.fine("CHANNEL["+channelNumber+"]: RECEBIDO MSG: ["+builder.toString()+"]");
 		                	break;
 		                }
 		            	Thread.sleep(300);
@@ -269,7 +270,7 @@ public class TestActiveStreamUDP extends TestCase {
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
-			logger.debug("finalize :"+activeChannels);
+			logger.fine("finalize :"+activeChannels);
 		}
 	}
 }
