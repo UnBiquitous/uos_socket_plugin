@@ -96,9 +96,6 @@ public class EthernetTCPClientConnection extends ClientConnection implements Cac
 	 * method to get the output stream of the ethernet connection
 	 */
 	public DataOutputStream getDataOutputStream() throws IOException {
-		
-		logger.info(tcpSocket.getInetAddress()+" OutPut is:"+dataOutputStream);
-		
 		return dataOutputStream;
 	}
 

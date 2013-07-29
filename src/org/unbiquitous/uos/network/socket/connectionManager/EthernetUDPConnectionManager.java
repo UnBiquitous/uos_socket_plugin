@@ -1,10 +1,7 @@
 package org.unbiquitous.uos.network.socket.connectionManager;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.Enumeration;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +15,8 @@ import org.unbiquitous.uos.network.socket.EthernetDevice;
 import org.unbiquitous.uos.network.socket.channelManager.EthernetUDPChannelManager;
 import org.unbiquitous.uos.network.socket.connection.EthernetUDPServerConnection;
 import org.unbiquitous.uos.network.socket.udp.UdpChannel;
+
+import br.unb.cic.ethutil.NetworkInterfaceHelper;
 
 
 public class EthernetUDPConnectionManager extends EthernetConnectionManager{
@@ -135,33 +134,16 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 	public NetworkDevice getNetworkDevice() {
 		if(serverDevice == null){			
 			try {
-				Enumeration<NetworkInterface> e1 = (Enumeration<NetworkInterface>)NetworkInterface.getNetworkInterfaces();
-				while(e1.hasMoreElements()) {
-					NetworkInterface ni = e1.nextElement();
-					
-					if (!ni.isLoopback() && !ni.isVirtual() && ni.isUp()){
-						Enumeration<InetAddress> e2 = ni.getInetAddresses();
-						String addr = null;
-						while(e2.hasMoreElements()) {
-							InetAddress ia = e2.nextElement();
-							if (!ia.isLoopbackAddress() && !ia.isAnyLocalAddress() && !ia.isMulticastAddress()){
-								if (!ia.toString().contains(":")){
-									addr = ia.toString(); // FIXME : UDP Plugin : This denies a ipv6 server to be create which is a very restrictive strategy.
-								}
-							}
-						}
-						if (addr != null){
-							serverDevice = new EthernetDevice(addr.substring(1), UBIQUITOS_ETH_UDP_PORT, EthernetConnectionType.UDP);
-							return serverDevice;
-						}
-					}
-				}
+				String addr = NetworkInterfaceHelper.listLocalAddresses()[0];
+				serverDevice = new EthernetDevice(addr, UBIQUITOS_ETH_UDP_PORT, EthernetConnectionType.UDP);
+				return serverDevice;
 			} catch (SocketException e) {
 				logger.log(Level.SEVERE,"",e);
 			}
 		}
 		return serverDevice;
 	}
+	
 	
 	/**
 	 * A method for retrive the channel manager of this connection manager
@@ -207,3 +189,4 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
     }
 
 }
+
