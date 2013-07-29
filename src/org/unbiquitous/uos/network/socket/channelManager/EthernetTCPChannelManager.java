@@ -91,7 +91,7 @@ public class EthernetTCPChannelManager implements ChannelManager{
     		port = defaultPort;
     	}
     	
-    	ClientConnection cached = cacheController.getConnection(networkDeviceName+':'+port);
+    	ClientConnection cached = cacheController.getConnection(host+':'+port);
 		if (cached != null){
 			logger.info("EthernetTCPChannelManager: openActiveConnection: Returning cached connection for host '"+host+"'\n\n"); 
 			return cached;
