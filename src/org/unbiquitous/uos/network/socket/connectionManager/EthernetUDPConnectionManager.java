@@ -1,6 +1,7 @@
 package org.unbiquitous.uos.network.socket.connectionManager;
 
 import java.io.IOException;
+import java.net.EthUtilNetworkInterfaceHelper;
 import java.net.SocketException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -15,8 +16,6 @@ import org.unbiquitous.uos.network.socket.EthernetDevice;
 import org.unbiquitous.uos.network.socket.channelManager.EthernetUDPChannelManager;
 import org.unbiquitous.uos.network.socket.connection.EthernetUDPServerConnection;
 import org.unbiquitous.uos.network.socket.udp.UdpChannel;
-
-import br.unb.cic.ethutil.NetworkInterfaceHelper;
 
 
 public class EthernetUDPConnectionManager extends EthernetConnectionManager{
@@ -134,7 +133,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 	public NetworkDevice getNetworkDevice() {
 		if(serverDevice == null){			
 			try {
-				String addr = NetworkInterfaceHelper.listLocalAddresses()[0];
+				String addr = EthUtilNetworkInterfaceHelper.listLocalAddresses()[0];
 				serverDevice = new EthernetDevice(addr, UBIQUITOS_ETH_UDP_PORT, EthernetConnectionType.UDP);
 				return serverDevice;
 			} catch (SocketException e) {
