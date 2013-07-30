@@ -1,7 +1,6 @@
 package org.unbiquitous.uos.network.socket.connectionManager;
 
 import java.io.IOException;
-import java.net.EthUtilNetworkInterfaceHelper;
 import java.net.SocketException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -16,6 +15,8 @@ import org.unbiquitous.uos.network.socket.EthernetDevice;
 import org.unbiquitous.uos.network.socket.channelManager.EthernetUDPChannelManager;
 import org.unbiquitous.uos.network.socket.connection.EthernetUDPServerConnection;
 import org.unbiquitous.uos.network.socket.udp.UdpChannel;
+
+import br.unb.cic.ethutil.EthUtilNetworkInterfaceHelper;
 
 
 public class EthernetUDPConnectionManager extends EthernetConnectionManager{

@@ -2,7 +2,6 @@ package org.unbiquitous.uos.network.socket.connectionManager;
 
 
 import java.io.IOException;
-import java.net.EthUtilNetworkInterfaceHelper;
 import java.net.SocketException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -17,6 +16,8 @@ import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.network.socket.EthernetDevice;
 import org.unbiquitous.uos.network.socket.channelManager.EthernetTCPChannelManager;
 import org.unbiquitous.uos.network.socket.connection.EthernetTCPServerConnection;
+
+import br.unb.cic.ethutil.EthUtilNetworkInterfaceHelper;
 
 
 /**
