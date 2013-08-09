@@ -6,7 +6,7 @@
 	<artifactId>uos-socket-plugin</artifactId>
 	<name>TCP and UDP Network Plugin</name>
 	<packaging>jar</packaging>
-	<version>3.0.0</version>
+	<version>3.1.0</version>
 
 	<build>
 		<directory>target</directory>
