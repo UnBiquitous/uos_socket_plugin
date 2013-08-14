@@ -17,11 +17,11 @@ public class EthernetPingRadarTest {
 	//TODO: Null breaks
 	
 	private RadarListener listener;
-	private EthernetPingRadar radar;
+	private PingRadar radar;
 
 	@Before public void setUp(){
 		listener = mock(RadarListener.class);
-		radar = new EthernetPingRadar(listener);
+		radar = new PingRadar(listener);
 	}
 	
 	@Test public void notfyLostDevices(){

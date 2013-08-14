@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.applicationManager.UOSMessageContext;
+import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpService;
@@ -43,7 +43,7 @@ public class StreamDriver implements UosDriver {
 	 * @param messageContext
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void chatService(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
+	public void chatService(ServiceCall serviceCall, ServiceResponse serviceResponse, CallContext messageContext){
 		
 		logger.fine("Handling StreamDriver.chatService Call");
 		
@@ -78,9 +78,9 @@ public class StreamDriver implements UosDriver {
 		private int NOT_READY_SLEEP_TIME = 100;
 		
 		private int channel;
-		private UOSMessageContext msgContext;
+		private CallContext msgContext;
 		
-		public ChatServiceThreaded(int channel, UOSMessageContext msgContext){
+		public ChatServiceThreaded(int channel, CallContext msgContext){
 			this.channel = channel;
 			this.msgContext = msgContext;
 		}

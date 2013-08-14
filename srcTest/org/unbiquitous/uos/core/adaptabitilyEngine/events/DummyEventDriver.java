@@ -3,7 +3,7 @@ package org.unbiquitous.uos.core.adaptabitilyEngine.events;
 import java.util.List;
 
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.applicationManager.UOSMessageContext;
+import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosEventDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpService.ParameterType;
@@ -25,7 +25,7 @@ public class DummyEventDriver implements UosEventDriver {
 	
 	@Override
 	public void registerListener(ServiceCall serviceCall,
-			ServiceResponse serviceResponse, UOSMessageContext messageContext) {
+			ServiceResponse serviceResponse, CallContext messageContext) {
 		// store service call for test check
 		lastServiceCall = serviceCall;
 		lastServiceCallCount++;
@@ -33,7 +33,7 @@ public class DummyEventDriver implements UosEventDriver {
 
 	@Override
 	public void unregisterListener(ServiceCall serviceCall,
-			ServiceResponse serviceResponse, UOSMessageContext messageContext) {
+			ServiceResponse serviceResponse, CallContext messageContext) {
 		// store service call for test check
 		lastServiceCall = serviceCall;
 		lastServiceCallCount++;

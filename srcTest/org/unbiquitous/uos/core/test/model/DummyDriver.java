@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.applicationManager.UOSMessageContext;
+import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpService;
@@ -27,7 +27,7 @@ public class DummyDriver implements UosDriver {
 	 * Basic service wich receives a message through the ServiceCall parameter "message" and echoes this message
 	 * in the ServiceResponse "message" parameter in its response Data 
 	 */
-	public void echoService(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
+	public void echoService(ServiceCall serviceCall, ServiceResponse serviceResponse, CallContext messageContext){
 		
 		Map<String,Object> parameters = serviceCall.getParameters();
 		

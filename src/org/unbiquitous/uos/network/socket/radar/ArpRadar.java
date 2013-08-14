@@ -2,8 +2,8 @@ package org.unbiquitous.uos.network.socket.radar;
 
 
 import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.unbiquitous.uos.core.UOSLogging;
@@ -18,7 +18,7 @@ import br.unb.cic.ethutil.EthUtilClientListener;
 
 
 /**
- * This class implements a ethernet Radar for the smart-space usaing PING discovery mode
+ * This class implements a ethernet Radar for the smart-space usaing ARP discovery mode
  * It implements 3 interfaces:
  *   Runnable - For running on a independent thread
  *   EthUtilClientListener - for recieving the Ethernet discovery events
@@ -29,7 +29,7 @@ import br.unb.cic.ethutil.EthUtilClientListener;
  *
  * @author Passarinho
  */
-public class EthernetPingRadar implements EthUtilClientListener, Radar {
+public class ArpRadar implements EthUtilClientListener, Radar {
     
 	/* *****************************
 	 *   	ATRUBUTES
@@ -43,7 +43,7 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
 	private EthUtil ethUtil = null;
 	
     /** This is the list of devices present in the smart-space. */
-    private HashSet<String> localHostRepository = null;
+    private Set<String> localHostRepository = null;
     
     /** A RadarListener object interested in receiving UbiquitOS Radar notifications, 
      * like "a new device has entered the smart-space" and "device X has left the smart-space". */
@@ -51,6 +51,14 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
     
     /** Indicates whether the radar is running or not. */
     private boolean started = false;
+    
+    /** A Thread for running this Radar*/
+    Thread thread = null;
+    
+    /**
+     * The connection manager responsible for handling the information of connections.
+     */
+    private ConnectionManager connectionManager;
     
     /* *****************************
 	 *   	CONSTRUCTOR
@@ -62,14 +70,11 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
      * @param listener Some object interested in receive Radar notifications
      *  about devices entrance and exit.
      */
-    public EthernetPingRadar(RadarListener radarListener ) {
+    public ArpRadar(RadarListener radarListener ) {
     	// add the listener
     	this.radarListener = radarListener;
     	ethUtil = new EthUtil(this);
     }
-    
-    @Override
-    public void setConnectionManager(ConnectionManager connectionManager) {}
     
     /* *****************************
 	 *   	PUBLIC METHODS - Runnable
@@ -83,11 +88,12 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
         try {
             // Start the device discovery. According to the defined discovery Mode
             // log it.
-        	logger.fine("[EthernetPingRadar] Starting Radar... PING Discovery");
-        	// start PING discovery.
-            ethUtil.discoverDevices(EthUtil.DISCOVER_DEVICES_USING_PING);
+        	logger.fine("[EthernetArpRadar] Starting Radar... ARP Discovery");
+        	// start ARP discovery.
+        	
+            ethUtil.discoverDevices(EthUtil.DISCOVER_DEVICES_USING_ARP);
         } catch (Exception ex) {
-        	logger.log(Level.SEVERE,"[EthernetPingRadar] Could Not realize the host discovery...",ex);
+        	logger.severe("[EthernetArpRadar] Could Not realize the host discovery...");
         }
     }
     
@@ -119,17 +125,17 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
     
     /**
      * Part of the EthUtilClientListener interface implementation.
-     * Method invoked when a new device is discovered by the PING host discovery
+     * Method invoked when a new device is discovered by the ARP host discovery
      * 
      * @param host 
      */
     public void deviceDiscovered(String host) {
 
-    	logger.fine("[EthernetPingRadar] A device was found [" + host + "].");
+    	logger.fine("[EthernetArpRadar] A device was found [" + host + "].");
         //Notify listeners.
-    	logger.info("[EthernetPingRadar] [" + host + "] is in the smart-space.");
+    	logger.info("[EthernetArpRadar] [" + host + "] is in the smart-space.");
     	// Creates a EthernetDevice Object
-    	//FIXME: PingRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
+    	//FIXME: ArpRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
     	EthernetDevice device = new EthernetDevice(host, 14984, EthernetConnectionType.TCP);
     	// Notifies the listener
     	radarListener.deviceEntered(device);
@@ -142,39 +148,43 @@ public class EthernetPingRadar implements EthUtilClientListener, Radar {
      * 
      * @param host 
      */
-    @SuppressWarnings("unchecked")
-	public void deviceDiscoveryFinished(Vector<String> recentilyDiscoveredHosts) {
-        if (recentilyDiscoveredHosts == null) return;
-    	
-    	logger.info("[EthernetPingRadar] Ethernet Discovery Finished. Found Devices: "+ recentilyDiscoveredHosts);
+    public void deviceDiscoveryFinished(Vector<String> recentilyDiscoveredHosts) {
+        
+    	logger.info("[EthernetArpRadar] Ethernet Discovery Finished. Found Devices: "+ recentilyDiscoveredHosts);
 
     	// If localHostRepository equals null, First time Discovery is called), populates it with the found hosts
     	if (localHostRepository == null){
     		localHostRepository = new HashSet<String>(recentilyDiscoveredHosts);
     	}else{
-    		
-			HashSet<String> byeGuys = (HashSet<String>) localHostRepository.clone();
-			byeGuys.removeAll(recentilyDiscoveredHosts);
-    		
     		//else, checks if some host exited the smart-space
-    		for (String byeHost : byeGuys) {
-				// remove from localRepository.
-				localHostRepository.remove(byeHost); 
-				// notifies the Radar Control Center
-				logger.info("[EthernetPingRadar] Host ["+byeHost+"] has left the smart-space.");
-		    	//FIXME: PingRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
-				radarListener.deviceLeft(new EthernetDevice(byeHost,  14984, EthernetConnectionType.TCP)); 
+    		for (String existingHost : localHostRepository) {
+    			// If localHost wasn't found on the network... It left the smart-space
+				if (!recentilyDiscoveredHosts.contains(existingHost)){
+					// remove from localRepository.
+					localHostRepository.remove(existingHost); 
+					// notifies the Radar Control Center
+					logger.info("[EthernetArpRadar] Host ["+existingHost+"] has left the smart-space.");
+			    	//FIXME: ArpRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
+					radarListener.deviceLeft(new EthernetDevice(existingHost,  14984, EthernetConnectionType.TCP)); 
+				}
 			}
     		// add all found hosts to the local repository
-    		localHostRepository = new HashSet<String>(recentilyDiscoveredHosts);
+    		localHostRepository.addAll(recentilyDiscoveredHosts);
     	}
     	
         //If stopRadar method was called, a new device discovery will not be started
         if (started) {
             //Start a new host discovery process
-        	logger.fine("[EthernetPingRadar] Starting a new discovery.");
-        	ethUtil.discoverDevices(EthUtil.DISCOVER_DEVICES_USING_PING);
+        	logger.fine("[EthernetArpRadar] Starting a new discovery.");
+        	try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {}
+        	ethUtil.discoverDevices(EthUtil.DISCOVER_DEVICES_USING_ARP);
         }
     }
-
+    
+    @Override
+    public void setConnectionManager(ConnectionManager connectionManager) {
+    	this.connectionManager = connectionManager;
+    }
 }

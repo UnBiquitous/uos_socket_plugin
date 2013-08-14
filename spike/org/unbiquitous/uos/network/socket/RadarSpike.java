@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.network.socket.connectionManager.EthernetTCPConnectionManager;
 import org.unbiquitous.uos.network.socket.connectionManager.EthernetUDPConnectionManager;
-import org.unbiquitous.uos.network.socket.radar.EthernetPingRadar;
+import org.unbiquitous.uos.network.socket.radar.PingRadar;
 
 public class RadarSpike {
 
@@ -24,7 +24,7 @@ public class RadarSpike {
 						EthernetTCPConnectionManager.class.getName() + ',' +
 						EthernetUDPConnectionManager.class.getName()},
 					{"ubiquitos.radar",
-						EthernetPingRadar.class.getName()},
+						PingRadar.class.getName()},
 					{"ubiquitos.eth.tcp.port", "14984"}, 
 					{"ubiquitos.eth.tcp.passivePortRange", "14985-15000"}, 
 					{"ubiquitos.eth.udp.port", "15001"}, 

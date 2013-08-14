@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.applicationManager.UOSMessageContext;
+import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpService.ParameterType;
@@ -26,7 +26,7 @@ public class MouseDriver implements UosDriver {
 	private Robot robot; 
 	
 	
-	public void movePointer(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
+	public void movePointer(ServiceCall serviceCall, ServiceResponse serviceResponse, CallContext messageContext){
 		
 		Map<String,Object> parameters = serviceCall.getParameters();
 		
@@ -44,7 +44,7 @@ public class MouseDriver implements UosDriver {
 		}
 	}
 	
-	public void moveScroll(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
+	public void moveScroll(ServiceCall serviceCall, ServiceResponse serviceResponse, CallContext messageContext){
 		
 		Map<String,Object> parameters = serviceCall.getParameters();
 		
