@@ -120,15 +120,23 @@ public class MulticastRadarTest {
 	}
 	
 	@Test public void whenSomebodySendsABeaconNotifiesItsDiscoveryOnce() throws Exception{
-		mockADeviceEntry("1.1.1.1");
+		mockADeviceEntry("1.1.1.1","2.2.2.2","3.3.3.3");
 		run();
 		final ArgumentCaptor<NetworkDevice> arg = forClass(NetworkDevice.class);
 		assertEventually(1000, new Runnable() {
 			public void run() {
-				verify(listener,times(1)).deviceEntered(arg.capture());
+				verify(listener,times(3)).deviceEntered(arg.capture());
 				NetworkDevice device = arg.getValue();
 				assertThat(device).isInstanceOf(EthernetDevice.class);
-				assertThat(device.getNetworkDeviceName()).isEqualTo("1.1.1.1"+":"+port);
+				NetworkDevice device1 = arg.getAllValues().get(0);
+				assertThat(device1.getNetworkDeviceName())
+												.isEqualTo("1.1.1.1"+":"+port);
+				NetworkDevice device2 = arg.getAllValues().get(1);
+				assertThat(device2.getNetworkDeviceName())
+												.isEqualTo("2.2.2.2"+":"+port);
+				NetworkDevice device3 = arg.getAllValues().get(2);
+				assertThat(device3.getNetworkDeviceName())
+												.isEqualTo("3.3.3.3"+":"+port);
 			}
 		});
 	}
@@ -153,13 +161,17 @@ public class MulticastRadarTest {
 		});
 	}
 	
-	private void mockADeviceEntry(final String enteredAddress) throws IOException {
+	//TODO: How to detect device left ?
+	
+	private void mockADeviceEntry(final String ... enteredAddress) throws IOException {
 		doAnswer(new Answer<Void>() {
+			int index = 0;
 			public Void answer(InvocationOnMock invocation)
 					throws Throwable {
+				String addr = enteredAddress[index++ % enteredAddress.length ];
 				Object[] args = invocation.getArguments();
 				DatagramPacket packet = (DatagramPacket) args[0];
-				packet.setAddress(InetAddress.getByName(enteredAddress));
+				packet.setAddress(InetAddress.getByName(addr));
 				return null;
 			}
 		}).when(serverSocket).receive((DatagramPacket)any());
