@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetUDPConnectionManager;
+import org.unbiquitous.uos.network.socket.connectionManager.UDPConnectionManager;
 
 
 /**
@@ -18,7 +18,7 @@ public class UdpInputStream extends InputStream{
 	 * ATTRIBUTES
 	 *************************************/
 	
-	private final int MAX_BUFFER_SIZE = EthernetUDPConnectionManager.UDP_BUFFER_SIZE * 8;
+	private final int MAX_BUFFER_SIZE = UDPConnectionManager.UDP_BUFFER_SIZE * 8;
 	private Vector<Byte> buffer = new Vector<Byte>();
 	private int bufferSize;
 	private boolean isClosed = false;

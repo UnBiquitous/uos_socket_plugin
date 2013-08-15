@@ -14,8 +14,8 @@ import org.unbiquitous.uos.core.network.connectionManager.ConnectionManagerListe
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.network.socket.SocketDevice;
-import org.unbiquitous.uos.network.socket.channelManager.EthernetTCPChannelManager;
-import org.unbiquitous.uos.network.socket.connection.EthernetTCPServerConnection;
+import org.unbiquitous.uos.network.socket.channelManager.TCPChannelManager;
+import org.unbiquitous.uos.network.socket.connection.TCPServerConnection;
 
 import br.unb.cic.ethutil.EthUtilNetworkInterfaceHelper;
 
@@ -25,7 +25,7 @@ import br.unb.cic.ethutil.EthUtilNetworkInterfaceHelper;
  *
  * @author Passarinho
  */
-public class EthernetTCPConnectionManager extends EthernetConnectionManager{
+public class TCPConnectionManager extends SocketConnectionManager{
 	
 	/* *****************************
 	 *   	ATRUBUTES
@@ -52,13 +52,13 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
     
     /** Server Connection */
     private SocketDevice serverDevice;
-    private EthernetTCPServerConnection server;
+    private TCPServerConnection server;
     
     /** Attribute to control the closing of the Connection Manager */
     private boolean closingEthernetConnectionManager = false;
     
     /** The ChannelManager for new channels */
-    private EthernetTCPChannelManager channelManager;
+    private TCPChannelManager channelManager;
     
     /**
      * Controller responsible for the active connections cache. 
@@ -73,7 +73,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 	 * Constructor
 	 * @throws UbiquitOSException
 	 */
-    public EthernetTCPConnectionManager() throws NetworkException {}
+    public TCPConnectionManager() throws NetworkException {}
     
     
     /* *****************************
@@ -162,7 +162,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 	 */
 	public ChannelManager getChannelManager(){
 		if(channelManager == null){
-			channelManager = new EthernetTCPChannelManager(UBIQUITOS_ETH_TCP_PORT, UBIQUITOS_ETH_TCP_CONTROL_PORT, UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE, cacheController);
+			channelManager = new TCPChannelManager(UBIQUITOS_ETH_TCP_PORT, UBIQUITOS_ETH_TCP_CONTROL_PORT, UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE, cacheController);
 		}
 		return channelManager;
 	}
@@ -180,7 +180,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
         IOException ex = null;
         while (tries < max_retries){
 			try {
-				server = new EthernetTCPServerConnection((SocketDevice)getNetworkDevice(), cacheController);
+				server = new TCPServerConnection((SocketDevice)getNetworkDevice(), cacheController);
 				tries = max_retries;
 			} catch (IOException e) {
 				String msg = "Error starting Ethernet TCP Connection Manager : "+e.getMessage();

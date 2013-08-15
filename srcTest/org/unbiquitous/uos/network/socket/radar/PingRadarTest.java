@@ -11,7 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
 
-public class EthernetPingRadarTest {
+public class PingRadarTest {
 
 	
 	//TODO: Null breaks

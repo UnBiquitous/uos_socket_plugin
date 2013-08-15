@@ -26,7 +26,7 @@ import org.unbiquitous.uos.core.messageEngine.messages.json.JSONNotify;
 import org.unbiquitous.uos.core.messageEngine.messages.json.JSONServiceCall;
 import org.unbiquitous.uos.core.messageEngine.messages.json.JSONServiceResponse;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
-import org.unbiquitous.uos.network.socket.connection.EthernetTCPClientConnection;
+import org.unbiquitous.uos.network.socket.connection.TCPClientConnection;
 
 
 public class TestAdaptabilityEngineRegisterListener extends TestCase {
@@ -262,7 +262,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 
 	private StringBuilder sendReceive(String message) throws IOException,
 			InterruptedException {
-		con = new EthernetTCPClientConnection("localhost",14984, null/*EthernetTCPConnectionManager.UBIQUITOS_ETH_TCP_PORT*/);
+		con = new TCPClientConnection("localhost",14984, null/*EthernetTCPConnectionManager.UBIQUITOS_ETH_TCP_PORT*/);
 			
 		OutputStream outputStream = con.getDataOutputStream();
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));

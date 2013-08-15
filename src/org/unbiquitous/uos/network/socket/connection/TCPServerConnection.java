@@ -13,7 +13,7 @@ import org.unbiquitous.uos.network.socket.SocketDevice;
  * 
  * @author Lucas Lins
  */
-public class EthernetTCPServerConnection extends ServerConnection {
+public class TCPServerConnection extends ServerConnection {
 	
 	/************************************
 	 * ATTRIBUTES
@@ -30,7 +30,7 @@ public class EthernetTCPServerConnection extends ServerConnection {
 	 * CONSTRUCTOR
 	 * @param cacheController 
 	 ************************************/
-	public EthernetTCPServerConnection(SocketDevice serverDevice, CacheController cacheController) throws IOException{
+	public TCPServerConnection(SocketDevice serverDevice, CacheController cacheController) throws IOException{
 		super(serverDevice);
 		this.cacheController = cacheController;
 		tcpSocket = new ServerSocket(serverDevice.getPort());
@@ -43,8 +43,8 @@ public class EthernetTCPServerConnection extends ServerConnection {
 	/**
 	 * accept a client connection and return the {@link EthernetClientConnection} from this action. 
 	 */
-	public EthernetTCPClientConnection accept() throws IOException{
-		return new EthernetTCPClientConnection(tcpSocket.accept(), null);
+	public TCPClientConnection accept() throws IOException{
+		return new TCPClientConnection(tcpSocket.accept(), null);
 	}
 	
 	/**

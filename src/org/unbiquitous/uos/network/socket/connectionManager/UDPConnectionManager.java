@@ -12,14 +12,14 @@ import org.unbiquitous.uos.core.network.connectionManager.ConnectionManagerListe
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.network.socket.SocketDevice;
-import org.unbiquitous.uos.network.socket.channelManager.EthernetUDPChannelManager;
-import org.unbiquitous.uos.network.socket.connection.EthernetUDPServerConnection;
+import org.unbiquitous.uos.network.socket.channelManager.UDPChannelManager;
+import org.unbiquitous.uos.network.socket.connection.UDPServerConnection;
 import org.unbiquitous.uos.network.socket.udp.UdpChannel;
 
 import br.unb.cic.ethutil.EthUtilNetworkInterfaceHelper;
 
 
-public class EthernetUDPConnectionManager extends EthernetConnectionManager{
+public class UDPConnectionManager extends SocketConnectionManager{
 	
 	/* *****************************
 	 *   	ATRUBUTES
@@ -48,13 +48,13 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
     
     /** Server Connection */
     private SocketDevice serverDevice;
-    private EthernetUDPServerConnection server;
+    private UDPServerConnection server;
     
     /** Attribute to control the closing of the Connection Manager */
     private boolean closingEthernetConnectionManager = false;
     
     /** The ChannelManager for new channels */
-    private EthernetUDPChannelManager channelManager;
+    private UDPChannelManager channelManager;
     
     /* *****************************
 	 *   	CONSTRUCTOR
@@ -64,7 +64,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 	 * Constructor
 	 * @throws UbiquitOSException
 	 */
-    public EthernetUDPConnectionManager() throws NetworkException {}
+    public UDPConnectionManager() throws NetworkException {}
     
     
     /* *****************************
@@ -151,7 +151,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 	 */
 	public ChannelManager getChannelManager(){
 		if(channelManager == null){
-			channelManager = new EthernetUDPChannelManager(UBIQUITOS_ETH_UDP_PORT, UBIQUITOS_ETH_UDP_CONTROL_PORT, UBIQUITOS_ETH_UDP_PASSIVE_PORT_RANGE);
+			channelManager = new UDPChannelManager(UBIQUITOS_ETH_UDP_PORT, UBIQUITOS_ETH_UDP_CONTROL_PORT, UBIQUITOS_ETH_UDP_PASSIVE_PORT_RANGE);
 		}
 		return channelManager;
 	}
@@ -164,7 +164,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
         logger.info("Starting Ethernet UDP Connection Manager...");
         
 		try {
-			server = new EthernetUDPServerConnection((SocketDevice)getNetworkDevice());
+			server = new UDPServerConnection((SocketDevice)getNetworkDevice());
 		} catch (IOException ex) {
 			String msg = "Error starting Ethernet UDP Connection Manager. ";
             logger.log(Level.SEVERE,msg, ex);

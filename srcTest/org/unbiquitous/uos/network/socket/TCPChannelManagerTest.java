@@ -12,19 +12,19 @@ import org.junit.Test;
 import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
-import org.unbiquitous.uos.network.socket.channelManager.EthernetTCPChannelManager;
+import org.unbiquitous.uos.network.socket.channelManager.TCPChannelManager;
 
-public class EthernetTCPChannelManagerTest {
+public class TCPChannelManagerTest {
 
 	private final int defaultPort = 14984;
 	private final int controlPort = 14895;
 	private final String portRange = "14896-14899";
 	private CacheController cacheController = new CacheController();
 	private ServerSocket server;
-	private EthernetTCPChannelManager mng;
+	private TCPChannelManager mng;
 	
 	@Before public void setUp() throws Exception{
-		mng = new EthernetTCPChannelManager(defaultPort, controlPort, portRange, cacheController);
+		mng = new TCPChannelManager(defaultPort, controlPort, portRange, cacheController);
 	}
 	
 	@After public void tearDown() throws Exception{

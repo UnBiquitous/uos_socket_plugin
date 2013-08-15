@@ -1,7 +1,7 @@
 package org.unbiquitous.uos.network.socket;
 
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
+import org.unbiquitous.uos.network.socket.connectionManager.SocketConnectionManager.EthernetConnectionType;
 
 
 

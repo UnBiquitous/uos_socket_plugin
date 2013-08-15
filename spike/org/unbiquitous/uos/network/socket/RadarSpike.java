@@ -4,8 +4,8 @@ import java.util.ListResourceBundle;
 import java.util.ResourceBundle;
 
 import org.unbiquitous.uos.core.UOS;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetTCPConnectionManager;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetUDPConnectionManager;
+import org.unbiquitous.uos.network.socket.connectionManager.TCPConnectionManager;
+import org.unbiquitous.uos.network.socket.connectionManager.UDPConnectionManager;
 import org.unbiquitous.uos.network.socket.radar.PingRadar;
 
 public class RadarSpike {
@@ -21,8 +21,8 @@ public class RadarSpike {
 					{"ubiquitos.message.response.timeout", "100"}, //Optional
 					{"ubiquitos.message.response.retry", "30"},//Optional
 					{"ubiquitos.connectionManager",
-						EthernetTCPConnectionManager.class.getName() + ',' +
-						EthernetUDPConnectionManager.class.getName()},
+						TCPConnectionManager.class.getName() + ',' +
+						UDPConnectionManager.class.getName()},
 					{"ubiquitos.radar",
 						PingRadar.class.getName()},
 					{"ubiquitos.eth.tcp.port", "14984"}, 

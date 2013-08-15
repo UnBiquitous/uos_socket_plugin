@@ -11,7 +11,7 @@ import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
 import org.unbiquitous.uos.network.socket.SocketDevice;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
+import org.unbiquitous.uos.network.socket.connectionManager.SocketConnectionManager.EthernetConnectionType;
 
 import br.unb.cic.ethutil.EthUtil;
 import br.unb.cic.ethutil.EthUtilClientListener;

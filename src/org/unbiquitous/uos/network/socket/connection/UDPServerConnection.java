@@ -14,7 +14,7 @@ import org.unbiquitous.uos.network.socket.udp.UdpChannel;
  * 
  * @author Lucas Lins
  */
-public class EthernetUDPServerConnection extends ServerConnection {
+public class UDPServerConnection extends ServerConnection {
 	
 	/************************************
 	 * ATTRIBUTES
@@ -26,7 +26,7 @@ public class EthernetUDPServerConnection extends ServerConnection {
 	 * CONSTRUCTOR
 	 ************************************/
 	
-	public EthernetUDPServerConnection(SocketDevice serverDevice) throws IOException{
+	public UDPServerConnection(SocketDevice serverDevice) throws IOException{
 		super(serverDevice);
 		udpChannel = UdpChannel.openChannel(serverDevice.getPort());
 	}
@@ -36,11 +36,11 @@ public class EthernetUDPServerConnection extends ServerConnection {
 	 ************************************/
 	
 	/**
-	 * accept a client connection and return the {@link EthernetUDPClientConnection} from this action. 
+	 * accept a client connection and return the {@link UDPClientConnection} from this action. 
 	 */
-	public EthernetUDPClientConnection accept() throws IOException{
+	public UDPClientConnection accept() throws IOException{
 		UdpAccept udpAccept = udpChannel.accept();
-		return new EthernetUDPClientConnection(udpChannel, (InetSocketAddress)udpAccept.getSocketAddress(), udpAccept);
+		return new UDPClientConnection(udpChannel, (InetSocketAddress)udpAccept.getSocketAddress(), udpAccept);
 	}
 	
 	/**
