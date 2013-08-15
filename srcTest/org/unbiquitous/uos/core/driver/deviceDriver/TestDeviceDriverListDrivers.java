@@ -1,5 +1,6 @@
 package org.unbiquitous.uos.core.driver.deviceDriver;
 
+import static org.fest.assertions.api.Assertions.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -86,7 +87,8 @@ private static final Logger logger = UOSLogging.getLogger();
 		
 		expectedDriverList.put("driverList", new JSONObject(testListDrivers));
 		
-		assertEquals(expectedDriverList.toMap(), jsonResponse.optJSONObject("responseData").toMap());
+		assertThat(jsonResponse.optJSONObject("responseData").toMap())
+										.isEqualTo(expectedDriverList.toMap());
 	}
 	
 	public void testSendListDriversByDriverNameValid1() 
