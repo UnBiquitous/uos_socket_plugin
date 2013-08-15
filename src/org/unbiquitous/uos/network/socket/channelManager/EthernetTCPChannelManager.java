@@ -13,7 +13,7 @@ import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 import org.unbiquitous.uos.network.socket.connection.EthernetTCPClientConnection;
 import org.unbiquitous.uos.network.socket.connection.EthernetTCPServerConnection;
 import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
@@ -64,7 +64,7 @@ public class EthernetTCPChannelManager implements ChannelManager{
 		int superiorPort = Integer.parseInt(limitPorts[1]);
 		for(int port = inferiorPort; port <= superiorPort; port++){
 			validPorts.add(port);
-			freePassiveDevices.add(new EthernetDevice("0.0.0.0",port,EthernetConnectionType.TCP));
+			freePassiveDevices.add(new SocketDevice("0.0.0.0",port,EthernetConnectionType.TCP));
 		}
 	}
 	
@@ -117,7 +117,7 @@ public class EthernetTCPChannelManager implements ChannelManager{
 			String host = address[0];
 	    	int port = Integer.parseInt(address[1]);
 			// Passive (Stream) connections shouldn't be cached
-	    	server = new EthernetTCPServerConnection(new EthernetDevice(host, port, EthernetConnectionType.TCP), null);
+	    	server = new EthernetTCPServerConnection(new SocketDevice(host, port, EthernetConnectionType.TCP), null);
 	    	startedServers.put(networkDeviceName, server);
 		}
 		

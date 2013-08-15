@@ -13,7 +13,7 @@ import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManagerListener;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 import org.unbiquitous.uos.network.socket.channelManager.EthernetTCPChannelManager;
 import org.unbiquitous.uos.network.socket.connection.EthernetTCPServerConnection;
 
@@ -51,7 +51,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
     private ConnectionManagerListener connectionManagerListener = null;
     
     /** Server Connection */
-    private EthernetDevice serverDevice;
+    private SocketDevice serverDevice;
     private EthernetTCPServerConnection server;
     
     /** Attribute to control the closing of the Connection Manager */
@@ -146,7 +146,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 		if(serverDevice == null){
 			try {
 				String addr = EthUtilNetworkInterfaceHelper.listLocalAddresses()[0];
-				serverDevice = new EthernetDevice(addr, UBIQUITOS_ETH_TCP_PORT, EthernetConnectionType.TCP);
+				serverDevice = new SocketDevice(addr, UBIQUITOS_ETH_TCP_PORT, EthernetConnectionType.TCP);
 				return serverDevice;
 			} catch (SocketException e) {
 				logger.log(Level.SEVERE,"",e);
@@ -180,7 +180,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
         IOException ex = null;
         while (tries < max_retries){
 			try {
-				server = new EthernetTCPServerConnection((EthernetDevice)getNetworkDevice(), cacheController);
+				server = new EthernetTCPServerConnection((SocketDevice)getNetworkDevice(), cacheController);
 				tries = max_retries;
 			} catch (IOException e) {
 				String msg = "Error starting Ethernet TCP Connection Manager : "+e.getMessage();

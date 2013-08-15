@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
 import org.unbiquitous.uos.network.socket.udp.UdpAccept;
 import org.unbiquitous.uos.network.socket.udp.UdpChannel;
@@ -34,14 +34,14 @@ public class EthernetUDPClientConnection extends ClientConnection {
 	 **********************************/
 	
 	public EthernetUDPClientConnection(UdpChannel udpChannel, InetSocketAddress socketAddress, UdpAccept udpAccept) throws IOException{
-		super(new EthernetDevice(socketAddress.getAddress().getHostName(), socketAddress.getPort(), EthernetConnectionType.UDP));
+		super(new SocketDevice(socketAddress.getAddress().getHostName(), socketAddress.getPort(), EthernetConnectionType.UDP));
 		this.peerAddress = socketAddress;
 		this.udpChannel = udpChannel;
 		this.udpChannel.connect(this.peerAddress, udpAccept.getInputStream(), udpAccept.getOutputStream());
 	}
 	
 	public EthernetUDPClientConnection(String host, int port) throws IOException{
-		super(new EthernetDevice(host, port, EthernetConnectionType.UDP));
+		super(new SocketDevice(host, port, EthernetConnectionType.UDP));
 		this.peerAddress = new InetSocketAddress(host,port);
 		this.udpChannel = UdpChannel.openChannel(this.peerAddress);
 	}

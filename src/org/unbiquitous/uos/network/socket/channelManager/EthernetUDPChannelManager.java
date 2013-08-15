@@ -10,7 +10,7 @@ import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 import org.unbiquitous.uos.network.socket.connection.EthernetUDPClientConnection;
 import org.unbiquitous.uos.network.socket.connection.EthernetUDPServerConnection;
 import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
@@ -46,7 +46,7 @@ public class EthernetUDPChannelManager implements ChannelManager{
 		int inferiorPort = Integer.parseInt(limitPorts[0]);
 		int superiorPort = Integer.parseInt(limitPorts[1]);
 		for(int port = inferiorPort; port <= superiorPort; port++){
-			freePassiveDevices.add(new EthernetDevice("0.0.0.0",port,EthernetConnectionType.UDP));
+			freePassiveDevices.add(new SocketDevice("0.0.0.0",port,EthernetConnectionType.UDP));
 		}
 	}
 	
@@ -90,7 +90,7 @@ public class EthernetUDPChannelManager implements ChannelManager{
 			String host = address[0];
 	    	int port = Integer.parseInt(address[1]);
 			
-	    	server = new EthernetUDPServerConnection(new EthernetDevice(host, port, EthernetConnectionType.UDP));
+	    	server = new EthernetUDPServerConnection(new SocketDevice(host, port, EthernetConnectionType.UDP));
 	    	startedServers.put(networkDeviceName, server);
 		}
 		

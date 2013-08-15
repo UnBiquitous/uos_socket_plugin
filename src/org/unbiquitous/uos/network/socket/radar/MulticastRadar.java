@@ -18,7 +18,7 @@ import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
 
 public class MulticastRadar implements Radar {
@@ -65,7 +65,7 @@ public class MulticastRadar implements Radar {
 			sendBeacon(socket, InetAddress.getByName("255.255.255.255"), port);
 			lastAddresses.removeAll(knownAddresses);
 			for(String address: lastAddresses){
-				EthernetDevice left = new EthernetDevice(address,port, 
+				SocketDevice left = new SocketDevice(address,port, 
 						EthernetConnectionType.TCP);
 				listener.deviceLeft(left);
 			}
@@ -96,7 +96,7 @@ public class MulticastRadar implements Radar {
 			String address = packet.getAddress().getHostAddress();
 			if (!knownAddresses.contains(address)){
 				//TODO: rename this class to SocketDevice
-				EthernetDevice found = new EthernetDevice(address,port, 
+				SocketDevice found = new SocketDevice(address,port, 
 						EthernetConnectionType.TCP);
 				listener.deviceEntered(found);
 				sendBeacon(socket, packet.getAddress(), port);

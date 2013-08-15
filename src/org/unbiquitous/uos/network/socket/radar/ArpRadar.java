@@ -10,7 +10,7 @@ import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
 
 import br.unb.cic.ethutil.EthUtil;
@@ -136,7 +136,7 @@ public class ArpRadar implements EthUtilClientListener, Radar {
     	logger.info("[EthernetArpRadar] [" + host + "] is in the smart-space.");
     	// Creates a EthernetDevice Object
     	//FIXME: ArpRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
-    	EthernetDevice device = new EthernetDevice(host, 14984, EthernetConnectionType.TCP);
+    	SocketDevice device = new SocketDevice(host, 14984, EthernetConnectionType.TCP);
     	// Notifies the listener
     	radarListener.deviceEntered(device);
     }
@@ -165,7 +165,7 @@ public class ArpRadar implements EthUtilClientListener, Radar {
 					// notifies the Radar Control Center
 					logger.info("[EthernetArpRadar] Host ["+existingHost+"] has left the smart-space.");
 			    	//FIXME: ArpRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
-					radarListener.deviceLeft(new EthernetDevice(existingHost,  14984, EthernetConnectionType.TCP)); 
+					radarListener.deviceLeft(new SocketDevice(existingHost,  14984, EthernetConnectionType.TCP)); 
 				}
 			}
     		// add all found hosts to the local repository

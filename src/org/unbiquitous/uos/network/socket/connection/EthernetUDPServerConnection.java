@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.unbiquitous.uos.core.network.model.connection.ServerConnection;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 import org.unbiquitous.uos.network.socket.udp.UdpAccept;
 import org.unbiquitous.uos.network.socket.udp.UdpChannel;
 
@@ -26,7 +26,7 @@ public class EthernetUDPServerConnection extends ServerConnection {
 	 * CONSTRUCTOR
 	 ************************************/
 	
-	public EthernetUDPServerConnection(EthernetDevice serverDevice) throws IOException{
+	public EthernetUDPServerConnection(SocketDevice serverDevice) throws IOException{
 		super(serverDevice);
 		udpChannel = UdpChannel.openChannel(serverDevice.getPort());
 	}

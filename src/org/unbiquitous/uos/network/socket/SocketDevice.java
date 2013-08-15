@@ -11,7 +11,7 @@ import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionMa
  * @author Passarinho
  *
  */
-public class EthernetDevice extends NetworkDevice{	
+public class SocketDevice extends NetworkDevice{	
 	
 	private static final String NETWORK_DEVICE_TYPE = "Ethernet";
 	
@@ -37,7 +37,7 @@ public class EthernetDevice extends NetworkDevice{
 	 * 
 	 * @param remoteDevice
 	 */
-	public EthernetDevice(String host, int port, EthernetConnectionType connectionType){
+	public SocketDevice(String host, int port, EthernetConnectionType connectionType){
 		this.host = host;
 		this.port = port;
 		this.connectionType = connectionType;

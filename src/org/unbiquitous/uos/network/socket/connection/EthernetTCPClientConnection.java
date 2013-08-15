@@ -14,7 +14,7 @@ import org.unbiquitous.uos.core.network.cache.CachedConnectionData;
 import org.unbiquitous.uos.core.network.cache.CachedInputStream;
 import org.unbiquitous.uos.core.network.cache.CachedOutputStream;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
 
 
@@ -43,7 +43,7 @@ public class EthernetTCPClientConnection extends ClientConnection implements Cac
 	 **********************************/
 
 	public EthernetTCPClientConnection(Socket tcpSocket, CacheController cacheController) throws IOException{
-		super(new EthernetDevice(tcpSocket.getInetAddress().getHostAddress(), tcpSocket.getPort(), EthernetConnectionType.TCP));
+		super(new SocketDevice(tcpSocket.getInetAddress().getHostAddress(), tcpSocket.getPort(), EthernetConnectionType.TCP));
 		this.tcpSocket = tcpSocket;
 		this.cacheController = cacheController;
 		if (cacheController != null){
@@ -54,7 +54,7 @@ public class EthernetTCPClientConnection extends ClientConnection implements Cac
 	}
 
 	public EthernetTCPClientConnection(String host, int port, CacheController cacheController) throws IOException{
-		super(new EthernetDevice(host, port, EthernetConnectionType.TCP));
+		super(new SocketDevice(host, port, EthernetConnectionType.TCP));
 		this.tcpSocket = new Socket(host, port);
 		this.cacheController = cacheController;
 		if (cacheController != null){

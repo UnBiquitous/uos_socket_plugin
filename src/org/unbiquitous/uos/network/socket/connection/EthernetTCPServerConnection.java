@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 
 import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.model.connection.ServerConnection;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 
 
 /**
@@ -30,7 +30,7 @@ public class EthernetTCPServerConnection extends ServerConnection {
 	 * CONSTRUCTOR
 	 * @param cacheController 
 	 ************************************/
-	public EthernetTCPServerConnection(EthernetDevice serverDevice, CacheController cacheController) throws IOException{
+	public EthernetTCPServerConnection(SocketDevice serverDevice, CacheController cacheController) throws IOException{
 		super(serverDevice);
 		this.cacheController = cacheController;
 		tcpSocket = new ServerSocket(serverDevice.getPort());

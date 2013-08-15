@@ -10,7 +10,7 @@ import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
 
 import br.unb.cic.ethutil.EthUtil;
@@ -130,7 +130,7 @@ public class PingRadar implements EthUtilClientListener, Radar {
     	logger.info("[EthernetPingRadar] [" + host + "] is in the smart-space.");
     	// Creates a EthernetDevice Object
     	//FIXME: PingRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
-    	EthernetDevice device = new EthernetDevice(host, 14984, EthernetConnectionType.TCP);
+    	SocketDevice device = new SocketDevice(host, 14984, EthernetConnectionType.TCP);
     	// Notifies the listener
     	radarListener.deviceEntered(device);
     }
@@ -163,7 +163,7 @@ public class PingRadar implements EthUtilClientListener, Radar {
 				// notifies the Radar Control Center
 				logger.info("[EthernetPingRadar] Host ["+byeHost+"] has left the smart-space.");
 		    	//FIXME: PingRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
-				radarListener.deviceLeft(new EthernetDevice(byeHost,  14984, EthernetConnectionType.TCP)); 
+				radarListener.deviceLeft(new SocketDevice(byeHost,  14984, EthernetConnectionType.TCP)); 
 			}
     		// add all found hosts to the local repository
     		localHostRepository = new HashSet<String>(recentilyDiscoveredHosts);

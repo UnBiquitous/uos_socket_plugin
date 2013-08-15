@@ -11,7 +11,7 @@ import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManagerListener;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 import org.unbiquitous.uos.network.socket.channelManager.EthernetUDPChannelManager;
 import org.unbiquitous.uos.network.socket.connection.EthernetUDPServerConnection;
 import org.unbiquitous.uos.network.socket.udp.UdpChannel;
@@ -47,7 +47,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
     private ConnectionManagerListener connectionManagerListener = null;
     
     /** Server Connection */
-    private EthernetDevice serverDevice;
+    private SocketDevice serverDevice;
     private EthernetUDPServerConnection server;
     
     /** Attribute to control the closing of the Connection Manager */
@@ -135,7 +135,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 		if(serverDevice == null){			
 			try {
 				String addr = EthUtilNetworkInterfaceHelper.listLocalAddresses()[0];
-				serverDevice = new EthernetDevice(addr, UBIQUITOS_ETH_UDP_PORT, EthernetConnectionType.UDP);
+				serverDevice = new SocketDevice(addr, UBIQUITOS_ETH_UDP_PORT, EthernetConnectionType.UDP);
 				return serverDevice;
 			} catch (SocketException e) {
 				logger.log(Level.SEVERE,"",e);
@@ -164,7 +164,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
         logger.info("Starting Ethernet UDP Connection Manager...");
         
 		try {
-			server = new EthernetUDPServerConnection((EthernetDevice)getNetworkDevice());
+			server = new EthernetUDPServerConnection((SocketDevice)getNetworkDevice());
 		} catch (IOException ex) {
 			String msg = "Error starting Ethernet UDP Connection Manager. ";
             logger.log(Level.SEVERE,msg, ex);

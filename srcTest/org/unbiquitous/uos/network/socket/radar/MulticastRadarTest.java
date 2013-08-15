@@ -33,7 +33,7 @@ import org.mockito.stubbing.Answer;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 
 public class MulticastRadarTest {
 
@@ -164,7 +164,7 @@ public class MulticastRadarTest {
 			public void run() {
 				verify(listener,times(3)).deviceEntered(arg.capture());
 				NetworkDevice device = arg.getValue();
-				assertThat(device).isInstanceOf(EthernetDevice.class);
+				assertThat(device).isInstanceOf(SocketDevice.class);
 				NetworkDevice device1 = arg.getAllValues().get(0);
 				assertThat(device1.getNetworkDeviceName())
 												.isEqualTo("1.1.1.1"+":"+port);
