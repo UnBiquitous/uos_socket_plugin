@@ -15,9 +15,15 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ListResourceBundle;
+import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,10 +34,10 @@ import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
 import org.unbiquitous.uos.network.socket.EthernetDevice;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
 
 public class MulticastRadarTest {
 
+	private static final String THREAD_NAME = "radar-t";
 	private Integer port;
 	private MulticastRadar radar;
 	private DatagramSocket serverSocket;
@@ -62,6 +68,7 @@ public class MulticastRadarTest {
 	
 	@After public void tearDown(){
 		radar.stopRadar();
+		DateTimeUtils.setCurrentMillisSystem();
 	}
 	
 	@Test public void mustBeARadarWithAProperFactory(){
@@ -72,10 +79,18 @@ public class MulticastRadarTest {
 			.isInstanceOf(DatagramSocketFactory.class);
 	}
 	
-	@Test public void listenToThePortSpecifyed() throws Exception{
+	@Test public void listenToThePortSpecifyedWithA10sTimeout() throws Throwable{
 		run();
-		
-		verify(factory).newSocket(port);
+		assertEventually(1000, new Runnable() {
+			public void run() {
+				try {
+					verify(factory).newSocket(port);
+					verify(serverSocket,times(1)).setSoTimeout(10*1000);
+				} catch (SocketException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
 	}
 	
 	@Test public void waitForDeviceToNotifyItsExistence() throws Exception{
@@ -86,21 +101,43 @@ public class MulticastRadarTest {
 		assertThat(arg.getValue()).isNotNull();
 	}
 	
-	@Test public void startAndStopMustControlTheNumberOfThreads(){
-		final int before = Thread.activeCount();
-		
+	@Test public void doesNotFailOnATimeout() throws Exception{
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation)throws Throwable {
+				throw new SocketTimeoutException("Test exception");
+			}
+		}).when(serverSocket).receive((DatagramPacket)any());
 		run();
-		assertThat(Thread.activeCount()).isEqualTo(before+1);
+	}
+	
+	@Test public void startAndStopMustControlTheNumberOfThreads() throws Throwable{
+		run();
+		assertEventually(1000, new Runnable() {
+			public void run() {
+				Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+				for (Thread t : allStackTraces.keySet()){
+					if(t.getName().equals(THREAD_NAME)){
+						return;
+					}
+				}
+				throw new AssertionError("Thread "+THREAD_NAME+" not found");
+			}
+		});
 		
 		radar.stopRadar();
 		assertEventually(1000, new Runnable() {
 			public void run() {
-				assertThat(Thread.activeCount()).isEqualTo(before);
+				Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+				for (Thread t : allStackTraces.keySet()){
+					if(t.getName().equals(THREAD_NAME)){
+						throw new AssertionError("Thread "+THREAD_NAME+" not expected");
+					}
+				}
 			}
 		});
 	}
 	
-	@Test public void sendsABroadcastBeaconAtStartup() throws Exception{
+	@Test public void sendsABroadcastBeaconAtStartup() throws Throwable{
 		run();
 		final ArgumentCaptor<DatagramPacket> arg = forClass(DatagramPacket.class);
 		assertEventually(1000, new Runnable() {
@@ -119,7 +156,7 @@ public class MulticastRadarTest {
 		});
 	}
 	
-	@Test public void whenSomebodySendsABeaconNotifiesItsDiscoveryOnce() throws Exception{
+	@Test public void whenSomebodySendsABeaconNotifiesItsDiscoveryOnce() throws Throwable{
 		mockADeviceEntry("1.1.1.1","2.2.2.2","3.3.3.3");
 		run();
 		final ArgumentCaptor<NetworkDevice> arg = forClass(NetworkDevice.class);
@@ -141,7 +178,7 @@ public class MulticastRadarTest {
 		});
 	}
 
-	@Test public void sendsADirectResponseBeaconWhenSomebodyIsFound() throws Exception{
+	@Test public void sendsADirectResponseBeaconWhenSomebodyIsFound() throws Throwable{
 		mockADeviceEntry("1.1.1.1");
 		run();
 		final ArgumentCaptor<DatagramPacket> arg = forClass(DatagramPacket.class);
@@ -163,6 +200,60 @@ public class MulticastRadarTest {
 	
 	//TODO: How to detect device left ?
 	
+	@Test public void checkForLeftDevicesEvery30seconds() throws Throwable{
+		final List<String> enteredAddress = new ArrayList<String>(){
+			{
+				add("1.1.1.1");add("2.2.2.2");add("3.3.3.3");
+			}
+		};
+		 
+		doAnswer(new Answer<Void>() {
+			int index = 0;
+			public Void answer(InvocationOnMock invocation)
+					throws Throwable {
+				String addr = enteredAddress.get(index++ % enteredAddress.size() );
+				Object[] args = invocation.getArguments();
+				DatagramPacket packet = (DatagramPacket) args[0];
+				packet.setAddress(InetAddress.getByName(addr));
+				return null;
+			}
+		}).when(serverSocket).receive((DatagramPacket)any());
+		
+		run();
+		Thread.sleep(10);
+		enteredAddress.remove("2.2.2.2");
+		
+		final ArgumentCaptor<NetworkDevice> arg = forClass(NetworkDevice.class);
+		assertEventually(1000, new Runnable() {
+			public void run() {
+				DateTimeUtils.setCurrentMillisFixed(new DateTime().plusSeconds(30).getMillis());
+				verify(listener,times(1)).deviceLeft(arg.capture());
+				NetworkDevice device = arg.getValue();
+				assertThat(device.getNetworkDeviceName()).isEqualTo("2.2.2.2:"+port);
+			}
+		});
+	}
+	
+	@Test public void sendsABeaconEvery30seconds() throws Throwable{
+		run();
+		final ArgumentCaptor<DatagramPacket> arg = forClass(DatagramPacket.class);
+		assertEventually(1000, new Runnable() {
+			public void run() {
+				try {
+					DateTimeUtils.setCurrentMillisFixed(new DateTime().plusSeconds(30).getMillis());
+					verify(serverSocket,times(2)).send(arg.capture());
+					DatagramPacket beacon = arg.getAllValues().get(1);
+					assertThat(beacon.getAddress().getHostAddress())
+						.isEqualTo("255.255.255.255");
+					assertThat(beacon.getPort())
+						.isEqualTo(port);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+	}
+	
 	private void mockADeviceEntry(final String ... enteredAddress) throws IOException {
 		doAnswer(new Answer<Void>() {
 			int index = 0;
@@ -179,11 +270,11 @@ public class MulticastRadarTest {
 	
 	private void run(){
 		radar.startRadar(); //TODO: why ?
-		Thread t = new Thread(radar);
+		Thread t = new Thread(radar,THREAD_NAME);
 		t.start();
 	}
 	
-	private void assertEventually(int timeoutInMilliseconds, Runnable assertion){
+	private void assertEventually(int timeoutInMilliseconds, Runnable assertion) throws Throwable{
 		long begin = System.currentTimeMillis();
 		long now = begin;
 		Throwable lastException = null;
@@ -198,6 +289,6 @@ public class MulticastRadarTest {
 			}
 			now = System.currentTimeMillis(); 
 		}while((now - begin) < timeoutInMilliseconds);
-		throw new RuntimeException(lastException);
+		throw lastException;
 	}
 }

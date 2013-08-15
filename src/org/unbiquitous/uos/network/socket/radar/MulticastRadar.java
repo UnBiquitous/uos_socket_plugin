@@ -5,12 +5,15 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.joda.time.DateTime;
+import org.joda.time.Seconds;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
@@ -27,6 +30,9 @@ public class MulticastRadar implements Radar {
 
 	private final RadarListener listener;
 	private Set<String> knownAddresses;
+
+	private DateTime lastCheck;
+	private Set<String> lastAddresses;
 	
 	public MulticastRadar(RadarListener listener) {
 		this.listener = listener;
@@ -37,10 +43,15 @@ public class MulticastRadar implements Radar {
 	public void run() {
 		Integer port = 14984;
 		try {
+			this.lastCheck = new DateTime();
+			this.lastAddresses = new HashSet<String>();
 			DatagramSocket socket = socketFactory.newSocket(port);
+			int tenSeconds = 10*1000;
+			socket.setSoTimeout(tenSeconds);
 			sendBeacon(socket, InetAddress.getByName("255.255.255.255"), port);
 			while(running){
 				receiveAnswers(port, socket);
+				checkLeftDevices(port, socket);
 			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Problems running the radar.", e);
@@ -48,15 +59,39 @@ public class MulticastRadar implements Radar {
 		
 	}
 
+	private void checkLeftDevices(Integer port, DatagramSocket socket) throws IOException {
+		DateTime now = new DateTime();
+		if (Seconds.secondsBetween(lastCheck, now).getSeconds() > 30){
+			sendBeacon(socket, InetAddress.getByName("255.255.255.255"), port);
+			lastAddresses.removeAll(knownAddresses);
+			for(String address: lastAddresses){
+				EthernetDevice left = new EthernetDevice(address,port, 
+						EthernetConnectionType.TCP);
+				listener.deviceLeft(left);
+			}
+			lastAddresses = knownAddresses;
+			knownAddresses =  new HashSet<String>();
+			lastCheck = now;
+		}
+	}
+
 	private void sendBeacon(DatagramSocket socket, InetAddress address, Integer port)
 			throws UnknownHostException, IOException {
 		socket.send(new DatagramPacket(new byte[]{1}, 1, address, port));
 	}
 
-	private void receiveAnswers(Integer port, DatagramSocket socket)
-			throws IOException {
-		DatagramPacket packet = new DatagramPacket(new byte[1], 1);
-		socket.receive(packet);
+	private void receiveAnswers(Integer port, DatagramSocket socket) throws IOException {
+		try {
+			DatagramPacket packet = new DatagramPacket(new byte[1], 1);
+			socket.receive(packet);
+			handleBeacon(port, socket, packet);
+		} catch (SocketTimeoutException e) {
+			// Timeout is expected to happen.
+		}
+	}
+
+	private void handleBeacon(Integer port, DatagramSocket socket,
+			DatagramPacket packet) throws UnknownHostException, IOException {
 		if (packet.getAddress() != null){
 			String address = packet.getAddress().getHostAddress();
 			if (!knownAddresses.contains(address)){
