@@ -33,6 +33,9 @@ public class MulticastRadar implements Radar {
 
 	private DateTime lastCheck;
 	private Set<String> lastAddresses;
+
+	//FIXME
+	public DatagramSocket socket;
 	
 	public MulticastRadar(RadarListener listener) {
 		this.listener = listener;
@@ -45,7 +48,7 @@ public class MulticastRadar implements Radar {
 		try {
 			this.lastCheck = new DateTime();
 			this.lastAddresses = new HashSet<String>();
-			DatagramSocket socket = socketFactory.newSocket(port);
+			socket = socketFactory.newSocket(port);
 			int tenSeconds = 10*1000;
 			socket.setSoTimeout(tenSeconds);
 			sendBeacon(socket, InetAddress.getByName("255.255.255.255"), port);
