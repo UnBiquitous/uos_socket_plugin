@@ -99,6 +99,7 @@ public class MulticastRadar implements Radar {
 			String address = packet.getAddress().getHostAddress();
 			if (!knownAddresses.contains(address)){
 				//TODO: rename this class to SocketDevice
+				logger.info(String.format("Entered device %s.", address));
 				SocketDevice found = new SocketDevice(address,port, 
 						EthernetConnectionType.TCP);
 				listener.deviceEntered(found);
