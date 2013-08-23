@@ -1,6 +1,7 @@
 package org.unbiquitous.uos.core.driver.deviceDriver;
 
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -22,7 +23,6 @@ import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.driver.DeviceDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
-import org.unbiquitous.uos.core.messageEngine.dataType.json.JSONDriver;
 import org.unbiquitous.uos.core.test.model.DummyDriver;
 
 public class TestDeviceDriverListDrivers extends TestCase {
@@ -70,7 +70,7 @@ private static final Logger logger = UOSLogging.getLogger();
 		Map<String,Object> testListDrivers = new HashMap<String,Object>();
 		
 		UpDriver upDeviceDriver = (new DeviceDriver()).getDriver();
-		JSONDriver jsonDeviceDriver = new JSONDriver(upDeviceDriver);
+		JSONObject jsonDeviceDriver = upDeviceDriver.toJSON();
 		
 		testListDrivers.put("uos.DeviceDriver1", jsonDeviceDriver);
 		testListDrivers.put("defaultDeviceDriver", jsonDeviceDriver);
@@ -78,7 +78,7 @@ private static final Logger logger = UOSLogging.getLogger();
 		testListDrivers.put("testListId", jsonDeviceDriver);
 		
 		UpDriver upDummyDriver = (new DummyDriver()).getDriver();
-		JSONDriver jsonDummyDriver = new JSONDriver(upDummyDriver);
+		JSONObject jsonDummyDriver = upDummyDriver.toJSON();
 		
 		testListDrivers.put("dummyDriverId", jsonDummyDriver);
 		testListDrivers.put("DummyDriver6", jsonDummyDriver);
@@ -111,22 +111,23 @@ private static final Logger logger = UOSLogging.getLogger();
 		assertNotNull(jsonResponse.optJSONObject("responseData"));
 		assertNotNull(jsonResponse.optJSONObject("responseData").opt("driverList"));
 		
-		Map<String,String> testListDrivers = new HashMap<String,String>();
+		Map<String,Object> testListDrivers = new HashMap<String,Object>();
 		
 		UpDriver upDriver = (new DeviceDriver()).getDriver();
 		
-		JSONDriver jsonDriver = new JSONDriver(upDriver);
+		JSONObject jsonDriver = upDriver.toJSON();
 		
-		testListDrivers.put("uos.DeviceDriver1", jsonDriver.toString());
-		testListDrivers.put("uos.DeviceDriver3", jsonDriver.toString());
-		testListDrivers.put("defaultDeviceDriver", jsonDriver.toString());
-		testListDrivers.put("testListId", jsonDriver.toString());
+		testListDrivers.put("uos.DeviceDriver1", jsonDriver);
+		testListDrivers.put("uos.DeviceDriver3", jsonDriver);
+		testListDrivers.put("defaultDeviceDriver", jsonDriver);
+		testListDrivers.put("testListId", jsonDriver);
 		
 		JSONObject expectedDriverList = new JSONObject();
 		
 		expectedDriverList.put("driverList", new JSONObject(testListDrivers).toString());
 		
-		assertEquals(expectedDriverList.toMap(), jsonResponse.optJSONObject("responseData").toMap());
+		assertThat(jsonResponse.optJSONObject("responseData").toMap())
+			.isEqualTo(expectedDriverList.toMap());
 	}
 	
 	public void testSendListDriversByDriverNameValid2() 
@@ -152,7 +153,7 @@ private static final Logger logger = UOSLogging.getLogger();
 		Map<String,String> testListDrivers = new HashMap<String,String>();
 		
 		UpDriver upDummyDriver = (new DummyDriver()).getDriver();
-		JSONDriver jsonDummyDriver = new JSONDriver(upDummyDriver);
+		JSONObject jsonDummyDriver = upDummyDriver.toJSON();
 		
 		testListDrivers.put("dummyDriverId", jsonDummyDriver.toString());
 		testListDrivers.put("DummyDriver6", jsonDummyDriver.toString());
