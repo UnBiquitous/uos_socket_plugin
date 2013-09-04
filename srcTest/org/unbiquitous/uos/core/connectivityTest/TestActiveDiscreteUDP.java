@@ -9,7 +9,6 @@ import junit.framework.TestCase;
 import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
-import org.unbiquitous.uos.core.messageEngine.dataType.json.JSONDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
 
 public class TestActiveDiscreteUDP extends TestCase {
@@ -77,7 +76,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		logger.info("Trying to consume the listDrivers service from the Device Driver from the TCP machine");
 		
 		Map<String,Object> parameterMap = new HashMap<String,Object>();
-		parameterMap.put("device", new JSONDevice(this.applicationContext.getGateway().getCurrentDevice()).toString());
+		parameterMap.put("device", this.applicationContext.getGateway().getCurrentDevice().toJSON().toString());
 		
 		ServiceResponse response = this.applicationContext.getGateway().callService(
 				this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"),
@@ -120,7 +119,7 @@ public class TestActiveDiscreteUDP extends TestCase {
 		logger.info("Trying to consume the listDrivers service from the Device Driver from the Bluetooth machine");
 		
 		Map<String,Object> parameterMap = new HashMap<String,Object>();
-		parameterMap.put("device", new JSONDevice(this.applicationContext.getGateway().getCurrentDevice()).toString());
+		parameterMap.put("device", this.applicationContext.getGateway().getCurrentDevice().toJSON().toString());
 		
 		ServiceResponse response = this.applicationContext.getGateway().callService(
 				this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"),

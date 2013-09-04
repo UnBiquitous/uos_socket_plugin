@@ -23,7 +23,6 @@ import org.unbiquitous.uos.core.messageEngine.messages.Notify;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
 import org.unbiquitous.uos.core.messageEngine.messages.json.JSONNotify;
-import org.unbiquitous.uos.core.messageEngine.messages.json.JSONServiceCall;
 import org.unbiquitous.uos.core.messageEngine.messages.json.JSONServiceResponse;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
 import org.unbiquitous.uos.network.socket.connection.TCPClientConnection;
@@ -239,11 +238,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	
 	
 	protected ServiceResponse sendReceive(ServiceCall serviceCall) throws UnknownHostException, IOException, InterruptedException, JSONException{
-
-		String message = new JSONServiceCall(serviceCall).toString();
-		
-		StringBuilder builder = sendReceive(message);
-		
+		StringBuilder builder = sendReceive(serviceCall.toJSON().toString());
 		
 		if (builder.length() == 0){
 			return null;
