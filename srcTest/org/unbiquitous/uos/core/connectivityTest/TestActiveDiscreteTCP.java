@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 /*
  * This test only works along with other on thsi package.
@@ -82,7 +82,7 @@ public class TestActiveDiscreteTCP extends TestCase {
 		Map<String,Object> parameterMap = new HashMap<String,Object>();
 		parameterMap.put("device", this.applicationContext.getGateway().getCurrentDevice().toJSON().toString());
 		
-		ServiceResponse response = this.applicationContext.getGateway().callService(
+		Response response = this.applicationContext.getGateway().callService(
 				this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"),
 				"listDrivers", 
 				"uos.DeviceDriver", 
@@ -125,7 +125,7 @@ public class TestActiveDiscreteTCP extends TestCase {
 		Map<String,Object> parameterMap = new HashMap<String,Object>();
 		parameterMap.put("device", this.applicationContext.getGateway().getCurrentDevice().toJSON().toString());
 		
-		ServiceResponse response = this.applicationContext.getGateway().callService(
+		Response response = this.applicationContext.getGateway().callService(
 				this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"),
 				"listDrivers", 
 				"uos.DeviceDriver", 

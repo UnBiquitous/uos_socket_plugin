@@ -17,9 +17,9 @@ import junit.framework.TestCase;
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall.ServiceType;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Call.ServiceType;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 	
@@ -74,7 +74,7 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 		
 		int channels = 5;
 		
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver(TEST_DATA_STREAM_DRIVER_NAME);
 		serviceCall.setService(TEST_DATA_CHAT_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_STREAM_DRIVER_ID);
@@ -88,7 +88,7 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 		
 		serviceCall.setParameters(parameters);
 		
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
 		logger.fine("Returned Msg: ["+response.getResponseData().get(TEST_DATA_CHAT_SERVICE_MESSAGE_KEY)+"]");
 		

@@ -8,8 +8,8 @@ import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 import br.unb.unbiquitous.ubiquitos.authentication.SessionKeyDaoHSQLDB;
 
@@ -71,16 +71,16 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		String SECURITY_TYPE = "BASIC";
 
 		// creates a new instance of serviceCall and initializes their parameters
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setSecurityType(SECURITY_TYPE);
-		serviceCall.setServiceType(ServiceCall.ServiceType.DISCRETE);
+		serviceCall.setServiceType(Call.ServiceType.DISCRETE);
 		serviceCall.setService("authenticate");
 		serviceCall.setDriver("uos.DeviceDriver");
 
 		logger.fine("Starts authentication proccess calling the service \"authenticate\"");
 		
 		// Call service
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
 		if (response.getResponseData().containsValue("true")){
 			logger.fine("Authentication performed successfully. Service returned value \"true\"");
@@ -122,16 +122,16 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		String SECURITY_TYPE = "BASIC";
 
 		// creates service call and initializes their parameters
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setSecurityType(SECURITY_TYPE);
-		serviceCall.setServiceType(ServiceCall.ServiceType.DISCRETE);
+		serviceCall.setServiceType(Call.ServiceType.DISCRETE);
 		serviceCall.setService("authenticate");
 		serviceCall.setDriver("uos.DeviceDriver");
 
 		logger.fine("Starts authentication proccess calling the service \"authenticate\"");
 		
 		// Call service
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
 		if (response.getResponseData().containsValue("true")){
 			logger.fine("Authentication performed successfully. Service returned value \"true\"");
@@ -172,16 +172,16 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		String SECURITY_TYPE = "BASIC";
 
 		// creates service call and initializes their parameters
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setSecurityType(SECURITY_TYPE);
-		serviceCall.setServiceType(ServiceCall.ServiceType.DISCRETE);
+		serviceCall.setServiceType(Call.ServiceType.DISCRETE);
 		serviceCall.setService("authenticate");
 		serviceCall.setDriver("uos.DeviceDriver");
 
 		logger.fine("Starts authentication proccess calling the service \"authenticate\"");
 		
 		// Call service
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
 		if (response.getResponseData().containsValue("true")){
 			logger.fine("Authentication performed successfully. Service returned value \"true\"");

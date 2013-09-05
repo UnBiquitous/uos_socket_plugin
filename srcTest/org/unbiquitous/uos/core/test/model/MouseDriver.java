@@ -10,8 +10,8 @@ import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpService.ParameterType;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 
 public class MouseDriver implements UosDriver {
@@ -26,7 +26,7 @@ public class MouseDriver implements UosDriver {
 	private Robot robot; 
 	
 	
-	public void movePointer(ServiceCall serviceCall, ServiceResponse serviceResponse, CallContext messageContext){
+	public void movePointer(Call serviceCall, Response serviceResponse, CallContext messageContext){
 		
 		Map<String,Object> parameters = serviceCall.getParameters();
 		
@@ -44,7 +44,7 @@ public class MouseDriver implements UosDriver {
 		}
 	}
 	
-	public void moveScroll(ServiceCall serviceCall, ServiceResponse serviceResponse, CallContext messageContext){
+	public void moveScroll(Call serviceCall, Response serviceResponse, CallContext messageContext){
 		
 		Map<String,Object> parameters = serviceCall.getParameters();
 		

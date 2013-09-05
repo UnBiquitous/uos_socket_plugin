@@ -7,15 +7,15 @@ import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosEventDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpService.ParameterType;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 
 public class DummyEventDriver implements UosEventDriver {
 	
 	private static DummyEventDriver currentDummyEventDriver ;
 	
-	private ServiceCall lastServiceCall ;
+	private Call lastServiceCall ;
 	
 	private int lastServiceCallCount = 0;
 
@@ -24,16 +24,16 @@ public class DummyEventDriver implements UosEventDriver {
 	}
 	
 	@Override
-	public void registerListener(ServiceCall serviceCall,
-			ServiceResponse serviceResponse, CallContext messageContext) {
+	public void registerListener(Call serviceCall,
+			Response serviceResponse, CallContext messageContext) {
 		// store service call for test check
 		lastServiceCall = serviceCall;
 		lastServiceCallCount++;
 	}
 
 	@Override
-	public void unregisterListener(ServiceCall serviceCall,
-			ServiceResponse serviceResponse, CallContext messageContext) {
+	public void unregisterListener(Call serviceCall,
+			Response serviceResponse, CallContext messageContext) {
 		// store service call for test check
 		lastServiceCall = serviceCall;
 		lastServiceCallCount++;
@@ -70,7 +70,7 @@ public class DummyEventDriver implements UosEventDriver {
 	/**
 	 * @return the lastServiceCall
 	 */
-	public ServiceCall getLastServiceCall() {
+	public Call getLastServiceCall() {
 		return lastServiceCall;
 	}
 

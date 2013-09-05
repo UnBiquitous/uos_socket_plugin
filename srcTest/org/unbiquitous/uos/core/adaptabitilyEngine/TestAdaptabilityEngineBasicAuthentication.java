@@ -13,8 +13,8 @@ import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.driverManager.DriverManagerException;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpNetworkInterface;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	private static final String TEST_DATA_ECHO_SERVICE_PARAMETER_KEY = "message";
@@ -68,7 +68,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	
 	public void testSendDechoRequestWithValidIntanceIdByServiceCall() throws ServiceCallException{
 		
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver(TEST_DATA_DUMMY_DRIVER_NAME);
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);
@@ -78,9 +78,9 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 		
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
-		ServiceResponse expectedResponse = new ServiceResponse();
+		Response expectedResponse = new Response();
 		Map<String,Object> responseMap = new HashMap<String,Object>();
 		responseMap.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		expectedResponse.setResponseData(responseMap);
@@ -93,7 +93,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		
-		ServiceResponse response = gateway.callService(
+		Response response = gateway.callService(
 				providerDevice, 
 				TEST_DATA_ECHO_SERVICE, 
 				TEST_DATA_DUMMY_DRIVER_NAME, 
@@ -101,7 +101,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 				TEST_DATA_SECURITY_TYPE_VALID,
 				parameters);
 		
-		ServiceResponse expectedResponse = new ServiceResponse();
+		Response expectedResponse = new Response();
 		Map<String,Object> responseMap = new HashMap<String,Object>();
 		responseMap.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		expectedResponse.setResponseData(responseMap);
@@ -111,7 +111,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	
 	public void testSendDechoRequestWithInvalidIntanceIdByServiceCall() throws ServiceCallException{
 		
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver(TEST_DATA_DUMMY_DRIVER_NAME);
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_INVALID_ID);
@@ -150,7 +150,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	
 	public void testSendDechoRequestWithoutInstanceIdAndValidDriverByServiceCall() throws ServiceCallException{
 		
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver(TEST_DATA_DUMMY_DRIVER_NAME);
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(null);
@@ -159,9 +159,9 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 		
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
-		ServiceResponse expectedResponse = new ServiceResponse();
+		Response expectedResponse = new Response();
 		Map<String,Object> responseMap = new HashMap<String,Object>();
 		responseMap.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		expectedResponse.setResponseData(responseMap);
@@ -174,7 +174,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		
-		ServiceResponse response = gateway.callService(
+		Response response = gateway.callService(
 				providerDevice, 
 				TEST_DATA_ECHO_SERVICE, 
 				TEST_DATA_DUMMY_DRIVER_NAME, 
@@ -182,7 +182,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 				TEST_DATA_SECURITY_TYPE_VALID,
 				parameters);
 		
-		ServiceResponse expectedResponse = new ServiceResponse();
+		Response expectedResponse = new Response();
 		Map<String,Object> responseMap = new HashMap<String,Object>();
 		responseMap.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		expectedResponse.setResponseData(responseMap);
@@ -194,7 +194,7 @@ public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	
 	public void testSendDechoRequestWithoutInstanceIdAndInvalidDriverServiceCall() throws ServiceCallException{
 		
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver(TEST_DATA_DUMMY_DRIVER_INVALID_NAME);
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(null);

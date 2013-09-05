@@ -16,8 +16,8 @@ import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpService;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 
 /**
@@ -43,7 +43,7 @@ public class StreamDriver implements UosDriver {
 	 * @param messageContext
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void chatService(ServiceCall serviceCall, ServiceResponse serviceResponse, CallContext messageContext){
+	public void chatService(Call serviceCall, Response serviceResponse, CallContext messageContext){
 		
 		logger.fine("Handling StreamDriver.chatService Call");
 		

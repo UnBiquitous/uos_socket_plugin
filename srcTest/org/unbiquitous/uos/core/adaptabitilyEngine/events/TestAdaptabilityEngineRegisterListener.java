@@ -21,8 +21,8 @@ import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.deviceManager.DeviceManager;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.Notify;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
 import org.unbiquitous.uos.network.socket.connection.TCPClientConnection;
 
@@ -83,7 +83,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	public void testRegisterSuccessfulListener() throws Exception{
 		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, registerCall.getParameter(EVENT_KEY_PARAM));
@@ -97,7 +97,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	public void testRegisterListenerTwiceSameEventkey() throws Exception{
 		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		int firstRegisterCallCount = currentEventDriver.getLastServiceCallCount();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
@@ -115,7 +115,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	public void testRegisterListenerTwiceDiferentEventkey() throws Exception{
 		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		int firstRegisterCallCount = currentEventDriver.getLastServiceCallCount();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
@@ -141,7 +141,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		
 		gateway.registerForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, registerCall.getParameter(EVENT_KEY_PARAM));
@@ -170,7 +170,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		
 		gateway.registerForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, registerCall.getParameter(EVENT_KEY_PARAM));
@@ -198,7 +198,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		
 		gateway.registerForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		int registerCount = currentEventDriver.getLastServiceCallCount();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
@@ -218,7 +218,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		
 		adaptabilityEngine.unregisterForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, null, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall unregisterCall = currentEventDriver.getLastServiceCall();
+		Call unregisterCall = currentEventDriver.getLastServiceCall();
 		
 		assertNotNull("Service Call Incorrect.", unregisterCall);
 		assertNotSame("Service Call Incorrect.", registerCount, currentEventDriver.getLastServiceCallCount());
@@ -236,14 +236,14 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	}
 	
 	
-	protected ServiceResponse sendReceive(ServiceCall serviceCall) throws UnknownHostException, IOException, InterruptedException, JSONException{
+	protected Response sendReceive(Call serviceCall) throws UnknownHostException, IOException, InterruptedException, JSONException{
 		StringBuilder builder = sendReceive(serviceCall.toJSON().toString());
 		
 		if (builder.length() == 0){
 			return null;
 		}
 		
-		return ServiceResponse.fromJSON(new JSONObject(builder.toString()));
+		return Response.fromJSON(new JSONObject(builder.toString()));
 	}
 	
 	protected void send(Notify notify) throws UnknownHostException, IOException, InterruptedException, JSONException{
