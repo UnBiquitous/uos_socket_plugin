@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import junit.framework.TestCase;
 
 import org.unbiquitous.json.JSONException;
+import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.AdaptabilityEngine;
@@ -22,7 +23,6 @@ import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.Notify;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
 import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
-import org.unbiquitous.uos.core.messageEngine.messages.json.JSONServiceResponse;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
 import org.unbiquitous.uos.network.socket.connection.TCPClientConnection;
 
@@ -243,7 +243,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 			return null;
 		}
 		
-		return new JSONServiceResponse(builder.toString()).getAsObject(); 
+		return ServiceResponse.fromJSON(new JSONObject(builder.toString()));
 	}
 	
 	protected void send(Notify notify) throws UnknownHostException, IOException, InterruptedException, JSONException{
