@@ -32,7 +32,6 @@ public class TCPChannelManager implements ChannelManager{
 	private Map<String, TCPServerConnection> startedServers;
 	
 	private int defaultPort;
-	private int controlPort;
 	
 	/**
      * Controller responsible for the active connections cache. 
@@ -49,10 +48,7 @@ public class TCPChannelManager implements ChannelManager{
 	public TCPChannelManager(int defaultPort, int controlPort ,String portRange, CacheController cacheController){
 		
 		this.defaultPort = defaultPort;
-		this.controlPort = controlPort;
-		
 		this.cacheController = cacheController;
-		
 		this.startedServers = new HashMap<String, TCPServerConnection>();
 		
 		freePassiveDevices = new ArrayList<NetworkDevice>();

@@ -3,11 +3,12 @@ package org.unbiquitous.uos.security;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.messageEngine.messages.Call;
 
-import junit.framework.TestCase;
 import br.unb.unbiquitous.ubiquitos.authentication.AuthenticationDao;
 import br.unb.unbiquitous.ubiquitos.authentication.SessionKeyDao;
 import br.unb.unbiquitous.ubiquitos.authentication.SessionKeyDaoHSQLDB;

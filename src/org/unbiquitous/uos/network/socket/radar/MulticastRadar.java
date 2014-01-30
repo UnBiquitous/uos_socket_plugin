@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,8 +35,9 @@ public class MulticastRadar implements Radar {
 	private DateTime lastCheck;
 	private Set<String> lastAddresses;
 
-	//FIXME
-	public DatagramSocket socket;
+	private DatagramSocket socket;
+
+	private Integer port = 14984;
 	
 	public MulticastRadar(RadarListener listener) {
 		this.listener = listener;
@@ -44,7 +46,6 @@ public class MulticastRadar implements Radar {
 	
 	@Override
 	public void run() {
-		Integer port = 14984;
 		try {
 			this.lastCheck = new DateTime();
 			this.lastAddresses = new HashSet<String>();
@@ -56,6 +57,7 @@ public class MulticastRadar implements Radar {
 				receiveAnswers(port, socket);
 				checkLeftDevices(port, socket);
 			}
+			socket.close();
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Problems running the radar.", e);
 		}
@@ -110,9 +112,12 @@ public class MulticastRadar implements Radar {
 	}
 
 	@Override
-	public void setConnectionManager(ConnectionManager arg0) {
-		// TODO Auto-generated method stub
-		
+	public void setConnectionManager(ConnectionManager manager) {
+		ResourceBundle bundle = manager.getResourceBundle();
+		if (bundle.containsKey("ubiquitos.eth.tcp.port")){
+			String portStr = bundle.getString("ubiquitos.eth.tcp.port");
+			port = Integer.valueOf(portStr);
+		}
 	}
 
 	@Override

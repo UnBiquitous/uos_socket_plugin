@@ -55,11 +55,6 @@ public class ArpRadar implements EthUtilClientListener, Radar {
     /** A Thread for running this Radar*/
     Thread thread = null;
     
-    /**
-     * The connection manager responsible for handling the information of connections.
-     */
-    private ConnectionManager connectionManager;
-    
     /* *****************************
 	 *   	CONSTRUCTOR
 	 * *****************************/
@@ -184,7 +179,5 @@ public class ArpRadar implements EthUtilClientListener, Radar {
     }
     
     @Override
-    public void setConnectionManager(ConnectionManager connectionManager) {
-    	this.connectionManager = connectionManager;
-    }
+    public void setConnectionManager(ConnectionManager connectionManager) {}
 }

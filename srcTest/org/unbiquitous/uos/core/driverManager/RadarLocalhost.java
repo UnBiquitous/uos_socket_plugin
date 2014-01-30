@@ -27,11 +27,6 @@ public class RadarLocalhost implements Radar {
 	
 	private static RadarLocalhost singletonReference = null;
 	
-	/**
-     * The connection manager responsible for handling the information of connections.
-     */
-    private ConnectionManager connectionManager;
-	
 	public RadarLocalhost(RadarListener listenner) {
 		this.listenner = listenner;
 		if (singletonReference != null){
@@ -113,8 +108,6 @@ public class RadarLocalhost implements Radar {
 	}
 	
 	@Override
-	public void setConnectionManager(ConnectionManager connectionManager) {
-		this.connectionManager = connectionManager;
-	}
+	public void setConnectionManager(ConnectionManager connectionManager) {}
 	
 }

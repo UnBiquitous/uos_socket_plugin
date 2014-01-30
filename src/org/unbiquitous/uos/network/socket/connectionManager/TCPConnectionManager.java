@@ -114,6 +114,9 @@ public class TCPConnectionManager extends SocketConnectionManager{
         }
 	}
 	
+	public ResourceBundle getResourceBundle(){
+		return this.resource;
+	}
 	/**
 	 * Finalize the Connection Manager.
 	 */

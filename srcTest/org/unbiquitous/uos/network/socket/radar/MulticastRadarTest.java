@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
@@ -45,7 +46,7 @@ public class MulticastRadarTest {
 	private RadarListener listener;
 
 	@Before public void setUp() throws Exception{
-		port = 14984;
+		port = 15000;
 		//TODO: port is not used
 		ResourceBundle bundle = new ListResourceBundle() {
 			protected Object[][] getContents() {
@@ -54,8 +55,12 @@ public class MulticastRadarTest {
 				}; 
 			}
 		};
+		
 		listener = mock(RadarListener.class);
 		radar = new MulticastRadar(listener);
+		ConnectionManager mng = mock(ConnectionManager.class);
+		when(mng.getResourceBundle()).thenReturn(bundle);
+		radar.setConnectionManager(mng);
 		mockSockets();
 	}
 
@@ -135,6 +140,11 @@ public class MulticastRadarTest {
 				}
 			}
 		});
+		assertEventually(1000, new Runnable() {
+			public void run() {
+					verify(serverSocket,times(1)).close();
+			}
+		});
 	}
 	
 	@Test public void sendsABroadcastBeaconAtStartup() throws Throwable{
@@ -200,6 +210,7 @@ public class MulticastRadarTest {
 	
 	//TODO: How to detect device left ?
 	
+	@SuppressWarnings("serial")
 	@Test public void checkForLeftDevicesEvery30seconds() throws Throwable{
 		final List<String> enteredAddress = new ArrayList<String>(){
 			{
