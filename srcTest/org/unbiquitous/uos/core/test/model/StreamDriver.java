@@ -51,7 +51,7 @@ public class StreamDriver implements UosDriver {
 		
 		int channels = (Integer)parameters.get(CHANNELS_KEY);
 		
-		logger.fine("Caller DeviceName : "+messageContext.getCallerDevice().getNetworkDeviceName());
+		logger.fine("Caller DeviceName : "+messageContext.getCallerNetworkDevice().getNetworkDeviceName());
 		
 		Map responseMap = new HashMap();
 		

@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
+import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
@@ -48,8 +49,7 @@ public abstract class TestSendMessage extends TestCase {
 		System.gc();
 	}
 	
-	public void testSendDechoRequestWithValidIntanceId()
-		throws UnknownHostException, IOException, InterruptedException {
+	public void testSendDechoRequestWithValidIntanceId() throws Exception{
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',serviceType:'DISCRETE',driver:'DummyDriver',service:'echoService',parameters:{message:'testMessage'},instanceId:'dummyDriverId'}";
 		
@@ -61,11 +61,11 @@ public abstract class TestSendMessage extends TestCase {
 		logger.fine("Returned Message:");
 		logger.fine(response);
 		
-		assertEquals("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
+		assertEquals(new JSONObject("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}").toMap(), 
+				new JSONObject(response).toMap());
 	}
 	
-	public void testSendDechoRequestWithInvalidIntanceId()
-		throws UnknownHostException, IOException, InterruptedException {
+	public void testSendDechoRequestWithInvalidIntanceId() throws Exception {
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',serviceType:'DISCRETE',driver:'DummyDriver',service:'echoService',parameters:{message:'testMessage'},instanceId:'dummyDriverIdInvalid'}";
 		
@@ -77,12 +77,12 @@ public abstract class TestSendMessage extends TestCase {
 		logger.fine("Returned Message:");
 		logger.fine(response);
 		
-		assertEquals("{\"responseData\":{},\"error\":\"No Instance found with id 'dummyDriverIdInvalid'\",\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
+		assertEquals(new JSONObject("{\"responseData\":{},\"error\":\"No Instance found with id 'dummyDriverIdInvalid'\",\"type\":\"SERVICE_CALL_RESPONSE\"}").toMap(), 
+				new JSONObject(response).toMap());
 		
 	}
 	
-	public void testSendDechoRequestWithoutInstanceIdAndValidDriver()
-		throws UnknownHostException, IOException, InterruptedException {
+	public void testSendDechoRequestWithoutInstanceIdAndValidDriver() throws Exception {
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',serviceType:'DISCRETE',driver:'DummyDriver',service:'echoService',parameters:{message:'testMessage'}}";
 		
@@ -94,12 +94,12 @@ public abstract class TestSendMessage extends TestCase {
 		logger.fine("Returned Message:");
 		logger.fine(response);
 		
-		assertEquals("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
+		assertEquals(new JSONObject("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}").toMap(), 
+				new JSONObject(response).toMap());
 		
 	}
 
-	public void testSendDechoRequestWithoutInstanceIdAndInvalidDriver() 
-		throws UnknownHostException, IOException, InterruptedException {
+	public void testSendDechoRequestWithoutInstanceIdAndInvalidDriver() throws Exception {
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',serviceType:'DISCRETE',driver:'DummyDriverInvalid',service:'echoService',parameters:{message:'testMessage'}}";
 		
@@ -111,11 +111,11 @@ public abstract class TestSendMessage extends TestCase {
 		logger.fine("Returned Message:");
 		logger.fine(response);
 		
-		assertEquals("{\"responseData\":{},\"error\":\"No instance found for handling driver 'DummyDriverInvalid'\",\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
+		assertEquals(new JSONObject("{\"responseData\":{},\"error\":\"No instance found for handling driver 'DummyDriverInvalid'\",\"type\":\"SERVICE_CALL_RESPONSE\"}").toMap(), 
+				new JSONObject(response).toMap());
 	}
 	
-	public void testSendDechoRequestTwoValidRequests()
-		throws UnknownHostException, IOException, InterruptedException {
+	public void testSendDechoRequestTwoValidRequests() throws Exception {
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',driver:'DummyDriver',service:'echoService',parameters:{message:'testMessage'},instanceId:'dummyDriverId'}";
 		
@@ -137,11 +137,11 @@ public abstract class TestSendMessage extends TestCase {
 		logger.fine("Returned Message:");
 		logger.fine(response);
 		
-		assertEquals("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
+		assertEquals(new JSONObject("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}").toMap(), 
+				new JSONObject(response).toMap());
 	}
 	
-	public void testSendDechoRequestTenValidRequests()
-			throws UnknownHostException, IOException, InterruptedException {
+	public void testSendDechoRequestTenValidRequests()throws Exception {
 		
 		String serviceCallMessage = "{type:'SERVICE_CALL_REQUEST',driver:'DummyDriver',service:'echoService',parameters:{message:'testMessage'},instanceId:'dummyDriverId'}";
 		
@@ -154,7 +154,8 @@ public abstract class TestSendMessage extends TestCase {
 			logger.fine("Returned Message:");
 			logger.fine(response);
 			
-			assertEquals("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}", response);
+			assertEquals(new JSONObject("{\"responseData\":{\"message\":\"testMessage\"},\"type\":\"SERVICE_CALL_RESPONSE\"}").toMap(), 
+					new JSONObject(response).toMap());
 		}
 	}
 	

@@ -8,13 +8,13 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.HashSet;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
+import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
@@ -113,9 +113,9 @@ public class MulticastRadar implements Radar {
 
 	@Override
 	public void setConnectionManager(ConnectionManager manager) {
-		ResourceBundle bundle = manager.getResourceBundle();
-		if (bundle.containsKey("ubiquitos.eth.tcp.port")){
-			String portStr = bundle.getString("ubiquitos.eth.tcp.port");
+		InitialProperties properties = manager.getResourceBundle();
+		if (properties.containsKey("ubiquitos.eth.tcp.port")){
+			String portStr = properties.getString("ubiquitos.eth.tcp.port");
 			port = Integer.valueOf(portStr);
 		}
 	}

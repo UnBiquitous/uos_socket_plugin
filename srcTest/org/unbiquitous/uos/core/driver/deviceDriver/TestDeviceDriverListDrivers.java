@@ -124,7 +124,7 @@ private static final Logger logger = UOSLogging.getLogger();
 		
 		JSONObject expectedDriverList = new JSONObject();
 		
-		expectedDriverList.put("driverList", new JSONObject(testListDrivers).toString());
+		expectedDriverList.put("driverList", new JSONObject(testListDrivers));
 		
 		assertThat(jsonResponse.optJSONObject("responseData").toMap())
 			.isEqualTo(expectedDriverList.toMap());
@@ -150,19 +150,19 @@ private static final Logger logger = UOSLogging.getLogger();
 		assertNotNull(jsonResponse.optJSONObject("responseData"));
 		assertNotNull(jsonResponse.optJSONObject("responseData").opt("driverList"));
 		
-		Map<String,String> testListDrivers = new HashMap<String,String>();
+		Map<String,Object> testListDrivers = new HashMap<String,Object>();
 		
 		UpDriver upDummyDriver = (new DummyDriver()).getDriver();
 		JSONObject jsonDummyDriver = upDummyDriver.toJSON();
 		
-		testListDrivers.put("dummyDriverId", jsonDummyDriver.toString());
-		testListDrivers.put("DummyDriver6", jsonDummyDriver.toString());
+		testListDrivers.put("dummyDriverId", jsonDummyDriver);
+		testListDrivers.put("DummyDriver6", jsonDummyDriver);
 		
 		JSONObject expectedDriverList = new JSONObject();
 		
-		expectedDriverList.put("driverList", new JSONObject(testListDrivers).toString());
+		expectedDriverList.put("driverList", new JSONObject(testListDrivers));
 		
-		assertEquals(expectedDriverList.toString(), jsonResponse.optJSONObject("responseData").toString());
+		assertEquals(expectedDriverList.toMap(), jsonResponse.optJSONObject("responseData").toMap());
 	}
 	
 	public void testSendListDriversByDriverNameEmpty() 
@@ -189,9 +189,9 @@ private static final Logger logger = UOSLogging.getLogger();
 		
 		JSONObject expectedDriverList = new JSONObject();
 		
-		expectedDriverList.put("driverList", new JSONObject(testListDrivers).toString());
+		expectedDriverList.put("driverList", new JSONObject(testListDrivers));
 		
-		assertEquals(expectedDriverList.toString(), jsonResponse.optJSONObject("responseData").toString());
+		assertEquals(expectedDriverList.toMap(), jsonResponse.optJSONObject("responseData").toMap());
 	}
 	
 	public void testSendListDriversByDriverNameWrong() 
@@ -218,9 +218,9 @@ private static final Logger logger = UOSLogging.getLogger();
 		
 		JSONObject expectedDriverList = new JSONObject();
 		
-		expectedDriverList.put("driverList", new JSONObject(testListDrivers).toString());
+		expectedDriverList.put("driverList", new JSONObject(testListDrivers));
 		
-		assertEquals(expectedDriverList.toString(), jsonResponse.optJSONObject("responseData").toString());
+		assertEquals(expectedDriverList.toMap(), jsonResponse.optJSONObject("responseData").toMap());
 	}
 	
 	

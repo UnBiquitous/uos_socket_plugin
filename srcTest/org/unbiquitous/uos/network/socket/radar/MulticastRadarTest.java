@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.radar.Radar;
@@ -59,7 +60,7 @@ public class MulticastRadarTest {
 		listener = mock(RadarListener.class);
 		radar = new MulticastRadar(listener);
 		ConnectionManager mng = mock(ConnectionManager.class);
-		when(mng.getResourceBundle()).thenReturn(bundle);
+		when(mng.getResourceBundle()).thenReturn(new InitialProperties(bundle));
 		radar.setConnectionManager(mng);
 		mockSockets();
 	}

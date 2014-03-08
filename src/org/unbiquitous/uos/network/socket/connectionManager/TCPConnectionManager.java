@@ -3,10 +3,10 @@ package org.unbiquitous.uos.network.socket.connectionManager;
 
 import java.io.IOException;
 import java.net.SocketException;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
@@ -32,7 +32,7 @@ public class TCPConnectionManager extends SocketConnectionManager{
 	 * *****************************/
 	
 	/** The ResourceBundle to get some properties. */
-	private ResourceBundle resource;
+	private InitialProperties properties;
 	
 	/** Specify the number of the ethernet port to be used*/
 	private static final String UBIQUITOS_ETH_TCP_PORT_KEY = "ubiquitos.eth.tcp.port";
@@ -90,22 +90,22 @@ public class TCPConnectionManager extends SocketConnectionManager{
 	/** 
      *  Sets the ResourceBundle to get some properties.
      */
-	public void setResourceBundle(ResourceBundle resourceBundle) {
-		resource = resourceBundle;
+	public void setResourceBundle(InitialProperties _properties) {
+		properties = _properties;
 		
-		if(resource == null){
+		if(properties == null){
         	String msg = "ResourceBundle is null";
         	logger.severe(msg);
             throw new RuntimeException(msg);
         }else{
         	try{
-        		UBIQUITOS_ETH_TCP_PORT = Integer.parseInt(resource.getString(UBIQUITOS_ETH_TCP_PORT_KEY));
+        		UBIQUITOS_ETH_TCP_PORT = Integer.parseInt(properties.getString(UBIQUITOS_ETH_TCP_PORT_KEY));
         		try {
-					UBIQUITOS_ETH_TCP_CONTROL_PORT = Integer.parseInt(resource.getString(UBIQUITOS_ETH_TCP_CONTROL_PORT_KEY));
+					UBIQUITOS_ETH_TCP_CONTROL_PORT = Integer.parseInt(properties.getString(UBIQUITOS_ETH_TCP_CONTROL_PORT_KEY));
 				} catch (Exception e) {
 					logger.info("No Alternative TCP Port defined");
 				}
-        		UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE = resource.getString(UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE_KEY);
+        		UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE = properties.getString(UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE_KEY);
         	}catch (Exception e) {
         		String msg = "Incorrect ethernet tcp port";
             	logger.severe(msg);
@@ -114,8 +114,8 @@ public class TCPConnectionManager extends SocketConnectionManager{
         }
 	}
 	
-	public ResourceBundle getResourceBundle(){
-		return this.resource;
+	public InitialProperties getResourceBundle(){
+		return this.properties;
 	}
 	/**
 	 * Finalize the Connection Manager.
