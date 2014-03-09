@@ -2,6 +2,7 @@ package org.unbiquitous.uos.core.adaptabitilyEngine.events;
 
 import java.util.List;
 
+import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosEventDriver;
@@ -55,7 +56,7 @@ public class DummyEventDriver implements UosEventDriver {
 	}
 
 	@Override
-	public void init(Gateway gateway, String instanceId) {}
+	public void init(Gateway gateway, InitialProperties properties, String instanceId) {}
 
 	@Override
 	public void destroy() {}
