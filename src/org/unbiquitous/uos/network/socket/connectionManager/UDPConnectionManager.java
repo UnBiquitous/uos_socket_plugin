@@ -81,7 +81,7 @@ public class UDPConnectionManager extends SocketConnectionManager{
 	/** 
      *  Sets the ResourceBundle to get some properties.
      */
-	public void setResourceBundle(InitialProperties resourceBundle) {
+	public void setProperties(InitialProperties resourceBundle) {
 		properties = resourceBundle;
 		
 		if(properties == null){
@@ -105,7 +105,7 @@ public class UDPConnectionManager extends SocketConnectionManager{
         }
 	}
 	
-	public InitialProperties getResourceBundle(){
+	public InitialProperties getProperties(){
 		return this.properties;
 	}
 	

@@ -60,7 +60,7 @@ public class MulticastRadarTest {
 		listener = mock(RadarListener.class);
 		radar = new MulticastRadar(listener);
 		ConnectionManager mng = mock(ConnectionManager.class);
-		when(mng.getResourceBundle()).thenReturn(new InitialProperties(bundle));
+		when(mng.getProperties()).thenReturn(new InitialProperties(bundle));
 		radar.setConnectionManager(mng);
 		mockSockets();
 	}
