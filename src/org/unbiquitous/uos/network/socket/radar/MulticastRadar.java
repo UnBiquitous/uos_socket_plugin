@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.MulticastSocket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.HashSet;
@@ -35,9 +35,9 @@ public class MulticastRadar implements Radar {
 	private DateTime lastCheck;
 	private Set<String> lastAddresses;
 
-	private DatagramSocket socket;
+	private MulticastSocket socket;
 
-	private Integer port = 14984+50;//14984;
+	private Integer port = 14984;
 	
 	public MulticastRadar(RadarListener listener) {
 		this.listener = listener;
@@ -50,6 +50,8 @@ public class MulticastRadar implements Radar {
 			this.lastCheck = new DateTime();
 			this.lastAddresses = new HashSet<String>();
 			socket = socketFactory.newSocket(port);
+			socket.setBroadcast(true);
+			socket.setReuseAddress(true);
 			int tenSeconds = 10*1000;
 			socket.setSoTimeout(tenSeconds);
 			sendBeacon(socket, InetAddress.getByName("255.255.255.255"), port);
@@ -133,10 +135,10 @@ public class MulticastRadar implements Radar {
 }
 
 class DatagramSocketFactory{
-	DatagramSocket newSocket() throws SocketException{
-		return new DatagramSocket();
+	MulticastSocket newSocket() throws IOException{
+		return new MulticastSocket();
 	}
-	DatagramSocket newSocket(int port) throws SocketException{
-		return new DatagramSocket(port);
+	MulticastSocket newSocket(int port) throws IOException{
+		return new MulticastSocket(port);
 	}
 }

@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.MulticastSocket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class MulticastRadarTest {
 	private static final String THREAD_NAME = "radar-t";
 	private Integer port;
 	private MulticastRadar radar;
-	private DatagramSocket serverSocket;
+	private MulticastSocket serverSocket;
 	private DatagramSocketFactory factory;
 	private RadarListener listener;
 
@@ -65,8 +65,8 @@ public class MulticastRadarTest {
 		mockSockets();
 	}
 
-	private void mockSockets() throws SocketException {
-		serverSocket = mock(DatagramSocket.class);
+	private void mockSockets() throws IOException {
+		serverSocket = mock(MulticastSocket.class);
 		factory = mock(DatagramSocketFactory.class);
 		when(factory.newSocket(port)).thenReturn(serverSocket);
 		radar.socketFactory = factory;
@@ -92,7 +92,7 @@ public class MulticastRadarTest {
 				try {
 					verify(factory).newSocket(port);
 					verify(serverSocket,times(1)).setSoTimeout(10*1000);
-				} catch (SocketException e) {
+				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
