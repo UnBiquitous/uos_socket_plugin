@@ -81,7 +81,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	 * @throws Exception
 	 */
 	public void testRegisterSuccessfulListener() throws Exception{
-		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
 		Call registerCall = currentEventDriver.getLastServiceCall();
 		
@@ -95,7 +95,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	 * @throws Exception
 	 */
 	public void testRegisterListenerTwiceSameEventkey() throws Exception{
-		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
 		Call registerCall = currentEventDriver.getLastServiceCall();
 		int firstRegisterCallCount = currentEventDriver.getLastServiceCallCount();
@@ -103,7 +103,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, registerCall.getParameter(EVENT_KEY_PARAM));
 		
-		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
 		assertEquals("Unecessary register call.",firstRegisterCallCount, currentEventDriver.getLastServiceCallCount());
 	}
@@ -113,7 +113,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	 * @throws Exception
 	 */
 	public void testRegisterListenerTwiceDiferentEventkey() throws Exception{
-		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
 		Call registerCall = currentEventDriver.getLastServiceCall();
 		int firstRegisterCallCount = currentEventDriver.getLastServiceCallCount();
@@ -121,7 +121,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, registerCall.getParameter(EVENT_KEY_PARAM));
 		
-		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT_2);
+		gateway.register(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT_2);
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT_2, currentEventDriver.getLastServiceCall().getParameter(EVENT_KEY_PARAM));
@@ -139,7 +139,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		device.addNetworkInterface("127.0.0.1:5555", "Ethernet:TCP");
 		deviceManager.registerDevice(device);
 		
-		gateway.registerForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
 		Call registerCall = currentEventDriver.getLastServiceCall();
 		
@@ -168,7 +168,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		device.addNetworkInterface("127.0.0.1:5555", "Ethernet:TCP");
 		deviceManager.registerDevice(device);
 		
-		gateway.registerForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
 		Call registerCall = currentEventDriver.getLastServiceCall();
 		
@@ -179,7 +179,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		
 		Notify notify = new Notify(TEST_EVENT_KEY_CORRECT,EVENT_DRIVER_CORRECT);
 		
-		adaptabilityEngine.sendEventNotify(notify, device);
+		adaptabilityEngine.notify(notify, device);
 		
 		assertNotNull("Notify Incorrect.",currentEventListener.getLastEvent());
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, currentEventListener.getLastEvent().getEventKey());
@@ -196,7 +196,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		device.addNetworkInterface("127.0.0.1:5555", "Ethernet:TCP");
 		deviceManager.registerDevice(device);
 		
-		gateway.registerForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
 		Call registerCall = currentEventDriver.getLastServiceCall();
 		int registerCount = currentEventDriver.getLastServiceCallCount();
