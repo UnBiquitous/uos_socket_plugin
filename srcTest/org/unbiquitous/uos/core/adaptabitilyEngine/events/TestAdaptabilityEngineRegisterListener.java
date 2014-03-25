@@ -216,7 +216,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		
 		// ask to remove the listener from this event key
 		
-		adaptabilityEngine.unregisterForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, null, TEST_EVENT_KEY_CORRECT);
+		adaptabilityEngine.unregister(currentEventListener, device, EVENT_DRIVER_CORRECT, null, TEST_EVENT_KEY_CORRECT);
 		
 		Call unregisterCall = currentEventDriver.getLastServiceCall();
 		
