@@ -2,8 +2,10 @@ package org.unbiquitous.uos.network.socket;
 
 import java.util.ListResourceBundle;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import org.unbiquitous.uos.core.UOS;
+import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.network.socket.connectionManager.TCPConnectionManager;
 import org.unbiquitous.uos.network.socket.radar.MulticastRadar;
 
@@ -13,6 +15,8 @@ public class MulticastRadarSpike {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception{
+		UOSLogging.getLogger();
+		UOSLogging.setLevel(Level.FINE);
 		UOS u = new UOS();
 		ResourceBundle prop = new ListResourceBundle() {
 			protected Object[][] getContents() {

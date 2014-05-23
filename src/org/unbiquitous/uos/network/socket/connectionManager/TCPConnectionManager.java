@@ -148,9 +148,14 @@ public class TCPConnectionManager extends SocketConnectionManager{
 	public NetworkDevice getNetworkDevice() {
 		if(serverDevice == null){
 			try {
-				String addr = EthUtilNetworkInterfaceHelper.listLocalAddresses()[0];
-				serverDevice = new SocketDevice(addr, UBIQUITOS_ETH_TCP_PORT, EthernetConnectionType.TCP);
-				return serverDevice;
+				String[] localAddrs = EthUtilNetworkInterfaceHelper.listLocalAddresses();
+				if(localAddrs.length > 0){
+					String addr = localAddrs[0];
+					serverDevice = new SocketDevice(addr, UBIQUITOS_ETH_TCP_PORT, EthernetConnectionType.TCP);
+					return serverDevice;
+				}else{
+					throw new NetworkException("No network available");
+				}
 			} catch (SocketException e) {
 				logger.log(Level.SEVERE,"",e);
 			}
