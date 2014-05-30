@@ -81,7 +81,7 @@ public class UDPConnectionManager extends SocketConnectionManager{
 	/** 
      *  Sets the ResourceBundle to get some properties.
      */
-	public void setProperties(InitialProperties resourceBundle) {
+	public void init(InitialProperties resourceBundle) {
 		properties = resourceBundle;
 		
 		if(properties == null){

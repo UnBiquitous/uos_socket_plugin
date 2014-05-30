@@ -90,7 +90,7 @@ public class TCPConnectionManager extends SocketConnectionManager{
 	/** 
      *  Sets the ResourceBundle to get some properties.
      */
-	public void setProperties(InitialProperties _properties) {
+	public void init(InitialProperties _properties) {
 		properties = _properties;
 		
 		if(properties == null){
