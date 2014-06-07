@@ -33,7 +33,7 @@ public class TestCompleteBasicAuthenticationBluetooth extends TestCase {
 		logger.info("\n");
 		
 		context = new UOS();
-		context.start();
+		context.start("ubiquitos");
 		
 		deviceManager = context.getFactory().gateway().getDeviceManager();
 		SmartSpaceGateway gateway = (SmartSpaceGateway) context.getGateway();

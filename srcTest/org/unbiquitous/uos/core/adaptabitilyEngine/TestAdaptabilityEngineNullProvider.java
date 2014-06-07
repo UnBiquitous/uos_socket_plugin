@@ -43,7 +43,7 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 		Thread.sleep(timeToWaitBetweenTests/2);
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.start();
+		context.start("ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 		gateway = context.getGateway();
 	};

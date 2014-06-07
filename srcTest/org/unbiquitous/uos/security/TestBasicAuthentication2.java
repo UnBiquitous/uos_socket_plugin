@@ -30,7 +30,7 @@ public class TestBasicAuthentication2 extends TestCase {
 	protected void setUp() throws Exception {
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.start();
+		context.start("ubiquitos");
 		gateway = context.getGateway();
 		
 		providerDevice = new UpDevice();

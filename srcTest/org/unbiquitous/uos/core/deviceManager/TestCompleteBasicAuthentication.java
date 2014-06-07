@@ -40,7 +40,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		logger.info("\n");
 		
 		context = new UOS();
-		context.start();
+		context.start("ubiquitos");
 		
 		deviceManager = context.getFactory().gateway().getDeviceManager();
 		
