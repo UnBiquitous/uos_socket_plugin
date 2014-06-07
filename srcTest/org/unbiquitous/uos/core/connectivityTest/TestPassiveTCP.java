@@ -41,7 +41,7 @@ public class TestPassiveTCP extends TestCase {
 		
 		logger.info("***** Starting applicationContextRadar **********");
 		applicationContext = new UOS();
-		applicationContext.init("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesTCP");
+		applicationContext.start("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesTCP");
 		logger.info("***** ApplicationContextRadar started **********");		
 		
 	}
@@ -50,7 +50,7 @@ public class TestPassiveTCP extends TestCase {
 	protected synchronized void tearDown() throws Exception {
 		Thread.sleep(TIME_BETWEEN_TESTS);
 		logger.info("************** TEAR DOWN **************");
-		applicationContext.tearDown();
+		applicationContext.stop();
 		logger.info("============== Teste : "+(currentTest-1)+" ========================== End");
 		Thread.sleep(TIME_BETWEEN_TESTS);
 		synchronized (lock) {

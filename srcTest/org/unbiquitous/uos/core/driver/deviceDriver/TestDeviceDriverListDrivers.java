@@ -38,12 +38,12 @@ private static final Logger logger = UOSLogging.getLogger();
 		Thread.sleep(timeToWaitBetweenTests/2);
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.init("org/unbiquitous/uos/core/deviceManager/ubiquitos");
+		context.start("org/unbiquitous/uos/core/deviceManager/ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 	};
 	
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	

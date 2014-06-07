@@ -20,7 +20,7 @@ public class TestBasicAuthenticationHandler extends TestCase {
 	public void testeSucessoAutenticacao() throws Exception {
 
 		UOS context = new UOS();
-		context.init();
+		context.start();
 		Gateway gateway = context.getGateway();
 	
 		String SECURITY_TYPE = "BASIC";

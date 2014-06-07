@@ -30,7 +30,7 @@ public class TestBasicAuthentication2 extends TestCase {
 	protected void setUp() throws Exception {
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.init();
+		context.start();
 		gateway = context.getGateway();
 		
 		providerDevice = new UpDevice();
@@ -39,7 +39,7 @@ public class TestBasicAuthentication2 extends TestCase {
 	};
 	
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	

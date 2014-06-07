@@ -40,7 +40,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		logger.info("\n");
 		
 		context = new UOS();
-		context.init();
+		context.start();
 		
 		deviceManager = context.getFactory().gateway().getDeviceManager();
 		
@@ -56,7 +56,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 	 * Method that tear down the context after each test execution.
 	 * */
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	

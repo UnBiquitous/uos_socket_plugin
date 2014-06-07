@@ -33,7 +33,7 @@ public class TestCompleteBasicAuthenticationBluetooth extends TestCase {
 		logger.info("\n");
 		
 		context = new UOS();
-		context.init();
+		context.start();
 		
 		deviceManager = context.getFactory().gateway().getDeviceManager();
 		SmartSpaceGateway gateway = (SmartSpaceGateway) context.getGateway();
@@ -48,7 +48,7 @@ public class TestCompleteBasicAuthenticationBluetooth extends TestCase {
 	 * Method that tear down the context after each test execution.
 	 * */
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	

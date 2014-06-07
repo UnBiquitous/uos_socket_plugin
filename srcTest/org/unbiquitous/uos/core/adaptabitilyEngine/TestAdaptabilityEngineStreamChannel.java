@@ -53,13 +53,13 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 		Thread.sleep(timeToWaitBetweenTests/2);
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.init("ubiquitos_adaptability");
+		context.start("ubiquitos_adaptability");
 		Thread.sleep(timeToWaitBetweenTests/2);
 		gateway = context.getGateway();
 	};
 	
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	

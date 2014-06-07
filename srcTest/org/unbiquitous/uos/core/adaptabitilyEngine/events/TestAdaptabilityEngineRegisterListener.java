@@ -64,7 +64,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		Thread.sleep(timeToWaitBetweenTests/2);
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.init("br/unb/unbiquitous/ubiquitos/uos/adaptabitilyEngine/events/ubiquitos");
+		context.start("br/unb/unbiquitous/ubiquitos/uos/adaptabitilyEngine/events/ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 		currentEventDriver = DummyEventDriver.getCurrentDummyEventDriver();
 		gateway = context.getGateway();
@@ -73,7 +73,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	}
 	
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 	}
 	
 	/**

@@ -37,7 +37,7 @@ public abstract class TestSendMessage extends TestCase {
 		Thread.sleep(timeToWaitBetweenTests/2);
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.init("org/unbiquitous/uos/core/driverManager/ubiquitos");
+		context.start("org/unbiquitous/uos/core/driverManager/ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 		connect();
 	};
@@ -45,7 +45,7 @@ public abstract class TestSendMessage extends TestCase {
 	protected abstract void connect() throws Exception;
 	
 	protected synchronized void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	

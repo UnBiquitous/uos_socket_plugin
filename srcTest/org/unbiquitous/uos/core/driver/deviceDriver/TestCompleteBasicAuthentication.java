@@ -28,7 +28,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 	protected void setUp() throws Exception {
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.init("br/unb/unbiquitous/ubiquitos/uos/deviceManager/ubiquitos");
+		context.start("br/unb/unbiquitous/ubiquitos/uos/deviceManager/ubiquitos");
 		gateway = context.getGateway();
 		
 		providerDevice = new UpDevice();
@@ -40,7 +40,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 	 * Method that tear down the context after each test execution.
 	 * */
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	

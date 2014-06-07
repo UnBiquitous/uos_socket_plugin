@@ -56,7 +56,7 @@ public class TestDeviceManager extends TestCase {
 		logger.info("\n");
 		
 		applicationContext = new UOS();
-		applicationContext.init("org/unbiquitous/uos/core/deviceManager/prop");
+		applicationContext.start("org/unbiquitous/uos/core/deviceManager/prop");
 		
 		deviceManager = applicationContext.getFactory().gateway().getDeviceManager();
 		SmartSpaceGateway gateway = (SmartSpaceGateway) applicationContext.getGateway();
@@ -66,7 +66,7 @@ public class TestDeviceManager extends TestCase {
 	
 	@Override
 	protected void tearDown() throws Exception {
-		applicationContext.tearDown();
+		applicationContext.stop();
 		logger.info("============== Teste : "+(currentTest-1)+" ========================== End");
 		synchronized (lock) {
 			if (!isOnTest){
