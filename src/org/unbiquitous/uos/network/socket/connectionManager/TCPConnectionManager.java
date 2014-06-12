@@ -2,7 +2,6 @@ package org.unbiquitous.uos.network.socket.connectionManager;
 
 
 import java.io.IOException;
-import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,32 +58,28 @@ public class TCPConnectionManager extends SocketConnectionManager{
     
     /** The ChannelManager for new channels */
     private TCPChannelManager channelManager;
+    private NetworkInterfaceProvider interfaceProvider = new NetworkInterfaceProvider();
     
     /**
      * Controller responsible for the active connections cache. 
      */
     private CacheController cacheController = new CacheController();
-    
-    /* *****************************
-	 *   	CONSTRUCTOR
-	 * *****************************/
-	
-    /**
-	 * Constructor
-	 * @throws UbiquitOSException
-	 */
-    public TCPConnectionManager() throws NetworkException {}
-    
-    
-    /* *****************************
-     *   	PUBLIC  METHODS - ConnectionManager
-     * *****************************/
 
-    /** 
-     *  Sets the Listener who will be notified when a Connections is established.
-     */
+	private String ignoreFilter;
+    
 	public void setConnectionManagerListener(ConnectionManagerListener connectionManagerListener) {
 		this.connectionManagerListener = connectionManagerListener;
+	}
+
+	public static class NetworkInterfaceProvider {
+		public String[] interfaces() throws IOException{
+			return EthUtilNetworkInterfaceHelper.listLocalAddresses();
+		}
+	}
+	
+	public void setNetworkInterfaceProvider(
+			NetworkInterfaceProvider interfaceProvider) {
+		this.interfaceProvider = interfaceProvider;
 	}
 	
 	/** 
@@ -106,6 +101,7 @@ public class TCPConnectionManager extends SocketConnectionManager{
 					logger.info("No Alternative TCP Port defined");
 				}
         		UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE = properties.getString(UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE_KEY);
+        		ignoreFilter = properties.getString("ubiquitos.eth.tcp.ignoreFilter");
         	}catch (Exception e) {
         		String msg = "Incorrect ethernet tcp port";
             	logger.severe(msg);
@@ -148,15 +144,26 @@ public class TCPConnectionManager extends SocketConnectionManager{
 	public NetworkDevice getNetworkDevice() {
 		if(serverDevice == null){
 			try {
-				String[] localAddrs = EthUtilNetworkInterfaceHelper.listLocalAddresses();
+				String[] localAddrs = interfaceProvider.interfaces();
 				if(localAddrs.length > 0){
-					String addr = localAddrs[0];
+					String addr;
+					if (ignoreFilter == null){
+						addr = localAddrs[0];
+					}else{
+						addr = null;
+						for(String nInt :localAddrs){
+							if(!nInt.matches(ignoreFilter)){
+								addr = nInt;
+								break;
+							}
+						}
+					}
 					serverDevice = new SocketDevice(addr, UBIQUITOS_ETH_TCP_PORT, EthernetConnectionType.TCP);
 					return serverDevice;
 				}else{
 					throw new NetworkException("No network available");
 				}
-			} catch (SocketException e) {
+			} catch (IOException e) {
 				logger.log(Level.SEVERE,"",e);
 			}
 		}

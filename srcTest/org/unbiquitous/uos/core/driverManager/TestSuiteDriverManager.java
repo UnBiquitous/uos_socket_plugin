@@ -7,7 +7,7 @@ public class TestSuiteDriverManager {
 	public static Test suite() { 
         TestSuite suite = new TestSuite(TestSuiteDriverManager.class.getName());
 
-        suite.addTestSuite(TestSendMessageLoopback.class);
+//        suite.addTestSuite(TestSendMessageLoopback.class);
         return suite; 
 	}
 }

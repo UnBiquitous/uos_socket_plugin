@@ -6,7 +6,6 @@ import java.util.List;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpNetworkInterface;
 
-
 public class TestAdaptabilityEngineLoopbackStreamChannel extends TestAdaptabilityEngineStreamChannel{
 
 	@Override

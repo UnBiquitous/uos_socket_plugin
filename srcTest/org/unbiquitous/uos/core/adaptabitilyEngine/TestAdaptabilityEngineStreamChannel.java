@@ -71,7 +71,6 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 	
 	@SuppressWarnings("unchecked")
 	public void testChatService() throws ServiceCallException, IOException, InterruptedException{
-		
 		int channels = 5;
 		
 		Call serviceCall = new Call();

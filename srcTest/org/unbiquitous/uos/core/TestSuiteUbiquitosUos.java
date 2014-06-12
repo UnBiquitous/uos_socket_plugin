@@ -4,6 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.unbiquitous.uos.core.adaptabitilyEngine.TestSuiteAdaptabilityEngine;
+import org.unbiquitous.uos.core.connectionManager.NetworkDeviceFilteringTest;
 import org.unbiquitous.uos.core.deviceManager.TestSuiteDeviceManager;
 import org.unbiquitous.uos.core.driver.deviceDriver.TestSuiteDeviceDriver;
 import org.unbiquitous.uos.core.driverManager.TestSuiteDriverManager;
@@ -16,6 +17,7 @@ public class TestSuiteUbiquitosUos {
         suite.addTest(TestSuiteDeviceDriver.suite());
         suite.addTest(TestSuiteDriverManager.suite());
         suite.addTest(TestSuiteDeviceManager.suite());
+        suite.addTestSuite(NetworkDeviceFilteringTest.class);
         return suite; 
 	}
 }
