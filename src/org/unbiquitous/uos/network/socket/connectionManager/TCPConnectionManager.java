@@ -144,31 +144,42 @@ public class TCPConnectionManager extends SocketConnectionManager{
 	public NetworkDevice getNetworkDevice() {
 		if(serverDevice == null){
 			try {
-				String[] localAddrs = interfaceProvider.interfaces();
-				if(localAddrs.length > 0){
-					String addr;
-					if (ignoreFilter == null){
-						addr = localAddrs[0];
-					}else{
-						addr = null;
-						for(String nInt :localAddrs){
-							if(!nInt.matches(ignoreFilter)){
-								addr = nInt;
-								break;
-							}
-						}
-					}
-					serverDevice = new SocketDevice(addr, UBIQUITOS_ETH_TCP_PORT, EthernetConnectionType.TCP);
-					return serverDevice;
-				}else{
-					throw new NetworkException("No network available");
-				}
+				return createCurrentDevice();
 			} catch (IOException e) {
 				logger.log(Level.SEVERE,"",e);
 			}
 		}
 		logger.fine("returning:"+serverDevice);
 		return serverDevice;
+	}
+
+	private NetworkDevice createCurrentDevice() throws IOException {
+		String[] localAddrs = interfaceProvider.interfaces();
+		boolean hasAdresses = localAddrs != null && localAddrs.length > 0;
+		if(hasAdresses){
+			String addr = selectAddress(localAddrs);
+			serverDevice = new SocketDevice(addr, UBIQUITOS_ETH_TCP_PORT, EthernetConnectionType.TCP);
+			return serverDevice;
+		}else{
+			throw new NetworkException("No network available");
+		}
+	}
+
+	private String selectAddress(String[] localAddrs) {
+		if (ignoreFilter == null){
+			return localAddrs[0];
+		}else{
+			return applyIgnoreFilter(localAddrs);
+		}
+	}
+
+	private String applyIgnoreFilter(String[] localAddrs) {
+		for(String nInt :localAddrs){
+			if(!nInt.matches(ignoreFilter)){
+				return nInt;
+			}
+		}
+		return null;
 	}
 	
 	/**
