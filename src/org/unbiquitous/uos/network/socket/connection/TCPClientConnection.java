@@ -70,7 +70,7 @@ public class TCPClientConnection extends ClientConnection implements CachableCon
 	 ************************************/
 
 	public boolean isConnected() {
-		return !tcpSocket.isClosed();
+		return !tcpSocket.isClosed() && tcpSocket.isBound() && tcpSocket.isConnected();
 	}
 	
 	/**
@@ -143,5 +143,4 @@ public class TCPClientConnection extends ClientConnection implements CachableCon
 		tcpSocket.close();	
 		logger.info("Connection from device '" + getClientDevice().getNetworkDeviceName() + "' was closed.");
 	}
-
 }

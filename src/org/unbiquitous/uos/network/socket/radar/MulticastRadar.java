@@ -115,6 +115,7 @@ public class MulticastRadar implements Radar {
 
 	@Override
 	public void setConnectionManager(ConnectionManager manager) {
+		if(manager == null) return;
 		InitialProperties properties = manager.getProperties();
 		if (properties.containsKey("ubiquitos.eth.tcp.port")){
 			String portStr = properties.getString("ubiquitos.eth.tcp.port");

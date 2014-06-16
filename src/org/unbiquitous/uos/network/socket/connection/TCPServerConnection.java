@@ -34,6 +34,8 @@ public class TCPServerConnection extends ServerConnection {
 		super(serverDevice);
 		this.cacheController = cacheController;
 		tcpSocket = new ServerSocket(serverDevice.getPort());
+		int FIVE_MINUTES_IN_MILLIS = 5*60*1000;
+		tcpSocket.setSoTimeout(FIVE_MINUTES_IN_MILLIS);
 	}
 	
 	/************************************
