@@ -6,15 +6,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.junit.After;
-import org.junit.Before;
+import junit.framework.TestCase;
+
 import org.junit.Test;
 import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
 import org.unbiquitous.uos.network.socket.channelManager.TCPChannelManager;
 
-public class TCPChannelManagerTest {
+public class TCPChannelManagerTest extends TestCase {
 
 	private final int defaultPort = 14984;
 	private final int controlPort = 14895;
@@ -23,15 +23,15 @@ public class TCPChannelManagerTest {
 	private ServerSocket server;
 	private TCPChannelManager mng;
 	
-	@Before public void setUp() throws Exception{
+	public void setUp() throws Exception{
 		mng = new TCPChannelManager(defaultPort, controlPort, portRange, cacheController);
 	}
 	
-	@After public void tearDown() throws Exception{
+	public void tearDown() throws Exception{
 		server.close();
 	}
 	
-	@Test public void opensAConnectionOnTheAddress() throws Exception{
+	public void test_opensAConnectionOnTheAddress() throws Exception{
 		final boolean[] opened = openServerSocket(defaultPort);
 		
 		ClientConnection conn = mng.openActiveConnection("localhost");
@@ -48,7 +48,7 @@ public class TCPChannelManagerTest {
 		assertThat(opened[0]).isTrue();
 	}
 	
-	@Test public void opensAConnectionOnTheAddressAndPort() throws Exception{
+	public void test_opensAConnectionOnTheAddressAndPort() throws Exception{
 		final boolean[] opened = openServerSocket(14896);
 		
 		ClientConnection conn = mng.openActiveConnection("localhost:14896");
@@ -56,7 +56,7 @@ public class TCPChannelManagerTest {
 		assertThat(opened[0]).isTrue();
 	}
 	
-	@Test public void opensACachedConnectionOnTheAddressAndPort() throws Exception{
+	public void test_opensACachedConnectionOnTheAddressAndPort() throws Exception{
 		final boolean[] opened = openServerSocket(14896);
 		
 		ClientConnection conn1 = mng.openActiveConnection("localhost:14896");
@@ -66,7 +66,7 @@ public class TCPChannelManagerTest {
 		assertThat(opened[0]).isTrue();
 	}
 	
-	@Test public void doNotOpenAConnectionOnTheDefaultPortWhenInRange() throws Exception{
+	public void test_doNotOpenAConnectionOnTheDefaultPortWhenInRange() throws Exception{
 		final boolean[] opened = openServerSocket(defaultPort);
 		
 		ClientConnection conn = mng.openActiveConnection("localhost:14896");
@@ -74,7 +74,7 @@ public class TCPChannelManagerTest {
 		assertThat(opened[0]).isFalse();
 	}
 	
-	@Test public void opensAConnectionOnTheDefaultPortIfItsNotOnTheRightRange() throws Exception{
+	public void test_opensAConnectionOnTheDefaultPortIfItsNotOnTheRightRange() throws Exception{
 		final boolean[] opened = openServerSocket(defaultPort);
 		
 		ClientConnection conn = mng.openActiveConnection("localhost:12345");

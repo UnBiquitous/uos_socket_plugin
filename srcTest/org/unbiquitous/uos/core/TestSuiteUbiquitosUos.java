@@ -8,6 +8,9 @@ import org.unbiquitous.uos.core.connectionManager.NetworkDeviceFilteringTest;
 import org.unbiquitous.uos.core.deviceManager.TestSuiteDeviceManager;
 import org.unbiquitous.uos.core.driver.deviceDriver.TestSuiteDeviceDriver;
 import org.unbiquitous.uos.core.driverManager.TestSuiteDriverManager;
+import org.unbiquitous.uos.network.socket.TCPChannelManagerTest;
+import org.unbiquitous.uos.network.socket.radar.MulticastRadarTest;
+import org.unbiquitous.uos.network.socket.radar.PingRadarTest;
 
 public class TestSuiteUbiquitosUos {
 	public static Test suite() { 
@@ -18,6 +21,9 @@ public class TestSuiteUbiquitosUos {
         suite.addTest(TestSuiteDriverManager.suite());
         suite.addTest(TestSuiteDeviceManager.suite());
         suite.addTestSuite(NetworkDeviceFilteringTest.class);
+        suite.addTestSuite(MulticastRadarTest.class);
+        suite.addTestSuite(TCPChannelManagerTest.class);
+        suite.addTestSuite(PingRadarTest.class);
         return suite; 
 	}
 }

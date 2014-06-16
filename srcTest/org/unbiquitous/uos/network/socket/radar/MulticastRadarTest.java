@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketTimeoutException;
@@ -22,11 +21,10 @@ import java.util.ListResourceBundle;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import junit.framework.TestCase;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -37,7 +35,7 @@ import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
 import org.unbiquitous.uos.network.socket.SocketDevice;
 
-public class MulticastRadarTest {
+public class MulticastRadarTest extends TestCase {
 
 	private static final String THREAD_NAME = "radar-t";
 	private Integer port;
@@ -46,13 +44,14 @@ public class MulticastRadarTest {
 	private DatagramSocketFactory factory;
 	private RadarListener listener;
 
-	@Before public void setUp() throws Exception{
+	public void setUp() throws Exception{
 		port = 15000;
 		//TODO: port is not used
 		ResourceBundle bundle = new ListResourceBundle() {
 			protected Object[][] getContents() {
 				return new Object[][] {
-						{ "ubiquitos.eth.tcp.port", port.toString() }
+						{ "ubiquitos.eth.tcp.port", port.toString() },
+						{ "ubiquitos.multicast.beaconFrequencyInSeconds", 30 }
 				}; 
 			}
 		};
@@ -72,12 +71,12 @@ public class MulticastRadarTest {
 		radar.socketFactory = factory;
 	}
 	
-	@After public void tearDown(){
+	public void tearDown(){
 		radar.stopRadar();
 		DateTimeUtils.setCurrentMillisSystem();
 	}
 	
-	@Test public void mustBeARadarWithAProperFactory(){
+	public void test_mustBeARadarWithAProperFactory(){
 		radar = new MulticastRadar(null);
 		assertThat(radar).isInstanceOf(Radar.class);
 		assertThat(radar.socketFactory)
@@ -85,8 +84,8 @@ public class MulticastRadarTest {
 			.isInstanceOf(DatagramSocketFactory.class);
 	}
 	
-	@Test public void listenToThePortSpecifyedWithA10sTimeout() throws Throwable{
-		run();
+	public void test_listenToThePortSpecifyedWithA10sTimeout() throws Throwable{
+		doIt();
 		assertEventually(1000, new Runnable() {
 			public void run() {
 				try {
@@ -99,25 +98,25 @@ public class MulticastRadarTest {
 		});
 	}
 	
-	@Test public void waitForDeviceToNotifyItsExistence() throws Exception{
-		run();
+	public void test_waitForDeviceToNotifyItsExistence() throws Exception{
+		doIt();
 		
 		ArgumentCaptor<DatagramPacket> arg = forClass(DatagramPacket.class); 
 		verify(serverSocket,atLeastOnce()).receive(arg.capture());
 		assertThat(arg.getValue()).isNotNull();
 	}
 	
-	@Test public void doesNotFailOnATimeout() throws Exception{
+	public void test_doesNotFailOnATimeout() throws Exception{
 		doAnswer(new Answer<Void>() {
 			public Void answer(InvocationOnMock invocation)throws Throwable {
 				throw new SocketTimeoutException("Test exception");
 			}
 		}).when(serverSocket).receive((DatagramPacket)any());
-		run();
+		doIt();
 	}
 	
-	@Test public void startAndStopMustControlTheNumberOfThreads() throws Throwable{
-		run();
+	public void test_startAndStopMustControlTheNumberOfThreads() throws Throwable{
+		doIt();
 		assertEventually(1000, new Runnable() {
 			public void run() {
 				Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
@@ -148,8 +147,8 @@ public class MulticastRadarTest {
 		});
 	}
 	
-	@Test public void sendsABroadcastBeaconAtStartup() throws Throwable{
-		run();
+	public void test_sendsABroadcastBeaconAtStartup() throws Throwable{
+		doIt();
 		final ArgumentCaptor<DatagramPacket> arg = forClass(DatagramPacket.class);
 		assertEventually(1000, new Runnable() {
 			public void run() {
@@ -167,9 +166,9 @@ public class MulticastRadarTest {
 		});
 	}
 	
-	@Test public void whenSomebodySendsABeaconNotifiesItsDiscoveryOnce() throws Throwable{
+	public void test_whenSomebodySendsABeaconNotifiesItsDiscoveryOnce() throws Throwable{
 		mockADeviceEntry("1.1.1.1","2.2.2.2","3.3.3.3");
-		run();
+		doIt();
 		final ArgumentCaptor<NetworkDevice> arg = forClass(NetworkDevice.class);
 		assertEventually(1000, new Runnable() {
 			public void run() {
@@ -189,9 +188,9 @@ public class MulticastRadarTest {
 		});
 	}
 
-	@Test public void sendsADirectResponseBeaconWhenSomebodyIsFound() throws Throwable{
+	public void test_sendsADirectResponseBeaconWhenSomebodyIsFound() throws Throwable{
 		mockADeviceEntry("1.1.1.1");
-		run();
+		doIt();
 		final ArgumentCaptor<DatagramPacket> arg = forClass(DatagramPacket.class);
 		assertEventually(1000, new Runnable() {
 			public void run() {
@@ -212,7 +211,7 @@ public class MulticastRadarTest {
 	//TODO: How to detect device left ?
 	
 	@SuppressWarnings("serial")
-	@Test public void checkForLeftDevicesEvery30seconds() throws Throwable{
+	public void test_checkForLeftDevicesEvery30seconds() throws Throwable{
 		final List<String> enteredAddress = new ArrayList<String>(){
 			{
 				add("1.1.1.1");add("2.2.2.2");add("3.3.3.3");
@@ -231,7 +230,7 @@ public class MulticastRadarTest {
 			}
 		}).when(serverSocket).receive((DatagramPacket)any());
 		
-		run();
+		doIt();
 		Thread.sleep(10);
 		enteredAddress.remove("2.2.2.2");
 		
@@ -246,8 +245,8 @@ public class MulticastRadarTest {
 		});
 	}
 	
-	@Test public void sendsABeaconEvery30seconds() throws Throwable{
-		run();
+	public void test_sendsABeaconEvery30seconds() throws Throwable{
+		doIt();
 		final ArgumentCaptor<DatagramPacket> arg = forClass(DatagramPacket.class);
 		assertEventually(1000, new Runnable() {
 			public void run() {
@@ -280,7 +279,7 @@ public class MulticastRadarTest {
 		}).when(serverSocket).receive((DatagramPacket)any());
 	}
 	
-	private void run(){
+	private void doIt(){
 		radar.startRadar(); //TODO: why ?
 		Thread t = new Thread(radar,THREAD_NAME);
 		t.start();

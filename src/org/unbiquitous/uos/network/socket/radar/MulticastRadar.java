@@ -38,6 +38,8 @@ public class MulticastRadar implements Radar {
 	private MulticastSocket socket;
 
 	private Integer port = 14984;
+
+	private int secondsBetweenBeacons = 30;
 	
 	public MulticastRadar(RadarListener listener) {
 		this.listener = listener;
@@ -68,7 +70,7 @@ public class MulticastRadar implements Radar {
 
 	private void checkLeftDevices(Integer port, DatagramSocket socket) throws IOException {
 		DateTime now = new DateTime();
-		if (Seconds.secondsBetween(lastCheck, now).getSeconds() > 30){
+		if (Seconds.secondsBetween(lastCheck, now).getSeconds() > secondsBetweenBeacons){
 			sendBeacon(socket, InetAddress.getByName("255.255.255.255"), port);
 			lastAddresses.removeAll(knownAddresses);
 			for(String address: lastAddresses){
@@ -118,8 +120,10 @@ public class MulticastRadar implements Radar {
 		if(manager == null) return;
 		InitialProperties properties = manager.getProperties();
 		if (properties.containsKey("ubiquitos.eth.tcp.port")){
-			String portStr = properties.getString("ubiquitos.eth.tcp.port");
-			port = Integer.valueOf(portStr);
+			port = properties.getInt("ubiquitos.eth.tcp.port");
+		}
+		if (properties.containsKey("ubiquitos.multicast.beaconFrequencyInSeconds")){
+			secondsBetweenBeacons = properties.getInt("ubiquitos.multicast.beaconFrequencyInSeconds");
 		}
 	}
 
