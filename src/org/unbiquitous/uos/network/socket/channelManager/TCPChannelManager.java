@@ -45,7 +45,7 @@ public class TCPChannelManager implements ChannelManager{
 	 * @param cacheController 
 	 *********************************/
 	
-	public TCPChannelManager(int defaultPort, int controlPort ,String portRange, CacheController cacheController){
+	public TCPChannelManager(int defaultPort ,int portRangestart, int portRangeEnd, CacheController cacheController){
 		
 		this.defaultPort = defaultPort;
 		this.cacheController = cacheController;
@@ -54,11 +54,7 @@ public class TCPChannelManager implements ChannelManager{
 		freePassiveDevices = new ArrayList<NetworkDevice>();
 		validPorts = new ArrayList<Integer>();
 		validPorts.add(defaultPort);
-		validPorts.add(controlPort);
-		String[] limitPorts = portRange.split("-");
-		int inferiorPort = Integer.parseInt(limitPorts[0]);
-		int superiorPort = Integer.parseInt(limitPorts[1]);
-		for(int port = inferiorPort; port <= superiorPort; port++){
+		for(int port = portRangestart; port <= portRangeEnd; port++){
 			validPorts.add(port);
 			freePassiveDevices.add(new SocketDevice("0.0.0.0",port,EthernetConnectionType.TCP));
 		}

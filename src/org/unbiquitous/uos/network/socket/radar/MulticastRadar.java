@@ -19,7 +19,9 @@ import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
+import org.unbiquitous.uos.network.socket.TCPProperties;
 import org.unbiquitous.uos.network.socket.SocketDevice;
+import org.unbiquitous.uos.network.socket.connectionManager.TCPConnectionManager;
 import org.unbiquitous.uos.network.socket.connectionManager.SocketConnectionManager.EthernetConnectionType;
 
 public class MulticastRadar implements Radar {
@@ -137,6 +139,13 @@ public class MulticastRadar implements Radar {
 		running = false;
 	}
 
+	@SuppressWarnings("serial")
+	public static class Properties  extends TCPProperties{
+		public Properties() {
+			addRadar(MulticastRadar.class, TCPConnectionManager.class);
+		}
+	}
+	
 }
 
 class DatagramSocketFactory{

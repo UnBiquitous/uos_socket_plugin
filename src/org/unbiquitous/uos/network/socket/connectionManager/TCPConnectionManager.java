@@ -7,12 +7,14 @@ import java.util.logging.Logger;
 
 import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.InitialProperties.Tuple;
 import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManagerListener;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.network.socket.SocketDevice;
+import org.unbiquitous.uos.network.socket.TCPProperties;
 import org.unbiquitous.uos.network.socket.channelManager.TCPChannelManager;
 import org.unbiquitous.uos.network.socket.connection.TCPServerConnection;
 
@@ -30,39 +32,22 @@ public class TCPConnectionManager extends SocketConnectionManager{
 	 *   	ATRUBUTES
 	 * *****************************/
 	
-	/** The ResourceBundle to get some properties. */
-	private InitialProperties properties;
+	private TCPProperties properties;
 	
-	/** Specify the number of the ethernet port to be used*/
-	private static final String UBIQUITOS_ETH_TCP_PORT_KEY = "ubiquitos.eth.tcp.port";
-	private static final String UBIQUITOS_ETH_TCP_CONTROL_PORT_KEY = "ubiquitos.eth.tcp.port.control";
-	private int UBIQUITOS_ETH_TCP_PORT;
-	private int UBIQUITOS_ETH_TCP_CONTROL_PORT;
+	private int port = 14984;
+	private Tuple<Integer, Integer> passivePortRange = new Tuple<Integer, Integer>(14985, 14990);
 	
-	/** Specify the passive port range to be used*/
-	private static final String UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE_KEY = "ubiquitos.eth.tcp.passivePortRange";
-	String UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE;
-	
-    /** Object for logging registration.*/
     private static final Logger logger = UOSLogging.getLogger();
 
-    /** A Connection Manager Listener (ConnectionManagerControlCenter) */
     private ConnectionManagerListener connectionManagerListener = null;
     
-    /** Server Connection */
     private SocketDevice serverDevice;
     private TCPServerConnection server;
     
-    /** Attribute to control the closing of the Connection Manager */
     private boolean closingEthernetConnectionManager = false;
     
-    /** The ChannelManager for new channels */
     private TCPChannelManager channelManager;
     private NetworkInterfaceProvider interfaceProvider = new NetworkInterfaceProvider();
-    
-    /**
-     * Controller responsible for the active connections cache. 
-     */
     private CacheController cacheController = new CacheController();
 
 	private String ignoreFilter;
@@ -86,7 +71,11 @@ public class TCPConnectionManager extends SocketConnectionManager{
      *  Sets the ResourceBundle to get some properties.
      */
 	public void init(InitialProperties _properties) {
-		properties = _properties;
+		if(_properties instanceof TCPProperties){
+			properties = (TCPProperties) _properties;
+		}else{
+			properties = new TCPProperties(_properties);
+		}
 		
 		if(properties == null){
         	String msg = "ResourceBundle is null";
@@ -94,13 +83,12 @@ public class TCPConnectionManager extends SocketConnectionManager{
             throw new RuntimeException(msg);
         }else{
         	try{
-        		UBIQUITOS_ETH_TCP_PORT = Integer.parseInt(properties.getString(UBIQUITOS_ETH_TCP_PORT_KEY));
-        		try {
-					UBIQUITOS_ETH_TCP_CONTROL_PORT = Integer.parseInt(properties.getString(UBIQUITOS_ETH_TCP_CONTROL_PORT_KEY));
-				} catch (Exception e) {
-					logger.info("No Alternative TCP Port defined");
-				}
-        		UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE = properties.getString(UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE_KEY);
+        		if(properties.getPort() != null){
+        			port = properties.getPort();
+        		}
+        		if(properties.getPassivePortRange() != null){
+        			passivePortRange = properties.getPassivePortRange();
+        		}
         		ignoreFilter = properties.getString("ubiquitos.eth.tcp.ignoreFilter");
         	}catch (Exception e) {
         		String msg = "Incorrect ethernet tcp port";
@@ -158,7 +146,7 @@ public class TCPConnectionManager extends SocketConnectionManager{
 		boolean hasAdresses = localAddrs != null && localAddrs.length > 0;
 		if(hasAdresses){
 			String addr = selectAddress(localAddrs);
-			serverDevice = new SocketDevice(addr, UBIQUITOS_ETH_TCP_PORT, EthernetConnectionType.TCP);
+			serverDevice = new SocketDevice(addr, port, EthernetConnectionType.TCP);
 			return serverDevice;
 		}else{
 			throw new NetworkException("No network available");
@@ -188,7 +176,7 @@ public class TCPConnectionManager extends SocketConnectionManager{
 	 */
 	public ChannelManager getChannelManager(){
 		if(channelManager == null){
-			channelManager = new TCPChannelManager(UBIQUITOS_ETH_TCP_PORT, UBIQUITOS_ETH_TCP_CONTROL_PORT, UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE, cacheController);
+			channelManager = new TCPChannelManager(port, passivePortRange.x, passivePortRange.y, cacheController);
 		}
 		return channelManager;
 	}

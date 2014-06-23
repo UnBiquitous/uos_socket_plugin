@@ -11,7 +11,9 @@ import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
 import org.unbiquitous.uos.network.socket.SocketDevice;
+import org.unbiquitous.uos.network.socket.TCPProperties;
 import org.unbiquitous.uos.network.socket.connectionManager.SocketConnectionManager.EthernetConnectionType;
+import org.unbiquitous.uos.network.socket.connectionManager.TCPConnectionManager;
 
 import br.unb.cic.ethutil.EthUtil;
 import br.unb.cic.ethutil.EthUtilClientListener;
@@ -177,4 +179,11 @@ public class PingRadar implements EthUtilClientListener, Radar {
         }
     }
 
+    @SuppressWarnings("serial")
+	public static class Properties  extends TCPProperties{
+		public Properties() {
+			addConnectionManager(TCPConnectionManager.class);
+			addRadar(PingRadar.class, TCPConnectionManager.class);
+		}
+	}
 }
