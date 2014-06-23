@@ -49,7 +49,7 @@ public class TCPConnectionManager extends SocketConnectionManager{
     private TCPChannelManager channelManager;
     private NetworkInterfaceProvider interfaceProvider = new NetworkInterfaceProvider();
     private CacheController cacheController = new CacheController();
-
+    
 	private String ignoreFilter;
     
 	public void setConnectionManagerListener(ConnectionManagerListener connectionManagerListener) {
