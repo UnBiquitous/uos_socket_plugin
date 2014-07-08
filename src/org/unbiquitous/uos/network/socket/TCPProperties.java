@@ -12,12 +12,8 @@ public class TCPProperties extends InitialProperties {
 	
 	public TCPProperties(InitialProperties props) {
 		super(props);
-		try {
-			if(getConnectionManagers().isEmpty()){
-				addConnectionManager(TCPConnectionManager.class);
-			}
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
+		if(getConnectionManagers().isEmpty()){
+			addConnectionManager(TCPConnectionManager.class);
 		}
 	}
 	
