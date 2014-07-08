@@ -67,6 +67,10 @@ public class TCPConnectionManager extends SocketConnectionManager{
 		this.interfaceProvider = interfaceProvider;
 	}
 	
+	public CacheController getCacheController() {
+		return cacheController;
+	}
+	
 	/** 
      *  Sets the ResourceBundle to get some properties.
      */

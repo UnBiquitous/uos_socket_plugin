@@ -21,18 +21,12 @@ public class TCPServerConnection extends ServerConnection {
 
 	private ServerSocket tcpSocket;
 	
-	/**
-     * Controller responsible for the active connections cache. 
-     */
-    private CacheController cacheController;
-	
 	/************************************
 	 * CONSTRUCTOR
 	 * @param cacheController 
 	 ************************************/
 	public TCPServerConnection(SocketDevice serverDevice, CacheController cacheController) throws IOException{
 		super(serverDevice);
-		this.cacheController = cacheController;
 		tcpSocket = new ServerSocket(serverDevice.getPort());
 		int FIVE_MINUTES_IN_MILLIS = 5*60*1000;
 		tcpSocket.setSoTimeout(FIVE_MINUTES_IN_MILLIS);

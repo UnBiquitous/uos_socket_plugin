@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
@@ -53,6 +54,9 @@ public class PingRadar implements EthUtilClientListener, Radar {
     
     /** Indicates whether the radar is running or not. */
     private boolean started = false;
+
+
+	private CacheController cacheController;
     
     /* *****************************
 	 *   	CONSTRUCTOR
@@ -71,7 +75,12 @@ public class PingRadar implements EthUtilClientListener, Radar {
     }
     
     @Override
-    public void setConnectionManager(ConnectionManager connectionManager) {}
+    public void setConnectionManager(ConnectionManager manager) {
+    	//TODO: cache interference is not tested
+		if(manager instanceof TCPConnectionManager){
+			cacheController = ((TCPConnectionManager)manager).getCacheController();
+		}
+    }
     
     /* *****************************
 	 *   	PUBLIC METHODS - Runnable
@@ -165,7 +174,11 @@ public class PingRadar implements EthUtilClientListener, Radar {
 				// notifies the Radar Control Center
 				logger.info("[EthernetPingRadar] Host ["+byeHost+"] has left the smart-space.");
 		    	//FIXME: PingRadar : This asumption only works with the TCP-Plugin and don't consider the PortParameter.
-				radarListener.deviceLeft(new SocketDevice(byeHost,  14984, EthernetConnectionType.TCP)); 
+				SocketDevice device = new SocketDevice(byeHost,  14984, EthernetConnectionType.TCP);
+				radarListener.deviceLeft(device);
+				if(cacheController != null){
+					cacheController.removeDevice(device);
+				}
 			}
     		// add all found hosts to the local repository
     		localHostRepository = new HashSet<String>(recentilyDiscoveredHosts);

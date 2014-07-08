@@ -16,6 +16,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
@@ -42,6 +43,8 @@ public class MulticastRadar implements Radar {
 	private Integer port = 14984;
 
 	private int secondsBetweenBeacons = 30;
+
+	private CacheController cacheController;
 	
 	public MulticastRadar(RadarListener listener) {
 		this.listener = listener;
@@ -79,6 +82,10 @@ public class MulticastRadar implements Radar {
 				SocketDevice left = new SocketDevice(address,port, 
 						EthernetConnectionType.TCP);
 				listener.deviceLeft(left);
+				if(cacheController != null){
+					cacheController.removeDevice(left);
+				}
+				
 			}
 			lastAddresses = knownAddresses;
 			knownAddresses =  new HashSet<String>();
@@ -126,6 +133,10 @@ public class MulticastRadar implements Radar {
 		}
 		if (properties.containsKey("ubiquitos.multicast.beaconFrequencyInSeconds")){
 			secondsBetweenBeacons = properties.getInt("ubiquitos.multicast.beaconFrequencyInSeconds");
+		}
+		//TODO: cache interference is not tested
+		if(manager instanceof TCPConnectionManager){
+			cacheController = ((TCPConnectionManager)manager).getCacheController();
 		}
 	}
 
