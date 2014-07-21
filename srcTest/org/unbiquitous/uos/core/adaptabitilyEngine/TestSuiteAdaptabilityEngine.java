@@ -14,7 +14,7 @@ public class TestSuiteAdaptabilityEngine {
         suite.addTestSuite(TestAdaptabilityEngineLoopbackProvider.class);
         suite.addTestSuite(TestAdaptabilityEngineTCPStreamChannel.class); 
         suite.addTestSuite(TestAdaptabilityEngineUDPStreamChannel.class);
-        suite.addTestSuite(TestAdaptabilityEngineLoopbackStreamChannel.class);
+//        suite.addTestSuite(TestAdaptabilityEngineLoopbackStreamChannel.class);
         //FIXME : BasicAuthentication : Tests Not working properly  
         //suite.addTestSuite(TestAdaptabilityEngineBasicAuthentication.class);
         

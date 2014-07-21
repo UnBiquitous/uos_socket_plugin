@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetUDPConnectionManager;
+import org.unbiquitous.uos.network.socket.connectionManager.UDPConnectionManager;
 
 
 public class UdpChannel extends Thread{
@@ -215,7 +215,7 @@ public class UdpChannel extends Thread{
 		try{
 			SocketAddress socketAddress = null;
 			
-			int bufferSize = EthernetUDPConnectionManager.UDP_BUFFER_SIZE * 2;
+			int bufferSize = UDPConnectionManager.UDP_BUFFER_SIZE * 2;
 			byte[] buffer = new byte[bufferSize];
 			DatagramPacket packet = null;
 			

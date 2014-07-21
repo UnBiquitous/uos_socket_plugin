@@ -14,8 +14,8 @@ import org.unbiquitous.uos.core.network.cache.CachedConnectionData;
 import org.unbiquitous.uos.core.network.cache.CachedInputStream;
 import org.unbiquitous.uos.core.network.cache.CachedOutputStream;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
+import org.unbiquitous.uos.network.socket.SocketDevice;
+import org.unbiquitous.uos.network.socket.connectionManager.SocketConnectionManager.EthernetConnectionType;
 
 
 /**
@@ -23,7 +23,7 @@ import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionMa
  * 
  * @author Lucas Lins
  */
-public class EthernetTCPClientConnection extends ClientConnection implements CachableConnection {
+public class TCPClientConnection extends ClientConnection implements CachableConnection {
 	
 	private static final Logger logger = UOSLogging.getLogger();
 
@@ -42,8 +42,8 @@ public class EthernetTCPClientConnection extends ClientConnection implements Cac
 	 * Constructors
 	 **********************************/
 
-	public EthernetTCPClientConnection(Socket tcpSocket, CacheController cacheController) throws IOException{
-		super(new EthernetDevice(tcpSocket.getInetAddress().getHostAddress(), tcpSocket.getPort(), EthernetConnectionType.TCP));
+	public TCPClientConnection(Socket tcpSocket, CacheController cacheController) throws IOException{
+		super(new SocketDevice(tcpSocket.getInetAddress().getHostAddress(), tcpSocket.getPort(), EthernetConnectionType.TCP));
 		this.tcpSocket = tcpSocket;
 		this.cacheController = cacheController;
 		if (cacheController != null){
@@ -53,8 +53,8 @@ public class EthernetTCPClientConnection extends ClientConnection implements Cac
 		createOutputStream();
 	}
 
-	public EthernetTCPClientConnection(String host, int port, CacheController cacheController) throws IOException{
-		super(new EthernetDevice(host, port, EthernetConnectionType.TCP));
+	public TCPClientConnection(String host, int port, CacheController cacheController) throws IOException{
+		super(new SocketDevice(host, port, EthernetConnectionType.TCP));
 		this.tcpSocket = new Socket(host, port);
 		this.cacheController = cacheController;
 		if (cacheController != null){
@@ -70,7 +70,7 @@ public class EthernetTCPClientConnection extends ClientConnection implements Cac
 	 ************************************/
 
 	public boolean isConnected() {
-		return !tcpSocket.isClosed();
+		return !tcpSocket.isClosed() && tcpSocket.isBound() && tcpSocket.isConnected();
 	}
 	
 	/**
@@ -143,5 +143,4 @@ public class EthernetTCPClientConnection extends ClientConnection implements Cac
 		tcpSocket.close();	
 		logger.info("Connection from device '" + getClientDevice().getNetworkDeviceName() + "' was closed.");
 	}
-
 }

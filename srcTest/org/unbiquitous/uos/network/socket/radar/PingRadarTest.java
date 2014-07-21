@@ -1,30 +1,33 @@
 package org.unbiquitous.uos.network.socket.radar;
 
-import static org.mockito.Mockito.*;
-import static org.fest.assertions.api.Assertions.*;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import java.util.Vector;
 
-import org.junit.Before;
-import org.junit.Test;
+import junit.framework.TestCase;
+
 import org.mockito.ArgumentCaptor;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
 
-public class EthernetPingRadarTest {
+public class PingRadarTest extends TestCase {
 
 	
 	//TODO: Null breaks
 	
 	private RadarListener listener;
-	private EthernetPingRadar radar;
+	private PingRadar radar;
 
-	@Before public void setUp(){
+	public void setUp(){
 		listener = mock(RadarListener.class);
-		radar = new EthernetPingRadar(listener);
+		radar = new PingRadar(listener);
 	}
 	
-	@Test public void notfyLostDevices(){
+	public void test_notfyLostDevices(){
 		Vector<String> discovered = new Vector<String>();
 		discovered.add("1.2.3.4");
 		
@@ -38,7 +41,7 @@ public class EthernetPingRadarTest {
 		assertThat(d.getValue().getNetworkDeviceName()).isEqualTo("1.2.3.4:14984");
 	}
 	
-	@Test public void notfyLostDevicesAfterASuccessfullDiscovery(){
+	public void test_notfyLostDevicesAfterASuccessfullDiscovery(){
 		Vector<String> discovered = new Vector<String>();
 		discovered.add("1.2.3.4");
 		
@@ -56,7 +59,7 @@ public class EthernetPingRadarTest {
 		assertThat(d.getValue().getNetworkDeviceName()).isEqualTo("1.2.3.4:14984");
 	}
 	
-	@Test public void ethutilCanSendDuplicates(){
+	public void test_ethutilCanSendDuplicates(){
 		Vector<String> discovered = new Vector<String>();
 		discovered.add("1.2.3.4");
 		discovered.add("4.3.2.1");
@@ -76,7 +79,7 @@ public class EthernetPingRadarTest {
 		assertThat(d.getValue().getNetworkDeviceName()).isEqualTo("1.2.3.4:14984");
 	}
 
-	@Test public void notfyNobodyWhenThereIsNoChange(){
+	public void test_notfyNobodyWhenThereIsNoChange(){
 		Vector<String> discovered = new Vector<String>();
 		discovered.add("1.2.3.4");
 		
@@ -86,7 +89,7 @@ public class EthernetPingRadarTest {
 		verify(listener,never()).deviceLeft((NetworkDevice)any());
 	}
 	
-	@Test public void shouldNotBreakOnNull(){
+	public void test_shouldNotBreakOnNull(){
 		radar.deviceDiscoveryFinished(null);
 		verify(listener,never()).deviceLeft((NetworkDevice)any());
 	}

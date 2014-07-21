@@ -2,20 +2,21 @@ package org.unbiquitous.uos.network.socket.connectionManager;
 
 
 import java.io.IOException;
-import java.net.SocketException;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.InitialProperties.Tuple;
 import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManagerListener;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
-import org.unbiquitous.uos.network.socket.channelManager.EthernetTCPChannelManager;
-import org.unbiquitous.uos.network.socket.connection.EthernetTCPServerConnection;
+import org.unbiquitous.uos.network.socket.SocketDevice;
+import org.unbiquitous.uos.network.socket.TCPProperties;
+import org.unbiquitous.uos.network.socket.channelManager.TCPChannelManager;
+import org.unbiquitous.uos.network.socket.connection.TCPServerConnection;
 
 import br.unb.cic.ethutil.EthUtilNetworkInterfaceHelper;
 
@@ -25,87 +26,74 @@ import br.unb.cic.ethutil.EthUtilNetworkInterfaceHelper;
  *
  * @author Passarinho
  */
-public class EthernetTCPConnectionManager extends EthernetConnectionManager{
+public class TCPConnectionManager extends SocketConnectionManager{
 	
 	/* *****************************
 	 *   	ATRUBUTES
 	 * *****************************/
 	
-	/** The ResourceBundle to get some properties. */
-	private ResourceBundle resource;
+	private TCPProperties properties;
 	
-	/** Specify the number of the ethernet port to be used*/
-	private static final String UBIQUITOS_ETH_TCP_PORT_KEY = "ubiquitos.eth.tcp.port";
-	private static final String UBIQUITOS_ETH_TCP_CONTROL_PORT_KEY = "ubiquitos.eth.tcp.port.control";
-	private int UBIQUITOS_ETH_TCP_PORT;
-	private int UBIQUITOS_ETH_TCP_CONTROL_PORT;
+	private int port = 14984;
+	private Tuple<Integer, Integer> passivePortRange = new Tuple<Integer, Integer>(14985, 14990);
 	
-	/** Specify the passive port range to be used*/
-	private static final String UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE_KEY = "ubiquitos.eth.tcp.passivePortRange";
-	String UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE;
-	
-    /** Object for logging registration.*/
     private static final Logger logger = UOSLogging.getLogger();
 
-    /** A Connection Manager Listener (ConnectionManagerControlCenter) */
     private ConnectionManagerListener connectionManagerListener = null;
     
-    /** Server Connection */
-    private EthernetDevice serverDevice;
-    private EthernetTCPServerConnection server;
+    private SocketDevice serverDevice;
+    private TCPServerConnection server;
     
-    /** Attribute to control the closing of the Connection Manager */
     private boolean closingEthernetConnectionManager = false;
     
-    /** The ChannelManager for new channels */
-    private EthernetTCPChannelManager channelManager;
-    
-    /**
-     * Controller responsible for the active connections cache. 
-     */
+    private TCPChannelManager channelManager;
+    private NetworkInterfaceProvider interfaceProvider = new NetworkInterfaceProvider();
     private CacheController cacheController = new CacheController();
     
-    /* *****************************
-	 *   	CONSTRUCTOR
-	 * *****************************/
-	
-    /**
-	 * Constructor
-	 * @throws UbiquitOSException
-	 */
-    public EthernetTCPConnectionManager() throws NetworkException {}
+	private String ignoreFilter;
     
-    
-    /* *****************************
-     *   	PUBLIC  METHODS - ConnectionManager
-     * *****************************/
-
-    /** 
-     *  Sets the Listener who will be notified when a Connections is established.
-     */
 	public void setConnectionManagerListener(ConnectionManagerListener connectionManagerListener) {
 		this.connectionManagerListener = connectionManagerListener;
+	}
+
+	public static class NetworkInterfaceProvider {
+		public String[] interfaces() throws IOException{
+			return EthUtilNetworkInterfaceHelper.listLocalAddresses();
+		}
+	}
+	
+	public void setNetworkInterfaceProvider(
+			NetworkInterfaceProvider interfaceProvider) {
+		this.interfaceProvider = interfaceProvider;
+	}
+	
+	public CacheController getCacheController() {
+		return cacheController;
 	}
 	
 	/** 
      *  Sets the ResourceBundle to get some properties.
      */
-	public void setResourceBundle(ResourceBundle resourceBundle) {
-		resource = resourceBundle;
+	public void init(InitialProperties _properties) {
+		if(_properties instanceof TCPProperties){
+			properties = (TCPProperties) _properties;
+		}else{
+			properties = new TCPProperties(_properties);
+		}
 		
-		if(resource == null){
+		if(properties == null){
         	String msg = "ResourceBundle is null";
         	logger.severe(msg);
             throw new RuntimeException(msg);
         }else{
         	try{
-        		UBIQUITOS_ETH_TCP_PORT = Integer.parseInt(resource.getString(UBIQUITOS_ETH_TCP_PORT_KEY));
-        		try {
-					UBIQUITOS_ETH_TCP_CONTROL_PORT = Integer.parseInt(resource.getString(UBIQUITOS_ETH_TCP_CONTROL_PORT_KEY));
-				} catch (Exception e) {
-					logger.info("No Alternative TCP Port defined");
-				}
-        		UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE = resource.getString(UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE_KEY);
+        		if(properties.getPort() != null){
+        			port = properties.getPort();
+        		}
+        		if(properties.getPassivePortRange() != null){
+        			passivePortRange = properties.getPassivePortRange();
+        		}
+        		ignoreFilter = properties.getString("ubiquitos.eth.tcp.ignoreFilter");
         	}catch (Exception e) {
         		String msg = "Incorrect ethernet tcp port";
             	logger.severe(msg);
@@ -114,6 +102,9 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
         }
 	}
 	
+	public InitialProperties getProperties(){
+		return this.properties;
+	}
 	/**
 	 * Finalize the Connection Manager.
 	 */
@@ -145,15 +136,42 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 	public NetworkDevice getNetworkDevice() {
 		if(serverDevice == null){
 			try {
-				String addr = EthUtilNetworkInterfaceHelper.listLocalAddresses()[0];
-				serverDevice = new EthernetDevice(addr, UBIQUITOS_ETH_TCP_PORT, EthernetConnectionType.TCP);
-				return serverDevice;
-			} catch (SocketException e) {
+				return createCurrentDevice();
+			} catch (IOException e) {
 				logger.log(Level.SEVERE,"",e);
 			}
 		}
 		logger.fine("returning:"+serverDevice);
 		return serverDevice;
+	}
+
+	private NetworkDevice createCurrentDevice() throws IOException {
+		String[] localAddrs = interfaceProvider.interfaces();
+		boolean hasAdresses = localAddrs != null && localAddrs.length > 0;
+		if(hasAdresses){
+			String addr = selectAddress(localAddrs);
+			serverDevice = new SocketDevice(addr, port, EthernetConnectionType.TCP);
+			return serverDevice;
+		}else{
+			throw new NetworkException("No network available");
+		}
+	}
+
+	private String selectAddress(String[] localAddrs) {
+		if (ignoreFilter == null){
+			return localAddrs[0];
+		}else{
+			return applyIgnoreFilter(localAddrs);
+		}
+	}
+
+	private String applyIgnoreFilter(String[] localAddrs) {
+		for(String nInt :localAddrs){
+			if(!nInt.matches(ignoreFilter)){
+				return nInt;
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -162,7 +180,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
 	 */
 	public ChannelManager getChannelManager(){
 		if(channelManager == null){
-			channelManager = new EthernetTCPChannelManager(UBIQUITOS_ETH_TCP_PORT, UBIQUITOS_ETH_TCP_CONTROL_PORT, UBIQUITOS_ETH_TCP_PASSIVE_PORT_RANGE, cacheController);
+			channelManager = new TCPChannelManager(port, passivePortRange.x, passivePortRange.y, cacheController);
 		}
 		return channelManager;
 	}
@@ -180,7 +198,7 @@ public class EthernetTCPConnectionManager extends EthernetConnectionManager{
         IOException ex = null;
         while (tries < max_retries){
 			try {
-				server = new EthernetTCPServerConnection((EthernetDevice)getNetworkDevice(), cacheController);
+				server = new TCPServerConnection((SocketDevice)getNetworkDevice(), cacheController);
 				tries = max_retries;
 			} catch (IOException e) {
 				String msg = "Error starting Ethernet TCP Connection Manager : "+e.getMessage();

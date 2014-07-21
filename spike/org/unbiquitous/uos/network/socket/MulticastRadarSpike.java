@@ -2,18 +2,21 @@ package org.unbiquitous.uos.network.socket;
 
 import java.util.ListResourceBundle;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import org.unbiquitous.uos.core.UOS;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetTCPConnectionManager;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetUDPConnectionManager;
-import org.unbiquitous.uos.network.socket.radar.EthernetPingRadar;
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.network.socket.connectionManager.TCPConnectionManager;
+import org.unbiquitous.uos.network.socket.radar.MulticastRadar;
 
-public class RadarSpike {
+public class MulticastRadarSpike {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception{
+		UOSLogging.getLogger();
+		UOSLogging.setLevel(Level.FINE);
 		UOS u = new UOS();
 		ResourceBundle prop = new ListResourceBundle() {
 			protected Object[][] getContents() {
@@ -21,10 +24,12 @@ public class RadarSpike {
 					{"ubiquitos.message.response.timeout", "100"}, //Optional
 					{"ubiquitos.message.response.retry", "30"},//Optional
 					{"ubiquitos.connectionManager",
-						EthernetTCPConnectionManager.class.getName() + ',' +
-						EthernetUDPConnectionManager.class.getName()},
+						TCPConnectionManager.class.getName() 
+//						+ ',' +
+//						UDPConnectionManager.class.getName()
+						},
 					{"ubiquitos.radar",
-						EthernetPingRadar.class.getName()},
+						MulticastRadar.class.getName()},
 					{"ubiquitos.eth.tcp.port", "14984"}, 
 					{"ubiquitos.eth.tcp.passivePortRange", "14985-15000"}, 
 					{"ubiquitos.eth.udp.port", "15001"}, 
@@ -32,7 +37,7 @@ public class RadarSpike {
 		        };
 			}
 		};
-		u.init(prop);
+		u.start(prop);
 	}
 
 }

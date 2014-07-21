@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.messageEngine.Base64;
-import org.unbiquitous.uos.network.socket.connection.EthernetTCPClientConnection;
+import org.unbiquitous.uos.network.socket.connection.TCPClientConnection;
 
 
 public class TestSendEncapsulatedMessage extends TestSendMessage {
@@ -14,7 +14,7 @@ public class TestSendEncapsulatedMessage extends TestSendMessage {
 	private static Logger logger = UOSLogging.getLogger(); 
 
 	protected void connect() throws IOException{
-		con = new EthernetTCPClientConnection("localhost",14984, null/*EthernetTCPConnectionManager.UBIQUITOS_ETH_TCP_PORT*/);
+		con = new TCPClientConnection("localhost",14984, null/*EthernetTCPConnectionManager.UBIQUITOS_ETH_TCP_PORT*/);
 	}
 	
 	@Override

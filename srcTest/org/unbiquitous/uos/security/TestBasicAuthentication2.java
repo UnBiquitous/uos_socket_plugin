@@ -10,7 +10,7 @@ import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
 
 import br.unb.unbiquitous.ubiquitos.authentication.SessionKeyDaoHSQLDB;
 import br.unb.unbiquitous.ubiquitos.authentication.messages.FirstMessage;
@@ -30,7 +30,7 @@ public class TestBasicAuthentication2 extends TestCase {
 	protected void setUp() throws Exception {
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.init();
+		context.start("ubiquitos");
 		gateway = context.getGateway();
 		
 		providerDevice = new UpDevice();
@@ -39,7 +39,7 @@ public class TestBasicAuthentication2 extends TestCase {
 	};
 	
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	
@@ -61,10 +61,10 @@ public class TestBasicAuthentication2 extends TestCase {
 		authenticationData.put("ra2Enc", firstMessage.getRa2Enc());
 		authenticationData.put("hmacM1", firstMessage.getHmacM1());
 
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setParameters(authenticationData);
 		serviceCall.setSecurityType(SECURITY_TYPE);
-		serviceCall.setServiceType(ServiceCall.ServiceType.DISCRETE);
+		serviceCall.setServiceType(Call.ServiceType.DISCRETE);
 		serviceCall.setService("authenticate");
 		serviceCall.setDriver("uos.DeviceDriver");
 

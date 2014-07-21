@@ -2,12 +2,12 @@ package org.unbiquitous.uos.core.driverManager;
 
 import java.io.IOException;
 
-import org.unbiquitous.uos.network.socket.connection.EthernetTCPClientConnection;
+import org.unbiquitous.uos.network.socket.connection.TCPClientConnection;
 
 
 public class TestSendMessageTCP extends TestSendMessage {
 
 	protected void connect() throws IOException{
-		con = new EthernetTCPClientConnection("localhost",14984, null/*EthernetTCPConnectionManager.UBIQUITOS_ETH_TCP_PORT*/);
+		con = new TCPClientConnection("localhost",14984, null/*EthernetTCPConnectionManager.UBIQUITOS_ETH_TCP_PORT*/);
 	}
 }

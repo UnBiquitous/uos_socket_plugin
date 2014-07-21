@@ -2,31 +2,31 @@ package org.unbiquitous.uos.network.socket.connectionManager;
 
 import java.io.IOException;
 import java.net.SocketException;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.connectionManager.ConnectionManagerListener;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
-import org.unbiquitous.uos.network.socket.channelManager.EthernetUDPChannelManager;
-import org.unbiquitous.uos.network.socket.connection.EthernetUDPServerConnection;
+import org.unbiquitous.uos.network.socket.SocketDevice;
+import org.unbiquitous.uos.network.socket.channelManager.UDPChannelManager;
+import org.unbiquitous.uos.network.socket.connection.UDPServerConnection;
 import org.unbiquitous.uos.network.socket.udp.UdpChannel;
 
 import br.unb.cic.ethutil.EthUtilNetworkInterfaceHelper;
 
 
-public class EthernetUDPConnectionManager extends EthernetConnectionManager{
+public class UDPConnectionManager extends SocketConnectionManager{
 	
 	/* *****************************
 	 *   	ATRUBUTES
 	 * *****************************/
 	
 	/** The ResourceBundle to get some properties. */
-	private ResourceBundle resource;
+	private InitialProperties properties;
 	
 	/** Specify the number of the ethernet port to be used*/
 	private static final String UBIQUITOS_ETH_UDP_PORT_KEY = "ubiquitos.eth.udp.port";
@@ -47,14 +47,14 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
     private ConnectionManagerListener connectionManagerListener = null;
     
     /** Server Connection */
-    private EthernetDevice serverDevice;
-    private EthernetUDPServerConnection server;
+    private SocketDevice serverDevice;
+    private UDPServerConnection server;
     
     /** Attribute to control the closing of the Connection Manager */
     private boolean closingEthernetConnectionManager = false;
     
     /** The ChannelManager for new channels */
-    private EthernetUDPChannelManager channelManager;
+    private UDPChannelManager channelManager;
     
     /* *****************************
 	 *   	CONSTRUCTOR
@@ -64,7 +64,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 	 * Constructor
 	 * @throws UbiquitOSException
 	 */
-    public EthernetUDPConnectionManager() throws NetworkException {}
+    public UDPConnectionManager() throws NetworkException {}
     
     
     /* *****************************
@@ -81,28 +81,32 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 	/** 
      *  Sets the ResourceBundle to get some properties.
      */
-	public void setResourceBundle(ResourceBundle resourceBundle) {
-		resource = resourceBundle;
+	public void init(InitialProperties resourceBundle) {
+		properties = resourceBundle;
 		
-		if(resource == null){
+		if(properties == null){
         	String msg = "ResourceBundle is null";
         	logger.severe(msg);
             throw new RuntimeException(msg);
         }else{
         	try{
-        		UBIQUITOS_ETH_UDP_PORT = Integer.parseInt(resource.getString(UBIQUITOS_ETH_UDP_PORT_KEY));
+        		UBIQUITOS_ETH_UDP_PORT = Integer.parseInt(properties.getString(UBIQUITOS_ETH_UDP_PORT_KEY));
         		try {
-					UBIQUITOS_ETH_UDP_CONTROL_PORT = Integer.parseInt(resource.getString(UBIQUITOS_ETH_UDP_CONTROL_PORT_KEY));
+					UBIQUITOS_ETH_UDP_CONTROL_PORT = Integer.parseInt(properties.getString(UBIQUITOS_ETH_UDP_CONTROL_PORT_KEY));
 				} catch (Exception e) {
 					logger.info("No Alternative UDP Port defined");
 				}
-        		UBIQUITOS_ETH_UDP_PASSIVE_PORT_RANGE = resource.getString(UBIQUITOS_ETH_UDP_PASSIVE_PORT_RANGE_KEY);
+        		UBIQUITOS_ETH_UDP_PASSIVE_PORT_RANGE = properties.getString(UBIQUITOS_ETH_UDP_PASSIVE_PORT_RANGE_KEY);
         	}catch (Exception e) {
         		String msg = "Incorrect ethernet udp port";
             	logger.severe(msg);
                 throw new RuntimeException(msg);
 			}
         }
+	}
+	
+	public InitialProperties getProperties(){
+		return this.properties;
 	}
 	
 	/**
@@ -135,7 +139,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 		if(serverDevice == null){			
 			try {
 				String addr = EthUtilNetworkInterfaceHelper.listLocalAddresses()[0];
-				serverDevice = new EthernetDevice(addr, UBIQUITOS_ETH_UDP_PORT, EthernetConnectionType.UDP);
+				serverDevice = new SocketDevice(addr, UBIQUITOS_ETH_UDP_PORT, EthernetConnectionType.UDP);
 				return serverDevice;
 			} catch (SocketException e) {
 				logger.log(Level.SEVERE,"",e);
@@ -151,7 +155,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
 	 */
 	public ChannelManager getChannelManager(){
 		if(channelManager == null){
-			channelManager = new EthernetUDPChannelManager(UBIQUITOS_ETH_UDP_PORT, UBIQUITOS_ETH_UDP_CONTROL_PORT, UBIQUITOS_ETH_UDP_PASSIVE_PORT_RANGE);
+			channelManager = new UDPChannelManager(UBIQUITOS_ETH_UDP_PORT, UBIQUITOS_ETH_UDP_CONTROL_PORT, UBIQUITOS_ETH_UDP_PASSIVE_PORT_RANGE);
 		}
 		return channelManager;
 	}
@@ -164,7 +168,7 @@ public class EthernetUDPConnectionManager extends EthernetConnectionManager{
         logger.info("Starting Ethernet UDP Connection Manager...");
         
 		try {
-			server = new EthernetUDPServerConnection((EthernetDevice)getNetworkDevice());
+			server = new UDPServerConnection((SocketDevice)getNetworkDevice());
 		} catch (IOException ex) {
 			String msg = "Error starting Ethernet UDP Connection Manager. ";
             logger.log(Level.SEVERE,msg, ex);

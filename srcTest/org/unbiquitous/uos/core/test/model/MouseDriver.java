@@ -5,13 +5,14 @@ import java.awt.Robot;
 import java.util.List;
 import java.util.Map;
 
+import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.applicationManager.UOSMessageContext;
+import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpService.ParameterType;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 
 public class MouseDriver implements UosDriver {
@@ -26,7 +27,7 @@ public class MouseDriver implements UosDriver {
 	private Robot robot; 
 	
 	
-	public void movePointer(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
+	public void movePointer(Call serviceCall, Response serviceResponse, CallContext messageContext){
 		
 		Map<String,Object> parameters = serviceCall.getParameters();
 		
@@ -44,7 +45,7 @@ public class MouseDriver implements UosDriver {
 		}
 	}
 	
-	public void moveScroll(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
+	public void moveScroll(Call serviceCall, Response serviceResponse, CallContext messageContext){
 		
 		Map<String,Object> parameters = serviceCall.getParameters();
 		
@@ -74,7 +75,7 @@ public class MouseDriver implements UosDriver {
 	}
 
 	@Override
-	public void init(Gateway gateway, String instanceId) {
+	public void init(Gateway gateway, InitialProperties properties, String instanceId) {
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {

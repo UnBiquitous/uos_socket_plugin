@@ -32,12 +32,12 @@ public class TestDeviceDriverAuthenticate extends TestCase {
 		Thread.sleep(timeToWaitBetweenTests/2);
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.init("br/unb/unbiquitous/ubiquitos/uos/deviceManager/ubiquitos");
+		context.start("br/unb/unbiquitous/ubiquitos/uos/deviceManager/ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 	};
 	
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	

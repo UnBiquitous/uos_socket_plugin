@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 
 import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.model.connection.ServerConnection;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
+import org.unbiquitous.uos.network.socket.SocketDevice;
 
 
 /**
@@ -13,7 +13,7 @@ import org.unbiquitous.uos.network.socket.EthernetDevice;
  * 
  * @author Lucas Lins
  */
-public class EthernetTCPServerConnection extends ServerConnection {
+public class TCPServerConnection extends ServerConnection {
 	
 	/************************************
 	 * ATTRIBUTES
@@ -21,19 +21,15 @@ public class EthernetTCPServerConnection extends ServerConnection {
 
 	private ServerSocket tcpSocket;
 	
-	/**
-     * Controller responsible for the active connections cache. 
-     */
-    private CacheController cacheController;
-	
 	/************************************
 	 * CONSTRUCTOR
 	 * @param cacheController 
 	 ************************************/
-	public EthernetTCPServerConnection(EthernetDevice serverDevice, CacheController cacheController) throws IOException{
+	public TCPServerConnection(SocketDevice serverDevice, CacheController cacheController) throws IOException{
 		super(serverDevice);
-		this.cacheController = cacheController;
 		tcpSocket = new ServerSocket(serverDevice.getPort());
+		int FIVE_MINUTES_IN_MILLIS = 5*60*1000;
+		tcpSocket.setSoTimeout(FIVE_MINUTES_IN_MILLIS);
 	}
 	
 	/************************************
@@ -43,8 +39,8 @@ public class EthernetTCPServerConnection extends ServerConnection {
 	/**
 	 * accept a client connection and return the {@link EthernetClientConnection} from this action. 
 	 */
-	public EthernetTCPClientConnection accept() throws IOException{
-		return new EthernetTCPClientConnection(tcpSocket.accept(), null);
+	public TCPClientConnection accept() throws IOException{
+		return new TCPClientConnection(tcpSocket.accept(), null);
 	}
 	
 	/**

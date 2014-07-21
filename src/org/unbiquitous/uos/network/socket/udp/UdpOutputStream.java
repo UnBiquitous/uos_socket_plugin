@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Vector;
 
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetUDPConnectionManager;
+import org.unbiquitous.uos.network.socket.connectionManager.UDPConnectionManager;
 
 
 /**
@@ -42,7 +42,7 @@ public class UdpOutputStream extends OutputStream{
 	private void send() throws IOException{
 		int length = buffer.size();
 		if(length > 0){
-			int size = (length < EthernetUDPConnectionManager.UDP_BUFFER_SIZE)? length : EthernetUDPConnectionManager.UDP_BUFFER_SIZE;
+			int size = (length < UDPConnectionManager.UDP_BUFFER_SIZE)? length : UDPConnectionManager.UDP_BUFFER_SIZE;
 			byte[] sendBuffer = new byte[size];
 			for (int i = 0; i < size; i++) sendBuffer[i] = buffer.remove(0);
 			channel.send(sendBuffer, 0, size, this);
@@ -54,7 +54,7 @@ public class UdpOutputStream extends OutputStream{
 	 * @throws IOException
 	 */
 	private void checkToSend() throws IOException{
-		while(buffer.size() >= EthernetUDPConnectionManager.UDP_BUFFER_SIZE){
+		while(buffer.size() >= UDPConnectionManager.UDP_BUFFER_SIZE){
 			send();
 		}
 	}

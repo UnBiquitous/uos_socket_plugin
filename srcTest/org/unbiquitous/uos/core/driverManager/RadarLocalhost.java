@@ -10,8 +10,8 @@ import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
+import org.unbiquitous.uos.network.socket.SocketDevice;
+import org.unbiquitous.uos.network.socket.connectionManager.SocketConnectionManager.EthernetConnectionType;
 
 
 public class RadarLocalhost implements Radar {
@@ -26,11 +26,6 @@ public class RadarLocalhost implements Radar {
 	private List<NetworkDevice> deviceLeftPool = new ArrayList<NetworkDevice>();
 	
 	private static RadarLocalhost singletonReference = null;
-	
-	/**
-     * The connection manager responsible for handling the information of connections.
-     */
-    private ConnectionManager connectionManager;
 	
 	public RadarLocalhost(RadarListener listenner) {
 		this.listenner = listenner;
@@ -86,7 +81,7 @@ public class RadarLocalhost implements Radar {
 	
 	public static void forceDeviceJoin(){
 		synchronized (singletonReference.deviceEnteredPool) {
-			EthernetDevice device = new EthernetDevice("0.0.0.0",15002,EthernetConnectionType.TCP); 
+			SocketDevice device = new SocketDevice("0.0.0.0",15002,EthernetConnectionType.TCP); 
 			logger.info("Creating a Device");
 			singletonReference.deviceEnteredPool.add(device);
 			
@@ -100,7 +95,7 @@ public class RadarLocalhost implements Radar {
 	
 	public static void forceDeviceLeft(){
 		synchronized (singletonReference.deviceLeftPool) {
-			EthernetDevice device = new EthernetDevice("0.0.0.0",15002,EthernetConnectionType.TCP); 
+			SocketDevice device = new SocketDevice("0.0.0.0",15002,EthernetConnectionType.TCP); 
 			logger.info("Creating a Device");
 			singletonReference.deviceLeftPool.add(device);
 			
@@ -113,8 +108,6 @@ public class RadarLocalhost implements Radar {
 	}
 	
 	@Override
-	public void setConnectionManager(ConnectionManager connectionManager) {
-		this.connectionManager = connectionManager;
-	}
+	public void setConnectionManager(ConnectionManager connectionManager) {}
 	
 }

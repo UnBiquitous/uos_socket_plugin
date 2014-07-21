@@ -9,8 +9,7 @@ import junit.framework.TestCase;
 import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
-import org.unbiquitous.uos.core.messageEngine.dataType.json.JSONDevice;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 /*
  * This test only works along with other on thsi package.
@@ -51,13 +50,13 @@ public class TestActiveDiscreteTCP extends TestCase {
 		
 		
 		applicationContext = new UOS();
-		applicationContext.init("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesTCP");
+		applicationContext.start("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesTCP");
 			
 	}
 	
 	@Override
 	protected synchronized void tearDown() throws Exception {
-		applicationContext.tearDown();
+		applicationContext.stop();
 		logger.info("============== Teste : "+(currentTest-1)+" ========================== End");
 		Thread.sleep(TIME_BETWEEN_TESTS);
 		synchronized (lock) {
@@ -81,9 +80,9 @@ public class TestActiveDiscreteTCP extends TestCase {
 		logger.info("Trying to consume the listDrivers service from the Device Driver from the UDP machine");
 		
 		Map<String,Object> parameterMap = new HashMap<String,Object>();
-		parameterMap.put("device", new JSONDevice(this.applicationContext.getGateway().getCurrentDevice()).toString());
+		parameterMap.put("device", this.applicationContext.getGateway().getCurrentDevice().toJSON().toString());
 		
-		ServiceResponse response = this.applicationContext.getGateway().callService(
+		Response response = this.applicationContext.getGateway().callService(
 				this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"),
 				"listDrivers", 
 				"uos.DeviceDriver", 
@@ -124,9 +123,9 @@ public class TestActiveDiscreteTCP extends TestCase {
 		logger.info("Trying to consume the listDrivers service from the Device Driver from the Bluetooth machine");
 		
 		Map<String,Object> parameterMap = new HashMap<String,Object>();
-		parameterMap.put("device", new JSONDevice(this.applicationContext.getGateway().getCurrentDevice()).toString());
+		parameterMap.put("device", this.applicationContext.getGateway().getCurrentDevice().toJSON().toString());
 		
-		ServiceResponse response = this.applicationContext.getGateway().callService(
+		Response response = this.applicationContext.getGateway().callService(
 				this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"),
 				"listDrivers", 
 				"uos.DeviceDriver", 

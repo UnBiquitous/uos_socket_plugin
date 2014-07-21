@@ -10,14 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.applicationManager.UOSMessageContext;
+import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpService;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 
 /**
@@ -43,7 +44,7 @@ public class StreamDriver implements UosDriver {
 	 * @param messageContext
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void chatService(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
+	public void chatService(Call serviceCall, Response serviceResponse, CallContext messageContext){
 		
 		logger.fine("Handling StreamDriver.chatService Call");
 		
@@ -51,7 +52,7 @@ public class StreamDriver implements UosDriver {
 		
 		int channels = (Integer)parameters.get(CHANNELS_KEY);
 		
-		logger.fine("Caller DeviceName : "+messageContext.getCallerDevice().getNetworkDeviceName());
+		logger.fine("Caller DeviceName : "+messageContext.getCallerNetworkDevice().getNetworkDeviceName());
 		
 		Map responseMap = new HashMap();
 		
@@ -78,9 +79,9 @@ public class StreamDriver implements UosDriver {
 		private int NOT_READY_SLEEP_TIME = 100;
 		
 		private int channel;
-		private UOSMessageContext msgContext;
+		private CallContext msgContext;
 		
-		public ChatServiceThreaded(int channel, UOSMessageContext msgContext){
+		public ChatServiceThreaded(int channel, CallContext msgContext){
 			this.channel = channel;
 			this.msgContext = msgContext;
 		}
@@ -145,7 +146,7 @@ public class StreamDriver implements UosDriver {
 	}
 
 	@Override
-	public void init(Gateway gateway, String instanceId) {}
+	public void init(Gateway gateway, InitialProperties properties, String instanceId) {}
 
 	@Override
 	public void destroy() {}

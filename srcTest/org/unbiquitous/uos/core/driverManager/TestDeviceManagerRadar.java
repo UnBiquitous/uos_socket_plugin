@@ -56,10 +56,10 @@ public class TestDeviceManagerRadar extends TestCase {
 		logger.info("\n");
 		
 		applicationContextPassive = new UOS();
-		applicationContextPassive.init("br/unb/unbiquitous/ubiquitos/uos/deviceManager/propPassive");
+		applicationContextPassive.start("br/unb/unbiquitous/ubiquitos/uos/deviceManager/propPassive");
 		
 		applicationContextRadar = new UOS();
-		applicationContextRadar.init("br/unb/unbiquitous/ubiquitos/uos/deviceManager/propRadar");
+		applicationContextRadar.start("br/unb/unbiquitous/ubiquitos/uos/deviceManager/propRadar");
 		
 		deviceManager = applicationContextRadar.getFactory().gateway().getDeviceManager();
 		SmartSpaceGateway gateway = (SmartSpaceGateway) applicationContextRadar.getGateway();
@@ -99,8 +99,8 @@ public class TestDeviceManagerRadar extends TestCase {
 	
 	@Override
 	protected synchronized void tearDown() throws Exception {
-		applicationContextPassive.tearDown();
-		applicationContextRadar.tearDown();
+		applicationContextPassive.stop();
+		applicationContextRadar.stop();
 		logger.info("============== Teste : "+(currentTest-1)+" ========================== End");
 		Thread.sleep(TIME_BETWEEN_TESTS);
 		synchronized (lock) {

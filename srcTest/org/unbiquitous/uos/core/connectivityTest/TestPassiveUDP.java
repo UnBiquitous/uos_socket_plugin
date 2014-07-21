@@ -39,7 +39,7 @@ public class TestPassiveUDP extends TestCase {
 		
 		logger.info("***** Starting applicationContextRadar **********");
 		applicationContext = new UOS();
-		applicationContext.init("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesUDP");
+		applicationContext.start("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesUDP");
 		logger.info("***** ApplicationContextRadar started **********");		
 		
 	}
@@ -48,7 +48,7 @@ public class TestPassiveUDP extends TestCase {
 	protected synchronized void tearDown() throws Exception {
 		Thread.sleep(TIME_BETWEEN_TESTS);
 		logger.info("************** TEAR DOWN **************");
-		applicationContext.tearDown();
+		applicationContext.stop();
 		logger.info("============== Teste : "+(currentTest-1)+" ========================== End");
 		Thread.sleep(TIME_BETWEEN_TESTS);
 		synchronized (lock) {

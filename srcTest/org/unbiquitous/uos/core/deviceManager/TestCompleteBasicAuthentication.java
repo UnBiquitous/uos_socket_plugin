@@ -11,8 +11,8 @@ import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.SmartSpaceGateway;
 import org.unbiquitous.uos.core.driverManager.DriverDao;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 import br.unb.unbiquitous.ubiquitos.authentication.SessionKeyDaoHSQLDB;
 
@@ -40,7 +40,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		logger.info("\n");
 		
 		context = new UOS();
-		context.init();
+		context.start("ubiquitos");
 		
 		deviceManager = context.getFactory().gateway().getDeviceManager();
 		
@@ -56,7 +56,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 	 * Method that tear down the context after each test execution.
 	 * */
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	
@@ -102,7 +102,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		new br.unb.unbiquitous.ubiquitos.authentication.AuthenticationHandler(authenticationDao, sessionKeyDao);
 
 		// creates a new instance of serviceCall and initializes their parameters
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver("uos.DeviceDriver");
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);//verificar isso
@@ -117,10 +117,10 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		logger.fine("Starts authentication proccess calling the service \"echoService\"");
 		
 		// Call service
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
 		// creates a service response to compare the obtained response to expected response
-		ServiceResponse expectedResponse = new ServiceResponse();
+		Response expectedResponse = new Response();
 		Map responseMap = new HashMap();
 		responseMap.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		expectedResponse.setResponseData(responseMap);
@@ -182,7 +182,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		new br.unb.unbiquitous.ubiquitos.authentication.AuthenticationHandler(authenticationDao, sessionKeyDao);
 
 		// creates a new instance of serviceCall and initializes their parameters
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver("uos.DeviceDriver");
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);//verificar isso
@@ -196,7 +196,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		logger.fine("Starts authentication proccess calling the service \"echoService\"");
 		
 		// Call service
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
 		// checks the service response
 		assertNull(response);
@@ -246,7 +246,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		new br.unb.unbiquitous.ubiquitos.authentication.AuthenticationHandler(authenticationDao, sessionKeyDao);
 
 		// creates a new instance of serviceCall and initializes their parameters
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver("uos.DeviceDriver");
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);//verificar isso
@@ -260,7 +260,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		logger.fine("Starts authentication proccess calling the service \"echoService\"");
 		
 		// Call service
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
 		// checks the service response
 		assertNull(response);
@@ -301,7 +301,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		new br.unb.unbiquitous.ubiquitos.authentication.AuthenticationHandler(authenticationDao, sessionKeyDao);
 
 		// creates a new instance of serviceCall and initializes their parameters
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver("uos.DeviceDriver");
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);//verificar isso
@@ -315,7 +315,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		logger.fine("Starts authentication proccess calling the service \"echoService\"");
 		
 		// Call service
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
 		// checks the service response
 		assertNull(response);
@@ -357,7 +357,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		new br.unb.unbiquitous.ubiquitos.authentication.AuthenticationHandler(authenticationDao, sessionKeyDao);
 
 		// creates a new instance of serviceCall and initializes their parameters
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver("uos.DeviceDriver");
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);//verificar isso
@@ -371,7 +371,7 @@ public class TestCompleteBasicAuthentication extends TestCase {
 		logger.fine("Starts authentication proccess calling the service \"echoService\"");
 		
 		// Call service
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
 		// checks the service response
 		assertNull(response);

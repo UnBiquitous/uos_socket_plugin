@@ -17,9 +17,9 @@ import junit.framework.TestCase;
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall.ServiceType;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Call.ServiceType;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 	
@@ -53,13 +53,13 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 		Thread.sleep(timeToWaitBetweenTests/2);
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.init("ubiquitos_adaptability");
+		context.start("ubiquitos_adaptability");
 		Thread.sleep(timeToWaitBetweenTests/2);
 		gateway = context.getGateway();
 	};
 	
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 		System.gc();
 	}
 	
@@ -71,10 +71,9 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 	
 	@SuppressWarnings("unchecked")
 	public void testChatService() throws ServiceCallException, IOException, InterruptedException{
-		
 		int channels = 5;
 		
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver(TEST_DATA_STREAM_DRIVER_NAME);
 		serviceCall.setService(TEST_DATA_CHAT_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_STREAM_DRIVER_ID);
@@ -88,7 +87,7 @@ public abstract class TestAdaptabilityEngineStreamChannel extends TestCase{
 		
 		serviceCall.setParameters(parameters);
 		
-		ServiceResponse response = gateway.callService(providerDevice, serviceCall);
+		Response response = gateway.callService(providerDevice, serviceCall);
 		
 		logger.fine("Returned Msg: ["+response.getResponseData().get(TEST_DATA_CHAT_SERVICE_MESSAGE_KEY)+"]");
 		

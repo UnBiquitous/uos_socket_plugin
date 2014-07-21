@@ -5,48 +5,58 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.network.cache.CacheController;
 import org.unbiquitous.uos.core.network.connectionManager.ChannelManager;
 import org.unbiquitous.uos.core.network.exceptions.NetworkException;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
-import org.unbiquitous.uos.network.socket.connection.EthernetUDPClientConnection;
-import org.unbiquitous.uos.network.socket.connection.EthernetUDPServerConnection;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
+import org.unbiquitous.uos.network.socket.SocketDevice;
+import org.unbiquitous.uos.network.socket.connection.TCPClientConnection;
+import org.unbiquitous.uos.network.socket.connection.TCPServerConnection;
+import org.unbiquitous.uos.network.socket.connectionManager.SocketConnectionManager.EthernetConnectionType;
 
 
-public class EthernetUDPChannelManager implements ChannelManager{
+public class TCPChannelManager implements ChannelManager{ 
+	
+	private static final Logger logger = UOSLogging.getLogger();
 	
 	/*********************************
 	 * ATTRIBUTES
 	 *********************************/
-
+	
 	private List<NetworkDevice> freePassiveDevices;
 	
-	private Map<String, EthernetUDPServerConnection> startedServers;
+	private Map<String, TCPServerConnection> startedServers;
 	
 	private int defaultPort;
-	private int controlPort;
 	
+	/**
+     * Controller responsible for the active connections cache. 
+     */
+    private CacheController cacheController;
+
+	private List<Integer> validPorts;
 	
 	/*********************************
 	 * CONSTRUCTORS
+	 * @param cacheController 
 	 *********************************/
 	
-	public EthernetUDPChannelManager(int defaultPort, int controlPort, String portRange){
+	public TCPChannelManager(int defaultPort ,int portRangestart, int portRangeEnd, CacheController cacheController){
 		
 		this.defaultPort = defaultPort;
-		this.controlPort = controlPort;
-		
-		this.startedServers = new HashMap<String, EthernetUDPServerConnection>();
+		this.cacheController = cacheController;
+		this.startedServers = new HashMap<String, TCPServerConnection>();
 		
 		freePassiveDevices = new ArrayList<NetworkDevice>();
-		String[] limitPorts = portRange.split("-");
-		int inferiorPort = Integer.parseInt(limitPorts[0]);
-		int superiorPort = Integer.parseInt(limitPorts[1]);
-		for(int port = inferiorPort; port <= superiorPort; port++){
-			freePassiveDevices.add(new EthernetDevice("0.0.0.0",port,EthernetConnectionType.UDP));
+		validPorts = new ArrayList<Integer>();
+		validPorts.add(defaultPort);
+		for(int port = portRangestart; port <= portRangeEnd; port++){
+			validPorts.add(port);
+			freePassiveDevices.add(new SocketDevice("0.0.0.0",port,EthernetConnectionType.TCP));
 		}
 	}
 	
@@ -60,7 +70,7 @@ public class EthernetUDPChannelManager implements ChannelManager{
 		String host ;
 		int port ;
 		if (address.length == 1){
-			port = controlPort;
+			port = defaultPort;
 		}else if(address.length == 2){
 			port = Integer.parseInt(address[1]);
 		}else{
@@ -69,15 +79,24 @@ public class EthernetUDPChannelManager implements ChannelManager{
 		
     	host = address[0];
     	
-    	EthernetUDPClientConnection etcc ;
-		try {
-			etcc = new EthernetUDPClientConnection(host, port);
-		} catch (Exception e) {
-			etcc = new EthernetUDPClientConnection(host, defaultPort);
+    	if (!validPorts.contains(port) ){
+    		port = defaultPort;
+    	}
+    	
+    	ClientConnection cached = cacheController.getConnection(host+':'+port);
+		if (cached != null){
+			logger.info("EthernetTCPChannelManager: openActiveConnection: Returning cached connection for host '"+host+"'\n\n"); 
+			return cached;
 		}
-		return etcc;
+    	
+		try {
+			return new TCPClientConnection(host, port, cacheController);
+		} catch (Exception e) {
+			return null;
+		}
 	}
-
+	
+	
 	public ClientConnection openPassiveConnection(String networkDeviceName) throws NetworkException, IOException{
 		String[] address = networkDeviceName.split(":");
 		
@@ -85,12 +104,12 @@ public class EthernetUDPChannelManager implements ChannelManager{
 			throw new NetworkException("Invalid parameters for creation of the channel.");
 		}
 		
-		EthernetUDPServerConnection server = startedServers.get(networkDeviceName);
+		TCPServerConnection server = startedServers.get(networkDeviceName);
 		if(server == null){
 			String host = address[0];
 	    	int port = Integer.parseInt(address[1]);
-			
-	    	server = new EthernetUDPServerConnection(new EthernetDevice(host, port, EthernetConnectionType.UDP));
+			// Passive (Stream) connections shouldn't be cached
+	    	server = new TCPServerConnection(new SocketDevice(host, port, EthernetConnectionType.TCP), null);
 	    	startedServers.put(networkDeviceName, server);
 		}
 		
@@ -106,9 +125,8 @@ public class EthernetUDPChannelManager implements ChannelManager{
 	
 	
 	public void tearDown() throws NetworkException, IOException {
-		for(EthernetUDPServerConnection server : startedServers.values()){
+		for(TCPServerConnection server : startedServers.values()){
 			server.closeConnection();
 		}
 	}
-
 }

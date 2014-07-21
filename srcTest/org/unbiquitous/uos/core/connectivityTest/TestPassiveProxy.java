@@ -49,7 +49,7 @@ public class TestPassiveProxy extends TestCase {
 		
 		logger.info("***** Starting proxyApplicationContext **********");
 		proxyApplicationContext = new UOS();
-		proxyApplicationContext.init("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesProxy");
+		proxyApplicationContext.start("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesProxy");
 		logger.info("***** proxyApplicationContext started **********");
 		
 		
@@ -95,7 +95,7 @@ public class TestPassiveProxy extends TestCase {
 		logger.info("************** TEAR DOWN **************");
 		//applicationContextPassiveTCP.tearDown();
 		//applicationContextPassiveUDP.tearDown();
-		proxyApplicationContext.tearDown();
+		proxyApplicationContext.stop();
 		logger.info("============== Teste : "+(currentTest-1)+" ========================== End");
 		Thread.sleep(TIME_BETWEEN_TESTS);
 		synchronized (lock) {

@@ -13,20 +13,18 @@ import java.util.logging.Logger;
 import junit.framework.TestCase;
 
 import org.unbiquitous.json.JSONException;
+import org.unbiquitous.json.JSONObject;
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
 import org.unbiquitous.uos.core.adaptabitilyEngine.AdaptabilityEngine;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
 import org.unbiquitous.uos.core.deviceManager.DeviceManager;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
 import org.unbiquitous.uos.core.messageEngine.messages.Notify;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
-import org.unbiquitous.uos.core.messageEngine.messages.json.JSONNotify;
-import org.unbiquitous.uos.core.messageEngine.messages.json.JSONServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.json.JSONServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 import org.unbiquitous.uos.core.network.model.connection.ClientConnection;
-import org.unbiquitous.uos.network.socket.connection.EthernetTCPClientConnection;
+import org.unbiquitous.uos.network.socket.connection.TCPClientConnection;
 
 
 public class TestAdaptabilityEngineRegisterListener extends TestCase {
@@ -66,7 +64,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		Thread.sleep(timeToWaitBetweenTests/2);
 		logger.fine("\n\n######################### TEST "+testNumber+++" #########################\n\n");
 		context = new UOS();
-		context.init("br/unb/unbiquitous/ubiquitos/uos/adaptabitilyEngine/events/ubiquitos");
+		context.start("br/unb/unbiquitous/ubiquitos/uos/adaptabitilyEngine/events/ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 		currentEventDriver = DummyEventDriver.getCurrentDummyEventDriver();
 		gateway = context.getGateway();
@@ -75,7 +73,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	}
 	
 	protected void tearDown() throws Exception {
-		context.tearDown();
+		context.stop();
 	}
 	
 	/**
@@ -83,9 +81,9 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	 * @throws Exception
 	 */
 	public void testRegisterSuccessfulListener() throws Exception{
-		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, registerCall.getParameter(EVENT_KEY_PARAM));
@@ -97,15 +95,15 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	 * @throws Exception
 	 */
 	public void testRegisterListenerTwiceSameEventkey() throws Exception{
-		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		int firstRegisterCallCount = currentEventDriver.getLastServiceCallCount();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, registerCall.getParameter(EVENT_KEY_PARAM));
 		
-		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
 		assertEquals("Unecessary register call.",firstRegisterCallCount, currentEventDriver.getLastServiceCallCount());
 	}
@@ -115,15 +113,15 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	 * @throws Exception
 	 */
 	public void testRegisterListenerTwiceDiferentEventkey() throws Exception{
-		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		int firstRegisterCallCount = currentEventDriver.getLastServiceCallCount();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, registerCall.getParameter(EVENT_KEY_PARAM));
 		
-		gateway.registerForEvent(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT_2);
+		gateway.register(currentEventListener, gateway.getCurrentDevice(), EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT_2);
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT_2, currentEventDriver.getLastServiceCall().getParameter(EVENT_KEY_PARAM));
@@ -141,9 +139,9 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		device.addNetworkInterface("127.0.0.1:5555", "Ethernet:TCP");
 		deviceManager.registerDevice(device);
 		
-		gateway.registerForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, registerCall.getParameter(EVENT_KEY_PARAM));
@@ -170,9 +168,9 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		device.addNetworkInterface("127.0.0.1:5555", "Ethernet:TCP");
 		deviceManager.registerDevice(device);
 		
-		gateway.registerForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, registerCall.getParameter(EVENT_KEY_PARAM));
@@ -181,7 +179,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		
 		Notify notify = new Notify(TEST_EVENT_KEY_CORRECT,EVENT_DRIVER_CORRECT);
 		
-		adaptabilityEngine.sendEventNotify(notify, device);
+		adaptabilityEngine.notify(notify, device);
 		
 		assertNotNull("Notify Incorrect.",currentEventListener.getLastEvent());
 		assertEquals("EventKey don't match.",TEST_EVENT_KEY_CORRECT, currentEventListener.getLastEvent().getEventKey());
@@ -198,9 +196,9 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		device.addNetworkInterface("127.0.0.1:5555", "Ethernet:TCP");
 		deviceManager.registerDevice(device);
 		
-		gateway.registerForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
+		gateway.register(currentEventListener, device, EVENT_DRIVER_CORRECT, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall registerCall = currentEventDriver.getLastServiceCall();
+		Call registerCall = currentEventDriver.getLastServiceCall();
 		int registerCount = currentEventDriver.getLastServiceCallCount();
 		
 		assertNotNull("Service Call Incorrect.", registerCall);
@@ -218,9 +216,9 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 		
 		// ask to remove the listener from this event key
 		
-		adaptabilityEngine.unregisterForEvent(currentEventListener, device, EVENT_DRIVER_CORRECT, null, TEST_EVENT_KEY_CORRECT);
+		adaptabilityEngine.unregister(currentEventListener, device, EVENT_DRIVER_CORRECT, null, TEST_EVENT_KEY_CORRECT);
 		
-		ServiceCall unregisterCall = currentEventDriver.getLastServiceCall();
+		Call unregisterCall = currentEventDriver.getLastServiceCall();
 		
 		assertNotNull("Service Call Incorrect.", unregisterCall);
 		assertNotSame("Service Call Incorrect.", registerCount, currentEventDriver.getLastServiceCallCount());
@@ -238,23 +236,19 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 	}
 	
 	
-	protected ServiceResponse sendReceive(ServiceCall serviceCall) throws UnknownHostException, IOException, InterruptedException, JSONException{
-
-		String message = new JSONServiceCall(serviceCall).toString();
-		
-		StringBuilder builder = sendReceive(message);
-		
+	protected Response sendReceive(Call serviceCall) throws UnknownHostException, IOException, InterruptedException, JSONException{
+		StringBuilder builder = sendReceive(serviceCall.toJSON().toString());
 		
 		if (builder.length() == 0){
 			return null;
 		}
 		
-		return new JSONServiceResponse(builder.toString()).getAsObject(); 
+		return Response.fromJSON(new JSONObject(builder.toString()));
 	}
 	
 	protected void send(Notify notify) throws UnknownHostException, IOException, InterruptedException, JSONException{
 		
-		String message = new JSONNotify(notify).toString();
+		String message = notify.toJSON().toString();
 		
 		sendReceive(message);
 		
@@ -262,7 +256,7 @@ public class TestAdaptabilityEngineRegisterListener extends TestCase {
 
 	private StringBuilder sendReceive(String message) throws IOException,
 			InterruptedException {
-		con = new EthernetTCPClientConnection("localhost",14984, null/*EthernetTCPConnectionManager.UBIQUITOS_ETH_TCP_PORT*/);
+		con = new TCPClientConnection("localhost",14984, null/*EthernetTCPConnectionManager.UBIQUITOS_ETH_TCP_PORT*/);
 			
 		OutputStream outputStream = con.getDataOutputStream();
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));

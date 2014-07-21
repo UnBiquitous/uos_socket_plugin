@@ -14,9 +14,9 @@ import junit.framework.TestCase;
 
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall.ServiceType;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Call.ServiceType;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 public class TestActiveStreamTCP extends TestCase {
 
@@ -58,14 +58,14 @@ public class TestActiveStreamTCP extends TestCase {
 		
 		
 		applicationContext = new UOS();
-		applicationContext.init("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesTCP");
+		applicationContext.start("br/unb/unbiquitous/ubiquitos/uos/connectivityTest/propertiesTCP");
 		
 	}
 	
 	
 	@Override
 	protected synchronized void tearDown() throws Exception {
-		applicationContext.tearDown();
+		applicationContext.stop();
 		logger.info("============== Teste : "+(currentTest-1)+" ========================== End");
 		Thread.sleep(TIME_BETWEEN_TESTS);
 		synchronized (lock) {
@@ -94,7 +94,7 @@ public class TestActiveStreamTCP extends TestCase {
 		
 		int channels = 5;
 		
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver("StreamDriver");
 		serviceCall.setService("chatService");
 		serviceCall.setInstanceId("streamDriverIdUDPDevice");
@@ -108,7 +108,7 @@ public class TestActiveStreamTCP extends TestCase {
 		
 		serviceCall.setParameters(parameters);
 	
-		ServiceResponse response = applicationContext.getGateway().callService(this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"), serviceCall);
+		Response response = applicationContext.getGateway().callService(this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"), serviceCall);
 		
 		assertNotNull(response);
 		
@@ -159,7 +159,7 @@ public class TestActiveStreamTCP extends TestCase {
 		
 		int channels = 5;
 		
-		ServiceCall serviceCall = new ServiceCall();
+		Call serviceCall = new Call();
 		serviceCall.setDriver("StreamDriver");
 		serviceCall.setService("chatService");
 		serviceCall.setInstanceId("streamDriverIdBluetoothDevice");
@@ -173,7 +173,7 @@ public class TestActiveStreamTCP extends TestCase {
 		
 		serviceCall.setParameters(parameters);
 	
-		ServiceResponse response = applicationContext.getGateway().callService(this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"), serviceCall);
+		Response response = applicationContext.getGateway().callService(this.applicationContext.getFactory().gateway().getDeviceManager().retrieveDevice("ProxyDevice"), serviceCall);
 		
 		assertNotNull(response);
 		

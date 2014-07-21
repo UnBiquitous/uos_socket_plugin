@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.unbiquitous.uos.core.InitialProperties;
 import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
-import org.unbiquitous.uos.core.applicationManager.UOSMessageContext;
+import org.unbiquitous.uos.core.applicationManager.CallContext;
 import org.unbiquitous.uos.core.driverManager.UosDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDriver;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpService;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceCall;
-import org.unbiquitous.uos.core.messageEngine.messages.ServiceResponse;
+import org.unbiquitous.uos.core.messageEngine.messages.Call;
+import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
 
 /**
@@ -27,7 +28,7 @@ public class DummyDriver implements UosDriver {
 	 * Basic service wich receives a message through the ServiceCall parameter "message" and echoes this message
 	 * in the ServiceResponse "message" parameter in its response Data 
 	 */
-	public void echoService(ServiceCall serviceCall, ServiceResponse serviceResponse, UOSMessageContext messageContext){
+	public void echoService(Call serviceCall, Response serviceResponse, CallContext messageContext){
 		
 		Map<String,Object> parameters = serviceCall.getParameters();
 		
@@ -60,7 +61,7 @@ public class DummyDriver implements UosDriver {
 	}
 
 	@Override
-	public void init(Gateway gateway, String instanceId) {
+	public void init(Gateway gateway, InitialProperties properties, String instanceId) {
 		// Do Nothing
 	}
 

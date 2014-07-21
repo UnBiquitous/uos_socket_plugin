@@ -10,8 +10,8 @@ import org.unbiquitous.uos.core.network.connectionManager.ConnectionManager;
 import org.unbiquitous.uos.core.network.model.NetworkDevice;
 import org.unbiquitous.uos.core.network.radar.Radar;
 import org.unbiquitous.uos.core.network.radar.RadarListener;
-import org.unbiquitous.uos.network.socket.EthernetDevice;
-import org.unbiquitous.uos.network.socket.connectionManager.EthernetConnectionManager.EthernetConnectionType;
+import org.unbiquitous.uos.network.socket.SocketDevice;
+import org.unbiquitous.uos.network.socket.connectionManager.SocketConnectionManager.EthernetConnectionType;
 
 
 public class RadarLocalhost implements Radar {
@@ -89,11 +89,11 @@ public class RadarLocalhost implements Radar {
 		synchronized (singletonReference.deviceEnteredPool) {		
 			
 			
-			EthernetDevice deviceTCP = new EthernetDevice("164.41.14.160",15002,EthernetConnectionType.TCP); 
+			SocketDevice deviceTCP = new SocketDevice("164.41.14.160",15002,EthernetConnectionType.TCP); 
 			logger.info("Creating a TCP Device");
 			singletonReference.deviceEnteredPool.add(deviceTCP);
 			
-			EthernetDevice deviceUDP = new EthernetDevice("164.41.14.143",15001,EthernetConnectionType.UDP); 
+			SocketDevice deviceUDP = new SocketDevice("164.41.14.143",15001,EthernetConnectionType.UDP); 
 			logger.info("Creating a UDP Device");
 			singletonReference.deviceEnteredPool.add(deviceUDP);
 			
@@ -107,7 +107,7 @@ public class RadarLocalhost implements Radar {
 	
 	public static void forceDeviceLeft(){
 		synchronized (singletonReference.deviceLeftPool) {
-			EthernetDevice device = new EthernetDevice("0.0.0.0",15002,EthernetConnectionType.TCP); 
+			SocketDevice device = new SocketDevice("0.0.0.0",15002,EthernetConnectionType.TCP); 
 			logger.info("Creating a Device");
 			singletonReference.deviceLeftPool.add(device);
 			

@@ -12,7 +12,7 @@ public class UosAppLauncher {
 	public static void main(String[] args) throws ContextException {
 		UOS applicationContext = new UOS();
 		try {
-			applicationContext.init("app");
+			applicationContext.start("app");
 		} catch (ContextException e) {
 			throw e;
 		}finally{
