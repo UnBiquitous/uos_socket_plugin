@@ -1,4 +1,4 @@
-package org.unbiquitous.uos.core.adaptabitilyEngine.events;
+package org.unbiquitous.uos.core.adaptabilityEngine.events;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class DummyEventDriver implements UosEventDriver {
 	@Override
 	public UpDriver getDriver() {
 		
-		UpDriver driver = new UpDriver("br.unb.unbiquitous.ubiquitos.uos.adaptabitilyEngine.events.DummyEventDriver");
+		UpDriver driver = new UpDriver("org.unbiquitous.uos.core.adaptabilityEngine.events.DummyEventDriver");
 		
 		driver.addService("registerListener")
 				.addParameter("eventKey", ParameterType.MANDATORY);

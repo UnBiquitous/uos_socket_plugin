@@ -1,4 +1,4 @@
-package org.unbiquitous.uos.core.adaptabitilyEngine;
+package org.unbiquitous.uos.core.adaptabilityEngine;
 
 import java.util.ArrayList;
 import java.util.List;

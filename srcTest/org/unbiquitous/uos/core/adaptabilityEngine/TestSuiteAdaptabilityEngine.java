@@ -1,4 +1,4 @@
-package org.unbiquitous.uos.core.adaptabitilyEngine;
+package org.unbiquitous.uos.core.adaptabilityEngine;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;

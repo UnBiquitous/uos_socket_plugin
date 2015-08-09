@@ -1,6 +1,8 @@
-package org.unbiquitous.uos.core.adaptabitilyEngine;
+package org.unbiquitous.uos.core.adaptabilityEngine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -8,13 +10,15 @@ import junit.framework.TestCase;
 
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
+import org.unbiquitous.uos.core.adaptabitilyEngine.ServiceCallException;
 import org.unbiquitous.uos.core.driverManager.DriverManagerException;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
+import org.unbiquitous.uos.core.messageEngine.dataType.UpNetworkInterface;
 import org.unbiquitous.uos.core.messageEngine.messages.Call;
 import org.unbiquitous.uos.core.messageEngine.messages.Response;
 
-public class TestAdaptabilityEngineNullProvider extends TestCase {
-	
+public class TestAdaptabilityEngineBasicAuthentication extends TestCase {
 	private static final String TEST_DATA_ECHO_SERVICE_PARAMETER_KEY = "message";
 
 	private static final String TEST_DATA_DUMMY_DRIVER_ID = "dummyDriverId";
@@ -26,6 +30,8 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 	private static final String TEST_DATA_DUMMY_DRIVER_NAME = "DummyDriver";
 	
 	private static final String TEST_DATA_DUMMY_DRIVER_INVALID_NAME = "DummyDriver";
+	
+	private static final String TEST_DATA_SECURITY_TYPE_VALID = "BASIC";
 
 	private static final Logger logger = UOSLogging.getLogger();
 	
@@ -33,7 +39,7 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 	
 	private static int testNumber = 0;
 	
-	private static final int timeToWaitBetweenTests = 200;
+	private static final int timeToWaitBetweenTests = 100;
 	
 	protected UpDevice providerDevice;
 	
@@ -46,6 +52,15 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 		context.start("ubiquitos");
 		Thread.sleep(timeToWaitBetweenTests/2);
 		gateway = context.getGateway();
+		
+		providerDevice = new UpDevice();
+		providerDevice.setName("WrongDummyDevice");
+		List<UpNetworkInterface> networks = new ArrayList<UpNetworkInterface>();
+		UpNetworkInterface nInf = new UpNetworkInterface();
+		nInf.setNetType("Ethernet:TCP");
+		nInf.setNetworkAddress("localhost:14984");
+		networks.add(nInf);
+		providerDevice.setNetworks(networks);
 	};
 	
 	protected void tearDown() throws Exception {
@@ -59,6 +74,8 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 		serviceCall.setDriver(TEST_DATA_DUMMY_DRIVER_NAME);
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_ID);
+		serviceCall.setSecurityType(TEST_DATA_SECURITY_TYPE_VALID);
+		
 		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
@@ -83,7 +100,7 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 				TEST_DATA_ECHO_SERVICE, 
 				TEST_DATA_DUMMY_DRIVER_NAME, 
 				TEST_DATA_DUMMY_DRIVER_ID,
-				null,
+				TEST_DATA_SECURITY_TYPE_VALID,
 				parameters);
 		
 		Response expectedResponse = new Response();
@@ -100,6 +117,7 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 		serviceCall.setDriver(TEST_DATA_DUMMY_DRIVER_NAME);
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(TEST_DATA_DUMMY_DRIVER_INVALID_ID);
+		serviceCall.setSecurityType(TEST_DATA_SECURITY_TYPE_VALID);
 		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
@@ -123,7 +141,7 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 					TEST_DATA_ECHO_SERVICE, 
 					TEST_DATA_DUMMY_DRIVER_NAME, 
 					TEST_DATA_DUMMY_DRIVER_INVALID_ID, 
-					null,
+					TEST_DATA_SECURITY_TYPE_VALID,
 					parameters);
 		} catch (Exception e) {
 			assertTrue(e.getCause() instanceof DriverManagerException );
@@ -138,31 +156,12 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 		serviceCall.setDriver(TEST_DATA_DUMMY_DRIVER_NAME);
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(null);
+		serviceCall.setSecurityType(TEST_DATA_SECURITY_TYPE_VALID);
 		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
 		
 		Response response = gateway.callService(providerDevice, serviceCall);
-		
-		Response expectedResponse = new Response();
-		Map<String,Object> responseMap = new HashMap<String,Object>();
-		responseMap.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
-		expectedResponse.setResponseData(responseMap);
-		
-		assertEquals(expectedResponse, response);
-	}
-	
-	public void testSendDechoRequestWithoutInstanceIdAndValidDriverByServiceCall_with_null_device() throws ServiceCallException{
-		
-		Call serviceCall = new Call();
-		serviceCall.setDriver(TEST_DATA_DUMMY_DRIVER_NAME);
-		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
-		serviceCall.setInstanceId(null);
-		Map<String,Object> parameters = new HashMap<String,Object>();
-		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
-		serviceCall.setParameters(parameters);
-		
-		Response response = gateway.callService(null, serviceCall);
 		
 		Response expectedResponse = new Response();
 		Map<String,Object> responseMap = new HashMap<String,Object>();
@@ -182,7 +181,7 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 				TEST_DATA_ECHO_SERVICE, 
 				TEST_DATA_DUMMY_DRIVER_NAME, 
 				null, 
-				null,
+				TEST_DATA_SECURITY_TYPE_VALID,
 				parameters);
 		
 		Response expectedResponse = new Response();
@@ -201,6 +200,7 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 		serviceCall.setDriver(TEST_DATA_DUMMY_DRIVER_INVALID_NAME);
 		serviceCall.setService(TEST_DATA_ECHO_SERVICE);
 		serviceCall.setInstanceId(null);
+		serviceCall.setSecurityType(TEST_DATA_SECURITY_TYPE_VALID);
 		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
 		serviceCall.setParameters(parameters);
@@ -224,10 +224,30 @@ public class TestAdaptabilityEngineNullProvider extends TestCase {
 					TEST_DATA_ECHO_SERVICE, 
 					TEST_DATA_DUMMY_DRIVER_INVALID_NAME, 
 					null, 
-					null,
+					TEST_DATA_SECURITY_TYPE_VALID,
 					parameters);
 		} catch (Exception e) {
 			assertTrue(e.getCause() instanceof DriverManagerException );
+		}
+		
+	}
+	
+	public void testSendDechoRequestWithInvalidSecurityType() throws ServiceCallException{
+		
+		Map<String,Object> parameters = new HashMap<String,Object>();
+		parameters.put(TEST_DATA_ECHO_SERVICE_PARAMETER_KEY, "testMessage");
+		
+		try {
+			gateway.callService(
+					providerDevice, 
+					TEST_DATA_ECHO_SERVICE, 
+					TEST_DATA_DUMMY_DRIVER_INVALID_NAME, 
+					null, 
+					TEST_DATA_SECURITY_TYPE_VALID,
+					parameters);
+		} catch (Exception e) {
+			assertTrue(e instanceof ServiceCallException );
+			assertNull(e.getCause());
 		}
 		
 	}

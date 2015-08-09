@@ -1,4 +1,4 @@
-package org.unbiquitous.uos.core.adaptabitilyEngine.events;
+package org.unbiquitous.uos.core.adaptabilityEngine.events;
 
 import org.unbiquitous.uos.core.adaptabitilyEngine.UosEventListener;
 import org.unbiquitous.uos.core.messageEngine.messages.Notify;
