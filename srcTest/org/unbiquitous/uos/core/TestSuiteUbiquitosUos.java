@@ -3,7 +3,7 @@ package org.unbiquitous.uos.core;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.unbiquitous.uos.core.adaptabitilyEngine.TestSuiteAdaptabilityEngine;
+import org.unbiquitous.uos.core.adaptabilityEngine.TestSuiteAdaptabilityEngine;
 import org.unbiquitous.uos.core.connectionManager.NetworkDeviceFilteringTest;
 import org.unbiquitous.uos.core.deviceManager.TestSuiteDeviceManager;
 import org.unbiquitous.uos.core.driver.deviceDriver.TestSuiteDeviceDriver;

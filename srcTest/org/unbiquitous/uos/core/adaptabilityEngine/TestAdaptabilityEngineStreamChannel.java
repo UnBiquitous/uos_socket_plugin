@@ -1,4 +1,4 @@
-package org.unbiquitous.uos.core.adaptabitilyEngine;
+package org.unbiquitous.uos.core.adaptabilityEngine;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,6 +16,8 @@ import junit.framework.TestCase;
 
 import org.unbiquitous.uos.core.UOS;
 import org.unbiquitous.uos.core.UOSLogging;
+import org.unbiquitous.uos.core.adaptabitilyEngine.Gateway;
+import org.unbiquitous.uos.core.adaptabitilyEngine.ServiceCallException;
 import org.unbiquitous.uos.core.messageEngine.dataType.UpDevice;
 import org.unbiquitous.uos.core.messageEngine.messages.Call;
 import org.unbiquitous.uos.core.messageEngine.messages.Call.ServiceType;
